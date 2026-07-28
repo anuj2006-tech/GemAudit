@@ -1,0 +1,17 @@
+const Select = ({ label, options, ...props }) => (
+  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200">
+    {label && <span className="mb-1 block">{label}</span>}
+    <select
+      className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-800"
+      {...props}
+    >
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  </label>
+);
+
+export default Select;
