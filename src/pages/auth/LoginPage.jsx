@@ -7,12 +7,36 @@ import { useAuth } from '../../context/AuthContext';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleLogin = (role) => {
-    login(email, role);
-    navigate(role === 'super-admin' ? '/super-admin/dashboard' : '/legal-admin/dashboard');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    setError('');
+    setLoading(true);
+
+    try {
+      const result = await login(email, password);
+      if (result.success) {
+        if (result.role === 'super-admin') {
+          navigate('/super-admin/dashboard');
+        } else {
+          navigate('/legal-admin/dashboard');
+        }
+      }
+    } catch (err) {
+      const errorMsg = err.response?.data?.error || 'Authentication failed. Please check your credentials.';
+      setError(errorMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,18 +49,45 @@ const LoginPage = () => {
             <p className="mt-4 text-sm text-blue-100">Track, review, and approve tenders with role-based intelligence and elegant workflows.</p>
           </div>
           <div className="p-8 md:p-12">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Welcome back</h2>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Choose a role to continue</p>
+            <form onSubmit={handleLogin}>
+              <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Welcome back</h2>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Sign in to access your dashboard</p>
 
-            <div className="mt-6 space-y-4">
-              <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="admin@tender.ai" />
-              <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
-            </div>
+              {error && (
+                <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/30 dark:text-red-400">
+                  {error}
+                </div>
+              )}
 
-            <div className="mt-6 space-y-3">
-              <Button className="w-full" onClick={() => handleLogin('super-admin')}>Login as Super Admin</Button>
-              <Button variant="secondary" className="w-full" onClick={() => handleLogin('legal-admin')}>Login as Legal Admin</Button>
-            </div>
+              <div className="mt-6 space-y-4">
+                <Input 
+                  label="Email" 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="admin@tender.ai" 
+                  required
+                />
+                <Input 
+                  label="Password" 
+                  type="password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  placeholder="••••••••" 
+                  required
+                />
+              </div>
+
+              <div className="mt-6">
+                <Button 
+                  type="submit" 
+                  className="w-full flex justify-center items-center" 
+                  disabled={loading}
+                >
+                  {loading ? 'Signing in...' : 'Sign In'}
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
