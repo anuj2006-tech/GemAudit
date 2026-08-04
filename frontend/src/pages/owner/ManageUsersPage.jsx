@@ -4,11 +4,11 @@ import PageHeader from '../../components/common/PageHeader';
 import Table from '../../components/tables/Table';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
-import { getCompanyUsers, createCompanyAdmin, getCompanies } from '../../services/platformService';
+import { getUsers, createUser, getDepartments } from '../../services/organizationService';
 
-const UsersPage = () => {
+const ManageUsersPage = () => {
   const [users, setUsers] = useState([]);
-  const [companies, setCompanies] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -17,36 +17,37 @@ const UsersPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedCompanyId, setSelectedCompanyId] = useState('');
+  const [roleName, setRoleName] = useState('EMPLOYEE');
+  const [selectedDeptId, setSelectedDeptId] = useState('');
   const [modalError, setModalError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchUsersAndCompanies = async () => {
+  const fetchUsersAndDepts = async () => {
     setLoading(true);
     setError(null);
     try {
-      const [usersRes, companiesRes] = await Promise.all([
-        getCompanyUsers(),
-        getCompanies()
+      const [usersRes, deptsRes] = await Promise.all([
+        getUsers(),
+        getDepartments().catch(() => ({ data: [] }))
       ]);
       setUsers(usersRes.data);
-      setCompanies(companiesRes.data);
+      setDepartments(deptsRes.data);
     } catch (err) {
-      console.error('Failed to load user roster:', err);
-      setError(err.response?.data?.error || 'Failed to fetch platform users. Please try again.');
+      console.error('Failed to load company user roster:', err);
+      setError(err.response?.data?.error || 'Failed to fetch team members. Ensure your workspace session is valid.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUsersAndCompanies();
+    fetchUsersAndDepts();
   }, []);
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
-    if (!name || !email || !password || !selectedCompanyId) {
-      setModalError('All fields, including company association, are required.');
+    if (!name || !email || !password || !roleName) {
+      setModalError('All credential fields are required.');
       return;
     }
 
@@ -54,25 +55,27 @@ const UsersPage = () => {
     setSubmitting(true);
 
     try {
-      // Platform Admin creates a Company Admin associated with the chosen company
-      await createCompanyAdmin(selectedCompanyId, {
+      await createUser({
         name,
         email,
-        password
+        password,
+        roleName,
+        departmentId: selectedDeptId || null
       });
 
-      // Clear fields and close modal
+      // Clear states and close modal
       setName('');
       setEmail('');
       setPassword('');
-      setSelectedCompanyId('');
+      setRoleName('EMPLOYEE');
+      setSelectedDeptId('');
       setIsModalOpen(false);
 
       // Refresh list
-      fetchUsersAndCompanies();
+      fetchUsersAndDepts();
     } catch (err) {
-      console.error('Failed to create company user:', err);
-      setModalError(err.response?.data?.error || 'Failed to create user. Try again later.');
+      console.error('Failed to create company member:', err);
+      setModalError(err.response?.data?.error || 'Failed to provision company user. Try again later.');
     } finally {
       setSubmitting(false);
     }
@@ -81,14 +84,14 @@ const UsersPage = () => {
   return (
     <DashboardLayout>
       <PageHeader 
-        title="Platform Users" 
-        subtitle="Manage user accounts, roles, and company affiliations across all SaaS tenants" 
-        action={<Button onClick={() => setIsModalOpen(true)}>Add Admin User</Button>}
+        title="Manage Team Members" 
+        subtitle="Review, audit, and provision new user accounts for your company workspace" 
+        action={<Button onClick={() => setIsModalOpen(true)}>Add Team Member</Button>}
       />
 
       {error && (
         <div className="mb-6 rounded-2xl border border-red-900/50 bg-red-950/20 p-4 text-sm text-red-400">
-          <p className="font-semibold">Backend Connection Issue</p>
+          <p className="font-semibold">Operation Error</p>
           <p className="mt-1">{error}</p>
         </div>
       )}
@@ -108,22 +111,22 @@ const UsersPage = () => {
                 label: 'Role',
                 render: (row) => (
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    row.roles?.name === 'PLATFORM_ADMIN' ? 'bg-red-500/10 text-red-400' :
+                    row.roles?.name === 'ADMIN' ? 'bg-purple-500/10 text-purple-400' :
                     row.roles?.name === 'COMPANY_OWNER' ? 'bg-blue-500/10 text-blue-400' :
-                    row.roles?.name === 'ADMIN' ? 'bg-purple-500/10 text-purple-400' : 'bg-slate-500/10 text-slate-400'
+                    row.roles?.name === 'BID_MANAGER' ? 'bg-indigo-500/10 text-indigo-400' : 'bg-slate-500/10 text-slate-400'
                   }`}>
                     {row.roles?.name || 'EMPLOYEE'}
                   </span>
                 )
               },
               { 
-                key: 'company', 
-                label: 'Affiliated Company',
-                render: (row) => row.companies?.name || 'Platform Scope'
+                key: 'department', 
+                label: 'Department',
+                render: (row) => row.departments?.name || 'Unassigned'
               },
               {
                 key: 'created_at',
-                label: 'Joined At',
+                label: 'Added On',
                 render: (row) => new Date(row.created_at).toLocaleDateString()
               },
               {
@@ -151,9 +154,9 @@ const UsersPage = () => {
           
           <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-900 bg-slate-950 p-6 shadow-2xl transition-all text-slate-200">
             <div className="mb-4">
-              <h3 className="text-xl font-bold text-white">Add New Company Admin</h3>
+              <h3 className="text-xl font-bold text-white">Add Team Member</h3>
               <p className="mt-1 text-xs text-slate-450">
-                Setup admin credentials for a company tenant. These credentials can be used to log in to the company's Admin Dashboard.
+                Setup credentials for a new employee or administrator. They will log in using their email and password.
               </p>
             </div>
 
@@ -192,19 +195,37 @@ const UsersPage = () => {
                 disabled={submitting}
               />
 
-              {/* Company dropdown */}
+              {/* Role Dropdown */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Associate Company</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Access Role</label>
                 <select
-                  value={selectedCompanyId}
-                  onChange={(e) => setSelectedCompanyId(e.target.value)}
+                  value={roleName}
+                  onChange={(e) => setRoleName(e.target.value)}
                   required
                   disabled={submitting}
                   className="w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition"
                 >
-                  <option value="">Select a company...</option>
-                  {companies.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                  <option value="EMPLOYEE">Employee</option>
+                  <option value="ADMIN">Admin</option>
+                  <option value="BID_MANAGER">Bid Manager</option>
+                  <option value="PROPOSAL_WRITER">Proposal Writer</option>
+                  <option value="REVIEWER">Reviewer</option>
+                  <option value="VIEWER">Viewer</option>
+                </select>
+              </div>
+
+              {/* Department Dropdown */}
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Department (Optional)</label>
+                <select
+                  value={selectedDeptId}
+                  onChange={(e) => setSelectedDeptId(e.target.value)}
+                  disabled={submitting}
+                  className="w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition"
+                >
+                  <option value="">Select department...</option>
+                  {departments.map(d => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
                   ))}
                 </select>
               </div>
@@ -222,7 +243,7 @@ const UsersPage = () => {
                   type="submit" 
                   disabled={submitting}
                 >
-                  {submitting ? 'Provisioning...' : 'Provision Admin'}
+                  {submitting ? 'Creating...' : 'Create Account'}
                 </Button>
               </div>
             </form>
@@ -233,4 +254,4 @@ const UsersPage = () => {
   );
 };
 
-export default UsersPage;
+export default ManageUsersPage;

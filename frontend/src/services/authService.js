@@ -1,16 +1,17 @@
-import axios from 'axios';
+import api from './api';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
-
-const authApi = axios.create({
-  baseURL: `${API_BASE_URL}/api/auth`,
-  timeout: 10000,
-});
-
-export const loginUser = async (payload) => {
-  return authApi.post('/login', payload);
+export const loginUser = async (payloadOrEmail, password) => {
+  if (typeof payloadOrEmail === 'object' && payloadOrEmail !== null) {
+    const { email, password: pwd } = payloadOrEmail;
+    return api.post('/api/auth/login', { email, password: pwd });
+  }
+  return api.post('/api/auth/login', { email: payloadOrEmail, password });
 };
 
 export const logoutUser = async () => {
-  return authApi.post('/logout');
+  return api.post('/api/auth/logout');
+};
+
+export const registerCompany = async (registrationData) => {
+  return api.post('/api/auth/register', registrationData);
 };

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { useAuth } from '../../context/AuthContext';
+import { Brain, Lock, ShieldCheck } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -25,10 +26,16 @@ const LoginPage = () => {
     try {
       const result = await login(email, password);
       if (result.success) {
-        if (result.role === 'super-admin') {
+        // Dynamic Role-based Dashboard routing
+        const role = result.role;
+        if (role === 'PLATFORM_ADMIN') {
           navigate('/super-admin/dashboard');
+        } else if (role === 'COMPANY_OWNER') {
+          navigate('/owner/dashboard');
+        } else if (role === 'ADMIN') {
+          navigate('/admin/dashboard');
         } else {
-          navigate('/legal-admin/dashboard');
+          navigate('/employee/dashboard');
         }
       }
     } catch (err) {
@@ -40,32 +47,57 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,_#dbeafe,_#f8fafc)] p-4">
-      <div className="w-full max-w-5xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4 relative overflow-hidden font-sans">
+      {/* Background gradients */}
+      <div className="absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-blue-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 h-[500px] w-[500px] rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none" />
+
+      <div className="w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-900 bg-slate-950 shadow-2xl relative z-10">
         <div className="grid md:grid-cols-2">
-          <div className="bg-primary px-8 py-12 text-white md:px-12">
-            <p className="text-sm uppercase tracking-[0.3em] text-blue-200">AI Tender Management</p>
-            <h1 className="mt-4 text-3xl font-semibold">Secure, intelligent tender operations for modern enterprises.</h1>
-            <p className="mt-4 text-sm text-blue-100">Track, review, and approve tenders with role-based intelligence and elegant workflows.</p>
+          {/* Left panel */}
+          <div className="bg-gradient-to-br from-blue-900/60 to-indigo-950/80 p-12 text-white flex flex-col justify-between border-r border-slate-900">
+            <div>
+              <div className="flex items-center gap-2 mb-8">
+                <Brain className="h-6 w-6 text-blue-400" />
+                <span className="text-lg font-bold">TenderAI SaaS</span>
+              </div>
+              <h1 className="text-3xl font-bold leading-tight">Secure, unified access console.</h1>
+              <p className="mt-4 text-sm text-slate-300">Enter your credentials to launch your role-specific dashboard with automated RAG assistance.</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-xs text-slate-400">
+                <ShieldCheck className="h-4 w-4 text-blue-500" />
+                <span>Encrypted credentials via Argon2id standards.</span>
+              </div>
+              <div className="flex items-center gap-3 text-xs text-slate-400">
+                <Lock className="h-4 w-4 text-blue-500" />
+                <span>Isolated sessions via database Row Level Security.</span>
+              </div>
+            </div>
           </div>
-          <div className="p-8 md:p-12">
-            <form onSubmit={handleLogin}>
-              <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">Welcome back</h2>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Sign in to access your dashboard</p>
+
+          {/* Right panel (Form) */}
+          <div className="p-8 lg:p-12 flex flex-col justify-center text-slate-200">
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Welcome back</h2>
+                <p className="mt-1 text-sm text-slate-400">Sign in to access your tenant dashboard</p>
+              </div>
 
               {error && (
-                <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950/30 dark:text-red-400">
+                <div className="rounded-xl bg-red-950/30 border border-red-900/50 p-4 text-sm text-red-400">
                   {error}
                 </div>
               )}
 
-              <div className="mt-6 space-y-4">
+              <div className="space-y-4">
                 <Input 
-                  label="Email" 
+                  label="Email Address" 
                   type="email" 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
-                  placeholder="admin@tender.ai" 
+                  placeholder="name@company.com" 
                   required
                 />
                 <Input 
@@ -78,14 +110,19 @@ const LoginPage = () => {
                 />
               </div>
 
-              <div className="mt-6">
-                <Button 
-                  type="submit" 
-                  className="w-full flex justify-center items-center" 
-                  disabled={loading}
-                >
-                  {loading ? 'Signing in...' : 'Sign In'}
-                </Button>
+              <Button 
+                type="submit" 
+                className="w-full flex justify-center items-center py-3" 
+                disabled={loading}
+              >
+                {loading ? 'Verifying Session...' : 'Sign In'}
+              </Button>
+
+              <div className="text-center text-xs text-slate-500 mt-6">
+                New to TenderAI?{' '}
+                <Link to="/auth/register" className="text-blue-400 hover:text-blue-300 font-semibold underline decoration-dotted">
+                  Register your company
+                </Link>
               </div>
             </form>
           </div>
