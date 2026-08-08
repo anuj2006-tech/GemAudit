@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Brain, Lock, ShieldCheck, Mail, ArrowRight, Eye, EyeOff, Sparkles, ArrowLeft, CheckCircle2, Zap } from 'lucide-react';
+import { Brain, Lock, ShieldCheck, Mail, ArrowRight, Eye, EyeOff, Sparkles, ArrowLeft, CheckCircle2} from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login, bypassLogin } = useAuth();
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,22 +44,7 @@ const LoginPage = () => {
     }
   };
 
-  // BYPASS CODE START
-  const handleBypass = (selectedRole = 'COMPANY_OWNER') => {
-    const result = bypassLogin(selectedRole);
-    if (result?.success) {
-      if (selectedRole === 'PLATFORM_ADMIN') {
-        navigate('/super-admin/dashboard');
-      } else if (selectedRole === 'COMPANY_OWNER') {
-        navigate('/owner/dashboard');
-      } else if (selectedRole === 'ADMIN') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/employee/dashboard');
-      }
-    }
-  };
-  // BYPASS CODE END
+ 
 
   return (
     <div className="min-h-screen bg-[#100e0c] text-slate-100 font-sans flex items-center justify-center p-4 sm:p-6 relative overflow-hidden selection:bg-orange-400 selection:text-white">
@@ -94,40 +79,7 @@ const LoginPage = () => {
                 </p>
               </div>
 
-              {/* BYPASS CODE START */}
-              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 mb-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-400 flex items-center gap-1.5">
-                    <Zap className="h-4 w-4" /> Dev Test Bypass
-                  </span>
-                  <span className="text-[10px] font-mono text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded font-extrabold">FRONTEND</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
-                  <button
-                    type="button"
-                    onClick={() => handleBypass('COMPANY_OWNER')}
-                    className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-amber-500/20 border border-amber-500/40 text-xs font-bold text-amber-300 transition"
-                  >
-                    Owner Dashboard
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleBypass('ADMIN')}
-                    className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-amber-500/20 border border-amber-500/40 text-xs font-bold text-amber-300 transition"
-                  >
-                    Admin Dashboard
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleBypass('EMPLOYEE')}
-                    className="col-span-2 sm:col-span-1 px-3 py-2 rounded-xl bg-slate-900 hover:bg-amber-500/20 border border-amber-500/40 text-xs font-bold text-amber-300 transition"
-                  >
-                    Employee
-                  </button>
-                </div>
-              </div>
-              {/* BYPASS CODE END */}
-
+             
               {error && (
                 <div className="mb-6 rounded-2xl bg-rose-500/10 border border-rose-500/30 p-4 text-xs font-medium text-rose-300 flex items-center gap-3">
                   <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
