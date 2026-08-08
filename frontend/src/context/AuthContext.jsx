@@ -4,7 +4,6 @@ import { loginUser } from '../services/authService';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Synchronously initialize state from localStorage to avoid redirect flashing
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('auth_user');
     try {
@@ -36,6 +35,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // BYPASS CODE START
+  const bypassLogin = (targetRole = 'COMPANY_OWNER') => {
+    const mockUser = { id: 'dev_user_1', name: 'Test Developer', email: 'dev@company.com' };
+    localStorage.setItem('auth_token', 'dev_test_bypass_token');
+    localStorage.setItem('auth_user', JSON.stringify(mockUser));
+    localStorage.setItem('auth_role', targetRole);
+    setUser(mockUser);
+    setRole(targetRole);
+    return { success: true, role: targetRole };
+  };
+  // BYPASS CODE END
+
   const logout = () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
@@ -44,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     setRole(null);
   };
 
-  const value = useMemo(() => ({ user, role, login, logout }), [user, role]);
+  const value = useMemo(() => ({ user, role, login, bypassLogin, logout }), [user, role]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

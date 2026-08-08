@@ -6,15 +6,17 @@ import AppRoutes from './routes/AppRoutes';
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <NotificationProvider>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </NotificationProvider>
-      </ThemeProvider>
-    </AuthProvider>
+    <>
+      <AuthProvider>
+        <ThemeProvider>
+          <NotificationProvider>
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </NotificationProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </>
   );
 }
 

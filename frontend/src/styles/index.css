@@ -2,19 +2,171 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #0f172a;
-  background-color: #f8fafc;
+@layer base {
+  :root {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: #100e0c;
+    color: #f8fafc;
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background: #f8fafc;
+@keyframes ambientPulse {
+  0%, 100% { transform: scale(1) translate(0px, 0px); opacity: 0.4; }
+  50% { transform: scale(1.15) translate(-20px, 15px); opacity: 0.7; }
 }
 
-* {
-  box-sizing: border-box;
+@keyframes ambientPulseSlow {
+  0%, 100% { transform: scale(1) translate(0px, 0px); opacity: 0.3; }
+  50% { transform: scale(1.2) translate(25px, -20px); opacity: 0.6; }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-ambient-1 {
+  animation: ambientPulse 12s ease-in-out infinite;
+}
+
+.animate-ambient-2 {
+  animation: ambientPulseSlow 16s ease-in-out infinite;
+}
+
+.animate-float-soft {
+  animation: floatSoft 5s ease-in-out infinite;
+}
+
+.glow-pill {
+  position: relative;
+  background: rgba(28, 25, 23, 0.7);
+  border: 1px solid rgba(218, 119, 86, 0.3);
+  box-shadow: 0 0 15px rgba(218, 119, 86, 0.15), inset 0 0 15px rgba(218, 119, 86, 0.05);
+}
+
+.glow-card {
+  position: relative;
+  background: rgba(28, 25, 23, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-card:hover {
+  background: rgba(41, 37, 36, 0.75);
+  border-color: rgba(218, 119, 86, 0.4);
+  box-shadow: 0 20px 40px -15px rgba(203, 84, 45, 0.25);
+  transform: translateY(-4px);
+}
+
+.dashboard-light .glow-card {
+  background: #ffffff !important;
+  border: 1px solid #e7e5e4 !important;
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05) !important;
+}
+
+.dashboard-light .glow-card:hover {
+  border-color: rgba(218, 119, 86, 0.5) !important;
+  box-shadow: 0 12px 30px -10px rgba(218, 119, 86, 0.15) !important;
+  transform: translateY(-4px);
+}
+
+.dashboard-light aside {
+  background-color: #ffffff !important;
+  border-color: #e7e5e4 !important;
+  color: #1c1917 !important;
+}
+
+.dashboard-light header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e7e5e4 !important;
+  color: #1c1917 !important;
+}
+
+.btn-modern-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #da7756 0%, #cb542d 50%, #a64524 100%);
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 0.85rem;
+  box-shadow: 0 10px 25px -5px rgba(218, 119, 86, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-modern-primary:hover {
+  box-shadow: 0 15px 35px -5px rgba(218, 119, 86, 0.7);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-modern-secondary {
+  position: relative;
+  font-weight: 600;
+  border-radius: 0.85rem;
+  background: rgba(28, 25, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f5f5f4;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-modern-secondary:hover {
+  background: rgba(41, 37, 36, 0.95);
+  border-color: rgba(218, 119, 86, 0.5);
+  color: #ffffff;
+}
+
+.dashboard-light .btn-modern-secondary {
+  background: #f5f5f4 !important;
+  border: 1px solid #d6d3d1 !important;
+  color: #1c1917 !important;
+}
+
+.dashboard-light .btn-modern-secondary:hover {
+  background: #e7e5e4 !important;
+  border-color: #a8a29e !important;
+  color: #1c1917 !important;
+}
+
+.btn-modern-ghost {
+  color: #a8a29e;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.btn-modern-ghost:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.gradient-title {
+  background: linear-gradient(135deg, #ffffff 0%, #e7e5e4 40%, #a8a29e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-light .gradient-title {
+  background: linear-gradient(135deg, #1c1917 0%, #44403c 40%, #57534e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #eab29f 0%, #e29379 35%, #da7756 70%, #cb542d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

@@ -4,9 +4,7 @@ import {
   Building2, 
   FileText, 
   Brain, 
-  BarChart3, 
   Settings, 
-  Bell, 
   FileCheck2, 
   ScrollText, 
   LogOut, 
@@ -17,41 +15,36 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-// Platform Superadmin Navigation
 const platformAdminLinks = [
   { label: 'Dashboard', to: '/super-admin/dashboard', icon: LayoutDashboard },
-  { label: 'Users', to: '/super-admin/users', icon: Users },
+  { label: 'Users Roster', to: '/super-admin/users', icon: Users },
   { label: 'Organizations', to: '/super-admin/organizations', icon: Building2 },
   { label: 'Legal Admins', to: '/super-admin/legal-admins', icon: ShieldCheck },
   { label: 'Tenders View', to: '/super-admin/tenders', icon: FileText },
-  { label: 'AI Metrics', to: '/super-admin/ai-analysis', icon: Brain },
+  { label: 'AI RAG Metrics', to: '/super-admin/ai-analysis', icon: Brain },
   { label: 'Platform Settings', to: '/super-admin/settings', icon: Settings },
 ];
 
-
-// Company Owner Navigation
 const companyOwnerLinks = [
   { label: 'Dashboard', to: '/owner/dashboard', icon: LayoutDashboard },
-  { label: 'Manage Users', to: '/owner/users', icon: Users },
+  { label: 'Manage Roster', to: '/owner/users', icon: Users },
   { label: 'Departments', to: '/owner/departments', icon: Network },
   { label: 'Tender Board', to: '/owner/tenders', icon: FileText },
   { label: 'Document Vault', to: '/owner/documents', icon: FileCheck2 },
-  { label: 'AI Bid Evaluator', to: '/owner/ai-assistant', icon: Brain },
+  { label: 'AI Bid Copilot', to: '/owner/ai-assistant', icon: Brain },
   { label: 'Billing & Plan', to: '/owner/billing', icon: CreditCard },
-  { label: 'Company Settings', to: '/owner/settings', icon: Settings },
+  { label: 'Settings', to: '/owner/settings', icon: Settings },
 ];
 
-// Company Admin Navigation
 const companyAdminLinks = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Employee Roster', to: '/admin/employees', icon: Users },
   { label: 'Tender Board', to: '/admin/tenders', icon: FileText },
   { label: 'Approvals & Review', to: '/admin/approvals', icon: ScrollText },
-  { label: 'Documents', to: '/admin/documents', icon: FileCheck2 },
-  { label: 'AI Bid Evaluator', to: '/admin/ai-assistant', icon: Brain },
+  { label: 'Document Vault', to: '/admin/documents', icon: FileCheck2 },
+  { label: 'AI Bid Copilot', to: '/admin/ai-assistant', icon: Brain },
 ];
 
-// Employee Navigation (includes Bid Manager, Writer, Reviewer, Employee, Viewer views)
 const employeeLinks = [
   { label: 'My Dashboard', to: '/employee/dashboard', icon: LayoutDashboard },
   { label: 'Assigned Tenders', to: '/employee/tenders', icon: FileCheck2 },
@@ -65,7 +58,6 @@ const Sidebar = () => {
   const location = useLocation();
   const { role, logout, user } = useAuth();
 
-  // Pick links list dynamically based on role
   let links = employeeLinks;
   if (role === 'PLATFORM_ADMIN') {
     links = platformAdminLinks;
@@ -76,48 +68,65 @@ const Sidebar = () => {
   }
 
   return (
-    <aside className="hidden h-screen w-72 flex-col border-r border-slate-900 bg-slate-950 p-6 text-slate-100 lg:flex shrink-0 font-sans select-none">
-      <div className="mb-8 border-b border-slate-900 pb-4">
-        <div className="flex items-center gap-2">
-          <Brain className="h-6 w-6 text-blue-500" />
-          <span className="text-lg font-extrabold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">TenderAI Console</span>
+    <aside className="hidden lg:flex h-screen w-72 flex-col border-r border-slate-200 bg-white text-slate-900 dark:border-slate-800/80 dark:bg-slate-950 dark:text-slate-100 p-6 shrink-0 font-sans select-none sticky top-0 z-30 transition-colors duration-300">
+      <div className="mb-8 border-b border-slate-200 dark:border-slate-800/80 pb-5">
+        <Link to="/" className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
+            <Brain className="h-5 w-5" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
+              Tender<span className="gradient-accent">AI</span>
+            </span>
+            <span className="text-[10px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase">Enterprise Console</span>
+          </div>
+        </Link>
+        <div className="mt-4 flex items-center justify-between bg-slate-100 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800/80">
+          <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">Role</span>
+          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-500/20">
+            {role?.replace('_', ' ') || 'GUEST'}
+          </span>
         </div>
-        <p className="text-[10px] mt-1.5 font-bold uppercase tracking-[0.2em] text-slate-500">
-          Role: <span className="text-blue-400">{role?.replace('_', ' ')}</span>
-        </p>
       </div>
 
-      <nav className="flex-1 space-y-1.5 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-800">
+      <nav className="flex-1 space-y-1.5 overflow-y-auto pr-1">
         {links.map(({ label, to, icon: Icon }) => {
           const active = location.pathname === to || location.pathname.startsWith(to + '/');
           return (
             <Link
               key={to}
               to={to}
-              className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition duration-200 ${
+              className={`flex items-center gap-3 rounded-xl px-3.5 py-3 text-xs font-semibold transition-all duration-200 ${
                 active 
-                  ? 'bg-blue-600/10 text-blue-400 border border-blue-600/30' 
-                  : 'text-slate-400 border border-transparent hover:bg-slate-900/50 hover:text-white'
+                  ? 'bg-indigo-50 text-indigo-600 border border-indigo-200 dark:bg-indigo-600/15 dark:text-indigo-300 dark:border-indigo-500/30 shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-400 border border-transparent hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-900/60 dark:hover:text-white'
               }`}
             >
-              <Icon size={18} className={active ? 'text-blue-400' : 'text-slate-500'} />
-              {label}
+              <Icon size={18} className={active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'} />
+              <span>{label}</span>
+              {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400 shadow-sm" />}
             </Link>
           );
         })}
       </nav>
 
-      <div className="space-y-1.5 border-t border-slate-900 pt-4 mt-auto">
-        <div className="px-3 py-2 text-xs text-slate-500 flex justify-between items-center bg-slate-900/20 rounded-xl mb-2">
-          <span className="truncate max-w-[120px] font-medium">{user?.name}</span>
-          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+      <div className="space-y-2 border-t border-slate-200 dark:border-slate-800/80 pt-4 mt-auto">
+        <div className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
+          <div className="flex flex-col truncate pr-2">
+            <span className="text-xs font-bold text-slate-900 dark:text-white truncate">{user?.name || 'Dev User'}</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{user?.email || 'dev@company.com'}</span>
+          </div>
+          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-ping shrink-0" />
         </div>
+
         <button 
           onClick={logout} 
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm text-slate-400 border border-transparent hover:bg-red-950/20 hover:text-red-400 transition duration-200"
+          className="flex w-full items-center justify-between rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-600 dark:text-slate-400 border border-transparent hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 transition-all duration-200 group"
         >
-          <LogOut size={18} className="text-slate-500 group-hover:text-red-400" />
-          Logout
+          <span className="flex items-center gap-2.5">
+            <LogOut size={16} className="text-slate-400 dark:text-slate-500 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition" />
+            Sign Out
+          </span>
         </button>
       </div>
     </aside>

@@ -1,19 +1,17 @@
-import { UserCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const ProfileMenu = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-800">
-      <UserCircle2 size={24} className="text-primary" />
-      <div className="min-w-0">
-        <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">{user?.name || 'Guest'}</p>
-        <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email || 'No account'}</p>
+    <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800/80 dark:bg-slate-900/60">
+      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-bold text-xs">
+        {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
       </div>
-      <button onClick={logout} className="text-xs font-medium text-danger">
-        Logout
-      </button>
+      <div className="min-w-0 flex flex-col">
+        <p className="truncate text-xs font-bold text-slate-900 dark:text-white leading-tight">{user?.name || 'Dev User'}</p>
+        <p className="truncate text-[10px] text-slate-500 dark:text-slate-400 font-mono">{user?.email || 'dev@company.com'}</p>
+      </div>
     </div>
   );
 };
