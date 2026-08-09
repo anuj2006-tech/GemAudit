@@ -29,9 +29,10 @@ const platformAdminLinks = [
 const companyOwnerLinks = [
   { label: 'Dashboard', to: '/owner/dashboard', icon: LayoutDashboard },
   { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
+  { label: 'Company Brain', to: '/company-brain', icon: Brain },
   { label: 'Manage Roster', to: '/owner/users', icon: Users },
   { label: 'Departments', to: '/owner/departments', icon: Network },
-  { label: 'Tender Board', to: '/owner/tenders', icon: FileText },
+  { label: 'Tender Management', to: '/tender-management', icon: FileText },
   { label: 'Document Vault', to: '/owner/documents', icon: FileCheck2 },
   { label: 'AI Bid Copilot', to: '/owner/ai-assistant', icon: Brain },
   { label: 'Billing & Plan', to: '/owner/billing', icon: CreditCard },
@@ -41,8 +42,9 @@ const companyOwnerLinks = [
 const companyAdminLinks = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
+  { label: 'Company Brain', to: '/company-brain', icon: Brain },
   { label: 'Employee Roster', to: '/admin/employees', icon: Users },
-  { label: 'Tender Board', to: '/admin/tenders', icon: FileText },
+  { label: 'Tender Management', to: '/tender-management', icon: FileText },
   { label: 'Approvals & Review', to: '/admin/approvals', icon: ScrollText },
   { label: 'Document Vault', to: '/admin/documents', icon: FileCheck2 },
   { label: 'AI Bid Copilot', to: '/admin/ai-assistant', icon: Brain },

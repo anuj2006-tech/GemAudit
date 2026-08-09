@@ -16,6 +16,11 @@ import UsersPage from '../pages/superAdmin/UsersPage';
 // Company Owner Page Imports
 import OwnerDashboard from '../pages/owner/OwnerDashboard';
 import ManageUsersPage from '../pages/owner/ManageUsersPage';
+import CompanyBrainDashboard from '../pages/owner/CompanyBrainDashboard';
+import CompanyBrainCategoryPage from '../pages/owner/CompanyBrainCategoryPage';
+import TenderManagementPage from '../pages/owner/TenderManagementPage';
+import CreateTenderPage from '../pages/owner/CreateTenderPage';
+import TenderWorkspacePage from '../pages/owner/TenderWorkspacePage';
 
 // Company Admin Page Imports
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -154,6 +159,25 @@ const AppRoutes = () => {
       } />
       <Route path="/employee/profile" element={
         <ProtectedRoute allowedRoles={['BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'EMPLOYEE', 'VIEWER']}><ProfilePage /></ProtectedRoute>
+      } />
+
+      {/* Company Brain MVP (Phase 1) Routes */}
+      <Route path="/company-brain" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']}><CompanyBrainDashboard /></ProtectedRoute>
+      } />
+      <Route path="/company-brain/:category" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']}><CompanyBrainCategoryPage /></ProtectedRoute>
+      } />
+
+      {/* Tender Workspace Routes */}
+      <Route path="/tender-management" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']}><TenderManagementPage /></ProtectedRoute>
+      } />
+      <Route path="/tender-management/new" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']}><CreateTenderPage /></ProtectedRoute>
+      } />
+      <Route path="/tenders/:tenderId" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']}><TenderWorkspacePage /></ProtectedRoute>
       } />
 
       {/* Error Fallback */}

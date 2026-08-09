@@ -22,11 +22,12 @@ export const logAudit = async ({
   ipAddress = null
 }) => {
   try {
+    const cleanUserId = (userId === '99999999-9999-9999-9999-999999999999' || userId === '00000000-0000-0000-0000-000000000000') ? null : userId;
     const { error } = await supabaseAdmin
       .from('audit_logs')
       .insert({
         company_id: companyId,
-        user_id: userId || null,
+        user_id: cleanUserId || null,
         action,
         entity_name: entityName,
         entity_id: entityId || null,
