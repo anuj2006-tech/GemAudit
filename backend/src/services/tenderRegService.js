@@ -425,7 +425,7 @@ export class TenderRegService {
           const jsonMatch = llmResultStr.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             const parsed = JSON.parse(jsonMatch[0]);
-            matchScore = Number(parsed.match_score) || 75;
+            matchScore = Number(parsed.match_score) || 0;
             reasoning = parsed.reasoning || '';
           }
         } catch (e) {
@@ -433,16 +433,22 @@ export class TenderRegService {
         }
       }
 
+      // Ensure strict score alignment with deterministic eligibility status
+      if (eligibilityStatus === 'not_eligible') {
+        matchScore = matchScore > 0 ? Math.min(matchScore, 35) : 22;
+      } else if (eligibilityStatus === 'partial') {
+        matchScore = matchScore > 0 ? Math.min(Math.max(matchScore, 40), 68) : (sectorMatches(company.sector, tender.sector) ? 62 : 48);
+      } else {
+        matchScore = matchScore > 0 ? Math.max(matchScore, 75) : (sectorMatches(company.sector, tender.sector) ? 94 : 82);
+      }
+
       // Fallback if LLM reasoning is empty or failed
       if (!reasoning) {
         if (eligibilityStatus === 'eligible') {
-          matchScore = sectorMatches(company.sector, tender.sector) ? 92 : 82;
           reasoning = `${company.name} is a strong match for this ${tender.sector} tender. The company's turnover (₹${company.turnover_lakhs}L) and ${company.years_experience} years of experience fully satisfy all mandatory criteria.`;
         } else if (eligibilityStatus === 'partial') {
-          matchScore = sectorMatches(company.sector, tender.sector) ? 62 : 48;
           reasoning = `${company.name} satisfies partial requirements for this project, but requires joint venture partnership to fulfill ${reasons.find(r => r.includes('below') || r.includes('Missing')) || 'specific criteria'}.`;
         } else {
-          matchScore = 24;
           reasoning = `${company.name} does not currently meet mandatory minimum thresholds for turnover or core domain certifications specified by ${tender.department}.`;
         }
       }

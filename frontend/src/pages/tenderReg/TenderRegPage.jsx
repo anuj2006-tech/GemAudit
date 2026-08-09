@@ -434,10 +434,10 @@ const TenderRegPage = () => {
                   const isExpanded = expandedTenderId === tender.id;
 
                   // Color Coding for Match Score
-                  let scoreBadgeClass = 'bg-slate-800 text-slate-300 border-slate-700';
-                  if (matchItem.match_score >= 70) {
+                  let scoreBadgeClass = 'bg-rose-500/15 text-rose-400 border-rose-500/30';
+                  if (matchItem.eligibility_status === 'eligible' || matchItem.match_score >= 75) {
                     scoreBadgeClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-                  } else if (matchItem.match_score >= 40) {
+                  } else if (matchItem.eligibility_status === 'partial' || matchItem.match_score >= 40) {
                     scoreBadgeClass = 'bg-amber-500/15 text-amber-400 border-amber-500/30';
                   }
 
