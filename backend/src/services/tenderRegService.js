@@ -229,6 +229,7 @@ export class TenderRegService {
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: AbortSignal.timeout(5000),
           body: JSON.stringify({
             contents: [
               {
@@ -265,6 +266,7 @@ export class TenderRegService {
             'HTTP-Referer': 'https://tender.ai',
             'X-Title': 'TenderReg AI Matcher'
           },
+          signal: AbortSignal.timeout(5000),
           body: JSON.stringify({
             model,
             messages: [
@@ -298,6 +300,7 @@ export class TenderRegService {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${openaiKey}`
           },
+          signal: AbortSignal.timeout(5000),
           body: JSON.stringify({
             model,
             messages: [
@@ -370,9 +373,7 @@ export class TenderRegService {
       throw new Error('Document not found.');
     }
 
-    const matches = [];
-
-    for (const tender of state.tenders) {
+    const matchPromises = state.tenders.map(async (tender) => {
       // 1. Rule-Based Eligibility Check (Deterministic Python/JS logic)
       const turnoverOk = (company.turnover_lakhs || 0) >= (tender.min_turnover_lakhs || 0);
       const experienceOk = (company.years_experience || 0) >= (tender.min_years_experience || 0);
@@ -457,9 +458,11 @@ export class TenderRegService {
         eligibility_reasons: reasons.join(' ')
       };
 
-      matches.push(matchObj);
       state.matches.push(matchObj);
-    }
+      return matchObj;
+    });
+
+    const matches = await Promise.all(matchPromises);
 
     // Sort descending by match_score
     matches.sort((a, b) => b.match_score - a.match_score);
