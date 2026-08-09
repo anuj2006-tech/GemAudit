@@ -8,6 +8,7 @@ router.use(requireAuth);
 router.use(requireTenant);
 
 router.get('/', documentController.getDocuments);
+router.get('/:id/status', documentController.getDocumentStatus);
 router.get('/:id', documentController.getDocumentById);
 router.get('/:id/versions', documentController.getVersions);
 

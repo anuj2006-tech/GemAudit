@@ -10,7 +10,8 @@ import {
   LogOut, 
   ShieldCheck,
   CreditCard,
-  Network
+  Network,
+  Sparkles
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -27,6 +28,7 @@ const platformAdminLinks = [
 
 const companyOwnerLinks = [
   { label: 'Dashboard', to: '/owner/dashboard', icon: LayoutDashboard },
+  { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
   { label: 'Manage Roster', to: '/owner/users', icon: Users },
   { label: 'Departments', to: '/owner/departments', icon: Network },
   { label: 'Tender Board', to: '/owner/tenders', icon: FileText },
@@ -38,6 +40,7 @@ const companyOwnerLinks = [
 
 const companyAdminLinks = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
   { label: 'Employee Roster', to: '/admin/employees', icon: Users },
   { label: 'Tender Board', to: '/admin/tenders', icon: FileText },
   { label: 'Approvals & Review', to: '/admin/approvals', icon: ScrollText },
@@ -47,6 +50,7 @@ const companyAdminLinks = [
 
 const employeeLinks = [
   { label: 'My Dashboard', to: '/employee/dashboard', icon: LayoutDashboard },
+  { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
   { label: 'Assigned Tenders', to: '/employee/tenders', icon: FileCheck2 },
   { label: 'Tender Tasks', to: '/employee/tasks', icon: ScrollText },
   { label: 'Document Vault', to: '/employee/documents', icon: FileText },

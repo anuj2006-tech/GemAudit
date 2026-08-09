@@ -99,4 +99,18 @@ export class DocumentRepository {
     if (error) throw new Error(`Fetch document versions error: ${error.message}`);
     return data;
   }
+
+  async getStatus(id, companyId) {
+    const doc = await this.findById(id, companyId);
+    if (!doc) throw new Error('Document not found or access denied.');
+
+    return {
+      id: doc.id,
+      filename: doc.name,
+      processing_status: doc.processing_status || 'queued',
+      indexing_status: doc.indexing_status || 'pending',
+      structured_data: doc.structured_data || {},
+      error_message: doc.error_message || null
+    };
+  }
 }

@@ -12,6 +12,7 @@ import aiRoutes from './src/routes/aiRoutes.js';
 import organizationRoutes from './src/routes/organizationRoutes.js';
 import billingRoutes from './src/routes/billingRoutes.js';
 import platformRoutes from './src/routes/platformRoutes.js';
+import tenderRegRoutes from './src/routes/tenderRegRoutes.js';
 
 dotenv.config();
 
@@ -47,6 +48,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/org', organizationRoutes);
 app.use('/api/billing', billingRoutes);
 app.use('/api/platform', platformRoutes);
+app.use('/api/tender-reg', tenderRegRoutes);
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {

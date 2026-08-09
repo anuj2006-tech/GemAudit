@@ -31,6 +31,18 @@ export const getDocumentById = async (req, res) => {
   }
 };
 
+export const getDocumentStatus = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const context = buildUserContext(req);
+    const data = await DocumentService.getDocumentStatus(id, context);
+    return res.json(data);
+  } catch (error) {
+    const statusCode = error.message.includes('not found') ? 404 : 500;
+    return res.status(statusCode).json({ error: error.message });
+  }
+};
+
 export const registerUpload = async (req, res) => {
   try {
     const context = buildUserContext(req);

@@ -31,6 +31,8 @@ import ProfilePage from '../pages/legalAdmin/ProfilePage';
 // Employee Page Imports
 import EmployeeDashboard from '../pages/employee/EmployeeDashboard';
 
+import TenderRegPage from '../pages/tenderReg/TenderRegPage';
+
 import NotFoundPage from '../pages/errors/NotFoundPage';
 
 /**
@@ -47,7 +49,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     // Bounce user to their matching dashboard
     if (role === 'PLATFORM_ADMIN') return <Navigate to="/super-admin/dashboard" replace />;
     if (role === 'COMPANY_OWNER') return <Navigate to="/owner/dashboard" replace />;
-    if (role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
+    if (role === 'ADMIN' || role === 'COMPANY_ADMIN') return <Navigate to="/admin/dashboard" replace />;
     return <Navigate to="/employee/dashboard" replace />;
   }
 
@@ -61,6 +63,7 @@ const AppRoutes = () => {
       <Route path="/" element={<LandingPage />} />
       <Route path="/auth/login" element={<LoginPage />} />
       <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/tender-reg" element={<TenderRegPage />} />
 
       {/* 1. PLATFORM_ADMIN (Super Admin) Scope */}
       <Route path="/super-admin/dashboard" element={
@@ -101,7 +104,7 @@ const AppRoutes = () => {
         <ProtectedRoute allowedRoles={['COMPANY_OWNER']}><OwnerDashboard /></ProtectedRoute>
       } />
       <Route path="/owner/documents" element={
-        <ProtectedRoute allowedRoles={['COMPANY_OWNER']}><OwnerDashboard /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['COMPANY_OWNER']}><DocumentVerificationPage /></ProtectedRoute>
       } />
       <Route path="/owner/ai-assistant" element={
         <ProtectedRoute allowedRoles={['COMPANY_OWNER']}><OwnerDashboard /></ProtectedRoute>
@@ -115,22 +118,22 @@ const AppRoutes = () => {
 
       {/* 3. COMPANY_ADMIN Scope */}
       <Route path="/admin/dashboard" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboard /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['ADMIN', 'COMPANY_ADMIN']}><AdminDashboard /></ProtectedRoute>
       } />
       <Route path="/admin/employees" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboard /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['ADMIN', 'COMPANY_ADMIN']}><AdminDashboard /></ProtectedRoute>
       } />
       <Route path="/admin/tenders" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}><AssignedTendersPage /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['ADMIN', 'COMPANY_ADMIN']}><AssignedTendersPage /></ProtectedRoute>
       } />
       <Route path="/admin/approvals" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}><ReviewTenderPage /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['ADMIN', 'COMPANY_ADMIN']}><ReviewTenderPage /></ProtectedRoute>
       } />
       <Route path="/admin/documents" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}><DocumentVerificationPage /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['ADMIN', 'COMPANY_ADMIN']}><DocumentVerificationPage /></ProtectedRoute>
       } />
       <Route path="/admin/ai-assistant" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}><AISuggestionsPage /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['ADMIN', 'COMPANY_ADMIN']}><AISuggestionsPage /></ProtectedRoute>
       } />
 
       {/* 4. EMPLOYEE & STAFF Scope */}
@@ -144,7 +147,7 @@ const AppRoutes = () => {
         <ProtectedRoute allowedRoles={['BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'EMPLOYEE', 'VIEWER']}><EmployeeDashboard /></ProtectedRoute>
       } />
       <Route path="/employee/documents" element={
-        <ProtectedRoute allowedRoles={['BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'EMPLOYEE', 'VIEWER']}><EmployeeDashboard /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'EMPLOYEE', 'VIEWER']}><DocumentVerificationPage /></ProtectedRoute>
       } />
       <Route path="/employee/ai-assistant" element={
         <ProtectedRoute allowedRoles={['BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'EMPLOYEE', 'VIEWER']}><EmployeeDashboard /></ProtectedRoute>
