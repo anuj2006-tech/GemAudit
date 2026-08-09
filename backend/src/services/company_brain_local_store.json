@@ -12,7 +12,72 @@
       "uploaded_by": "99999999-9999-9999-9999-999999999999",
       "created_at": "2026-08-09T12:09:23.204Z",
       "updated_at": "2026-08-09T12:09:23.386Z"
+    },
+    {
+      "id": "dcccffea-a3a8-42f1-a719-a6249d483dc6",
+      "company_id": "22c7eace-62f9-4b2e-a568-03458b08e9af",
+      "category": "company_profile",
+      "file_name": "profile.pdf",
+      "storage_path": "companies/22c7eace-62f9-4b2e-a568-03458b08e9af/company-brain/company_profile/1786303965729_profile.pdf",
+      "mime_type": "application/pdf",
+      "file_size": 20010,
+      "processing_status": "completed",
+      "uploaded_by": "8007a8c9-1300-4c27-a071-8c64fb634ddf",
+      "created_at": "2026-08-09T19:32:49.378Z",
+      "updated_at": "2026-08-09T19:32:55.757Z",
+      "extracted_text": "ABC Technologies Pvt Ltd\nEstablished: 2015\nBusiness Areas:\n- IT Infrastructure\n- Networking\n- CCTV\n- Data Center Solutions\nLocations:\n- Mumbai\n- Pune\n- Delhi\nTotal Employees: 120\n\n-- 1 of 1 --\n\n"
     }
   ],
-  "facts": []
+  "facts": [
+    {
+      "id": "fact_1786303975741_zegbp",
+      "company_id": "22c7eace-62f9-4b2e-a568-03458b08e9af",
+      "document_id": "dcccffea-a3a8-42f1-a719-a6249d483dc6",
+      "category": "company_profile",
+      "fact_type": "company_name",
+      "fact_value": "ABC Technologies Pvt Ltd",
+      "metadata": {},
+      "created_at": "2026-08-09T19:32:55.741Z"
+    },
+    {
+      "id": "fact_1786303975741_g1cck",
+      "company_id": "22c7eace-62f9-4b2e-a568-03458b08e9af",
+      "document_id": "dcccffea-a3a8-42f1-a719-a6249d483dc6",
+      "category": "company_profile",
+      "fact_type": "established_year",
+      "fact_value": "2015",
+      "metadata": {},
+      "created_at": "2026-08-09T19:32:55.741Z"
+    },
+    {
+      "id": "fact_1786303975741_ym6av",
+      "company_id": "22c7eace-62f9-4b2e-a568-03458b08e9af",
+      "document_id": "dcccffea-a3a8-42f1-a719-a6249d483dc6",
+      "category": "company_profile",
+      "fact_type": "employee_count",
+      "fact_value": "120",
+      "metadata": {},
+      "created_at": "2026-08-09T19:32:55.741Z"
+    },
+    {
+      "id": "fact_1786303975741_p321g",
+      "company_id": "22c7eace-62f9-4b2e-a568-03458b08e9af",
+      "document_id": "dcccffea-a3a8-42f1-a719-a6249d483dc6",
+      "category": "company_profile",
+      "fact_type": "business_areas",
+      "fact_value": "IT Infrastructure, Networking, CCTV",
+      "metadata": {},
+      "created_at": "2026-08-09T19:32:55.741Z"
+    },
+    {
+      "id": "fact_1786303975741_ux9vm",
+      "company_id": "22c7eace-62f9-4b2e-a568-03458b08e9af",
+      "document_id": "dcccffea-a3a8-42f1-a719-a6249d483dc6",
+      "category": "company_profile",
+      "fact_type": "locations",
+      "fact_value": "Mumbai, Pune, Delhi",
+      "metadata": {},
+      "created_at": "2026-08-09T19:32:55.757Z"
+    }
+  ]
 }
