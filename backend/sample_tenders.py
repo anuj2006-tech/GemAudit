@@ -93,5 +93,23 @@ SAMPLE_TENDERS = [
             "Submission Deadline: 2026-10-05\n"
             "Technical Opening Date: 2026-10-06"
         )
+    },
+    {
+        "title": "Provision of Installation and Commission of Solar PV for the University of Sunderland",
+        "department": "University of Sunderland (UK Find a Tender Service)",
+        "sector": "Electrical & Solar Energy",
+        "raw_text": (
+            "Procurement Notice: 2026/S 000-017393 (OCID: ocds-h6vhtk-065a70). "
+            "Provision of Installation and Commission of Solar PV for the University of Sunderland. "
+            "Design, supply, installation, testing, and commissioning of solar photovoltaic (PV) system for Helen McArdle House.\n\n"
+            "Total Estimated Value: GBP 120,000 (INR 125 Lakhs equivalent) excluding VAT / GBP 144,000 including VAT.\n"
+            "Contract Dates: 1 May 2026 to 31 July 2026 (3 months).\n"
+            "Main Procurement Category: Works.\n"
+            "CPV Classifications: 09330000 - Solar energy, 09331000 - Solar panels, 09331200 - Solar PV modules, 09332000 - Solar installation, 45261215 - Solar panel roof-covering work.\n"
+            "Particular Suitability: Small and medium-sized enterprises (SME).\n"
+            "Submission Deadline: 30 March 2026, 12:00pm.\n"
+            "Award Criteria: Quality 60% weighting, Cost 40% weighting.\n"
+            "Procedure Type: Below threshold - open competition."
+        )
     }
 ]
