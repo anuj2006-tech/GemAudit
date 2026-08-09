@@ -214,19 +214,54 @@ export class TenderRegService {
   }
 
   /**
-   * Helper to perform LLM call via OpenRouter API (or fallback engine)
+   * Helper to perform LLM call via Gemini, OpenRouter, or OpenAI API
    */
   static async callLLM(prompt, systemInstruction = '') {
-    const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY;
-    const model = process.env.OPENROUTER_MODEL || 'openai/gpt-oss-20b:free';
+    const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    const openrouterKey = process.env.OPENROUTER_API_KEY;
+    const openaiKey = process.env.OPENAI_API_KEY;
 
-    if (apiKey) {
+    // 1. Try Google Gemini API
+    if (geminiKey) {
       try {
+        const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiKey}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: (systemInstruction ? systemInstruction + '\n\n' : '') + prompt }
+                ]
+              }
+            ]
+          })
+        });
+
+        if (response.ok) {
+          const resData = await response.json();
+          const text = resData.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            console.log('[LLM Engine] Successfully generated response via Google Gemini API');
+            return text;
+          }
+        }
+      } catch (err) {
+        console.warn('[Gemini LLM Error]:', err.message);
+      }
+    }
+
+    // 2. Try OpenRouter API
+    if (openrouterKey) {
+      try {
+        const model = process.env.OPENROUTER_MODEL || 'openai/gpt-oss-20b:free';
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': `Bearer ${openrouterKey}`,
             'HTTP-Referer': 'https://tender.ai',
             'X-Title': 'TenderReg AI Matcher'
           },
@@ -243,10 +278,46 @@ export class TenderRegService {
         if (response.ok) {
           const resData = await response.json();
           const content = resData.choices?.[0]?.message?.content;
-          if (content) return content;
+          if (content) {
+            console.log('[LLM Engine] Successfully generated response via OpenRouter API');
+            return content;
+          }
         }
       } catch (err) {
-        console.warn('[LLM Call Error, falling back to local engine]:', err.message);
+        console.warn('[OpenRouter LLM Error]:', err.message);
+      }
+    }
+
+    // 3. Try OpenAI API
+    if (openaiKey) {
+      try {
+        const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${openaiKey}`
+          },
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: 'system', content: systemInstruction || 'You are an expert AI Tender Auditor and Evaluator.' },
+              { role: 'user', content: prompt }
+            ],
+            temperature: 0.2
+          })
+        });
+
+        if (response.ok) {
+          const resData = await response.json();
+          const content = resData.choices?.[0]?.message?.content;
+          if (content) {
+            console.log('[LLM Engine] Successfully generated response via OpenAI API');
+            return content;
+          }
+        }
+      } catch (err) {
+        console.warn('[OpenAI LLM Error]:', err.message);
       }
     }
 
