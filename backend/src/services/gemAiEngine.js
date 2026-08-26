@@ -6,14 +6,22 @@
  * and cross-verify them against statutory portal data.
  */
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 dotenv.config();
 
 let genAI = null;
-if (process.env.GEMINI_API_KEY) {
-  genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-}
+
+// Dynamically initialize GoogleGenerativeAI if package & key are available
+(async () => {
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const { GoogleGenerativeAI } = await import('@google/generative-ai');
+      genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    } catch (err) {
+      console.log('[AI Engine] @google/generative-ai package optional import skipped or unavailable.');
+    }
+  }
+})();
 
 /**
  * Analyze Bid Document text/content and cross-reference with portal requirements
@@ -49,7 +57,6 @@ Provide your analysis in JSON format with the following fields:
       const response = await result.response;
       const text = response.text();
 
-      // Clean JSON formatting
       const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
       return JSON.parse(cleanJson);
     } catch (err) {
