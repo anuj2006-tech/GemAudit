@@ -1,68 +1,49 @@
 import { 
   LayoutDashboard, 
-  Users, 
-  Building2, 
   FileText, 
   Brain, 
   Settings, 
-  FileCheck2, 
-  ScrollText, 
-  LogOut, 
-  ShieldCheck,
-  CreditCard,
-  Network,
-  Sparkles
+  LogOut
 } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
+// Simplified Minimal Navigation - 3 Core Workflow Stage Items per role
 const platformAdminLinks = [
   { label: 'Dashboard', to: '/super-admin/dashboard', icon: LayoutDashboard },
-  { label: 'Users Roster', to: '/super-admin/users', icon: Users },
-  { label: 'Organizations', to: '/super-admin/organizations', icon: Building2 },
-  { label: 'Legal Admins', to: '/super-admin/legal-admins', icon: ShieldCheck },
-  { label: 'Tenders View', to: '/super-admin/tenders', icon: FileText },
-  { label: 'AI RAG Metrics', to: '/super-admin/ai-analysis', icon: Brain },
-  { label: 'Platform Settings', to: '/super-admin/settings', icon: Settings },
+  { label: 'Company Brain', to: '/company-brain', icon: Brain },
+  { label: 'Tender Board', to: '/tender-reg', icon: FileText },
+  { label: 'Platform Settings', to: '/super-admin/settings', icon: Settings }
 ];
 
 const companyOwnerLinks = [
   { label: 'Dashboard', to: '/owner/dashboard', icon: LayoutDashboard },
-  { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
   { label: 'Company Brain', to: '/company-brain', icon: Brain },
-  { label: 'Manage Roster', to: '/owner/users', icon: Users },
-  { label: 'Departments', to: '/owner/departments', icon: Network },
-  { label: 'Tender Management', to: '/tender-management', icon: FileText },
-  { label: 'Document Vault', to: '/owner/documents', icon: FileCheck2 },
-  { label: 'AI Bid Copilot', to: '/owner/ai-assistant', icon: Brain },
-  { label: 'Billing & Plan', to: '/owner/billing', icon: CreditCard },
-  { label: 'Settings', to: '/owner/settings', icon: Settings },
+  { label: 'Tender Board', to: '/tender-reg', icon: FileText },
+  { label: 'Settings', to: '/owner/settings', icon: Settings }
 ];
 
 const companyAdminLinks = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
-  { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
   { label: 'Company Brain', to: '/company-brain', icon: Brain },
-  { label: 'Employee Roster', to: '/admin/employees', icon: Users },
-  { label: 'Tender Management', to: '/tender-management', icon: FileText },
-  { label: 'Approvals & Review', to: '/admin/approvals', icon: ScrollText },
-  { label: 'Document Vault', to: '/admin/documents', icon: FileCheck2 },
-  { label: 'AI Bid Copilot', to: '/admin/ai-assistant', icon: Brain },
+  { label: 'Tender Board', to: '/tender-reg', icon: FileText }
 ];
 
 const employeeLinks = [
-  { label: 'My Dashboard', to: '/employee/dashboard', icon: LayoutDashboard },
-  { label: 'TenderReg AI Matcher', to: '/tender-reg', icon: Sparkles },
-  { label: 'Assigned Tenders', to: '/employee/tenders', icon: FileCheck2 },
-  { label: 'Tender Tasks', to: '/employee/tasks', icon: ScrollText },
-  { label: 'Document Vault', to: '/employee/documents', icon: FileText },
-  { label: 'AI Bid Assistant', to: '/employee/ai-assistant', icon: Brain },
-  { label: 'My Profile', to: '/employee/profile', icon: Users },
+  { label: 'Dashboard', to: '/employee/dashboard', icon: LayoutDashboard },
+  { label: 'Company Brain', to: '/company-brain', icon: Brain },
+  { label: 'Tender Board', to: '/tender-reg', icon: FileText }
 ];
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { role, logout, user } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/auth/login');
+  };
 
   let links = employeeLinks;
   if (role === 'PLATFORM_ADMIN') {
@@ -126,7 +107,7 @@ const Sidebar = () => {
         </div>
 
         <button 
-          onClick={logout} 
+          onClick={handleLogout} 
           className="flex w-full items-center justify-between rounded-xl px-3.5 py-3 text-xs font-semibold text-slate-600 dark:text-slate-400 border border-transparent hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10 dark:hover:text-rose-400 transition-all duration-200 group"
         >
           <span className="flex items-center gap-2.5">

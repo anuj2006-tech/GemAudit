@@ -60,3 +60,12 @@ export const getTenderAnalysis = async (tenderId) => {
 export const overrideRequirementResult = async (tenderId, requirementId, payload) => {
   return api.post(`/api/tenders/${tenderId}/requirements/${requirementId}/review`, payload);
 };
+
+
+export const generateBidDocument = async (payload) => {
+  return api.post('/api/tender-reg/generate-document', payload);
+};
+
+export const getPriceScheduleTemplate = async (payload) => {
+  return api.post('/api/tender-reg/price-schedule-template', payload);
+};

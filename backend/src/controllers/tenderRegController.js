@@ -32,7 +32,8 @@ export const uploadDocument = async (req, res) => {
   try {
     const docData = {
       filename: req.body.filename || req.file?.originalname || 'Company_Certificate.pdf',
-      text: req.body.text || req.body.extracted_text
+      text: req.body.text || req.body.extracted_text,
+      base64: req.body.base64
     };
     const document = await TenderRegService.uploadDocument(companyId, docData);
     return res.status(201).json(document);
@@ -41,10 +42,42 @@ export const uploadDocument = async (req, res) => {
   }
 };
 
+
 export const matchDocumentToTenders = async (req, res) => {
   const { companyId, documentId } = req.params;
   try {
     const result = await TenderRegService.matchDocumentToTenders(companyId, documentId);
+    return res.json(result);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+export const chatWithTender = async (req, res) => {
+  const { documentId, tenderId, message } = req.body;
+  try {
+    const result = await TenderRegService.chatWithTender(documentId, tenderId, message);
+    return res.json(result);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+export const generateBidDocument = async (req, res) => {
+  try {
+    const result = await TenderRegService.generateBidDocument(req.body);
+    return res.json(result);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+export const getPriceScheduleTemplate = async (req, res) => {
+  const { companyId, documentId, tenderId } = req.body;
+  try {
+    const result = await TenderRegService.getPriceScheduleTemplate(companyId, documentId, tenderId);
     return res.json(result);
   } catch (err) {
     return res.status(500).json({ error: err.message });

@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth_role');
     setUser(null);
     setRole(null);
+    window.location.href = '/auth/login';
   };
 
   const value = useMemo(() => ({ user, role, login, logout }), [user, role]);

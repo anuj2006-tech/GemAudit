@@ -411,10 +411,33 @@ export class CompanyBrainService {
 
       // Create document entry
       const repo = this.getRepo(userContext.token);
-      await repo.createDocument(newDoc);
+      try {
+        await repo.createDocument(newDoc);
+      } catch (err) {
+        if (err.message && err.message.includes('uploaded_by_fkey')) {
+          console.warn('[Company Brain] Retrying DB insert with uploaded_by = null for sandbox user');
+          newDoc.uploaded_by = null;
+          try {
+            await repo.createDocument(newDoc);
+          } catch (retryErr) {
+            console.warn('[Company Brain] DB retry failed, saving to local store:', retryErr.message);
+            const store = readLocalStore();
+            store.documents = store.documents.filter(d => d.id !== docId);
+            store.documents.push(newDoc);
+            writeLocalStore(store);
+          }
+        } else {
+          console.warn('[Company Brain] DB createDocument error, falling back to local store:', err.message);
+          const store = readLocalStore();
+          store.documents = store.documents.filter(d => d.id !== docId);
+          store.documents.push(newDoc);
+          writeLocalStore(store);
+        }
+      }
     } else {
       // Local Store Document insertion
       const store = readLocalStore();
+      store.documents = store.documents.filter(d => d.id !== docId);
       store.documents.push(newDoc);
       writeLocalStore(store);
     }

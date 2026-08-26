@@ -7,7 +7,8 @@ const router = express.Router();
 // Enforce strict multi-tenant access control and roles constraints
 router.use(requireAuth);
 router.use(requireTenant);
-router.use(requireRole(['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']));
+router.use(requireRole(['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']));
+
 
 // Define Company Brain endpoints
 router.get('/health', companyBrainController.getHealth);

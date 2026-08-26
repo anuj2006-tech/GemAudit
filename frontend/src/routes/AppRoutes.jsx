@@ -37,6 +37,7 @@ import ProfilePage from '../pages/legalAdmin/ProfilePage';
 import EmployeeDashboard from '../pages/employee/EmployeeDashboard';
 
 import TenderRegPage from '../pages/tenderReg/TenderRegPage';
+import BidDocumentSuitePage from '../pages/bid/BidDocumentSuitePage';
 
 import NotFoundPage from '../pages/errors/NotFoundPage';
 
@@ -162,12 +163,16 @@ const AppRoutes = () => {
       } />
 
       {/* Company Brain MVP (Phase 1) Routes */}
+      <Route path="/bid-documents" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><BidDocumentSuitePage /></ProtectedRoute>
+      } />
       <Route path="/company-brain" element={
-        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']}><CompanyBrainDashboard /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><CompanyBrainDashboard /></ProtectedRoute>
       } />
       <Route path="/company-brain/:category" element={
-        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN']}><CompanyBrainCategoryPage /></ProtectedRoute>
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><CompanyBrainCategoryPage /></ProtectedRoute>
       } />
+
 
       {/* Tender Workspace Routes */}
       <Route path="/tender-management" element={
