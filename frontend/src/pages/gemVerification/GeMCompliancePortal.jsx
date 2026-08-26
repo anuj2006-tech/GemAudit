@@ -24,14 +24,19 @@ import {
   Lock,
   Layers,
   FileCheck,
-  UserCheck
+  UserCheck,
+  FileSearch,
+  History,
+  UploadCloud,
+  FileSpreadsheet
 } from 'lucide-react';
 import Sidebar from '../../components/layout/Sidebar';
 import { 
   fetchGeMTenders, 
   fetchBiddersForTender, 
   triggerBidderVerification, 
-  submitOfficerDecision 
+  submitOfficerDecision,
+  analyzeBidDocument
 } from '../../services/gemService';
 
 export default function GeMCompliancePortal() {
@@ -43,6 +48,15 @@ export default function GeMCompliancePortal() {
   const [verifyingId, setVerifyingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [riskFilter, setRiskFilter] = useState('ALL');
+
+  // Inspector View Tab: 'PORTALS' | 'AI_DOC_PARSER' | 'AUDIT_LOGS'
+  const [activeTab, setActiveTab] = useState('PORTALS');
+
+  // AI Doc Parser State
+  const [docType, setDocType] = useState('OEM_AUTHORIZATION');
+  const [docText, setDocText] = useState('');
+  const [analyzingDoc, setAnalyzingDoc] = useState(false);
+  const [aiAnalysisResult, setAiAnalysisResult] = useState(null);
 
   // Decision Modal State
   const [showDecisionModal, setShowDecisionModal] = useState(false);
@@ -123,6 +137,19 @@ export default function GeMCompliancePortal() {
     }
   };
 
+  const handleRunAiDocAnalysis = async () => {
+    if (!docText.trim() || !selectedBidder) return;
+    try {
+      setAnalyzingDoc(true);
+      const result = await analyzeBidDocument(docType, docText, selectedBidder);
+      setAiAnalysisResult(result);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAnalyzingDoc(false);
+    }
+  };
+
   const handleOpenDecisionModal = (type) => {
     setDecisionType(type);
     setOfficerRemarks('');
@@ -141,6 +168,47 @@ export default function GeMCompliancePortal() {
       console.error(err);
     } finally {
       setSubmittingDecision(false);
+    }
+  };
+
+  // Pre-fill Sample Doc Text when doc type changes
+  const handleSampleDocFill = (type) => {
+    setDocType(type);
+    setAiAnalysisResult(null);
+    if (type === 'OEM_AUTHORIZATION') {
+      setDocText(`MANUFACTURER AUTHORIZATION FORM (MAF)
+Date: 12-August-2026
+To: Procurement Officer, GeM Portal / MeitY
+
+Ref: GeM Tender No. GEM/2026/B/894120
+Subject: OEM Authorization for TechnoCorp Solutions Pvt Ltd
+
+We, Dell Technologies & NVIDIA Corp, who are official manufacturers of AI Servers and Cloud Storage Systems, having factories at Bangalore & Austin, hereby authorize TechnoCorp Solutions Pvt Ltd (GSTIN: 27AAACT1234F1Z5) to submit a bid and subsequently negotiate and sign the Contract for the supply of hardware under the above tender.
+
+Signature: [Verified Digital Seal]
+Authorized Signatory, Global Partner Sales`);
+    } else if (type === 'MAKE_IN_INDIA') {
+      setDocText(`STATUTORY AUDITOR CERTIFICATE FOR LOCAL CONTENT
+Under Public Procurement (Preference to Make in India) Order 2017
+
+We have examined the books of accounts and records of TechnoCorp Solutions Pvt Ltd (CIN: U72900MH2018PTC309124).
+We certify that the Local Content in the offered items under GeM Tender GEM/2026/B/894120 is 78.5% (Seventy-Eight point Five Percent).
+The bidder qualifies as a CLASS-I LOCAL SUPPLIER.
+
+Place of Manufacture: Pune & Navi Mumbai, India.
+UDIN: 26045912AAAAAA9941`);
+    } else {
+      setDocText(`CHARTERED ACCOUNTANT TURNOVER CERTIFICATE
+To Whomsoever It May Concern
+
+This is to certify that the Annual Financial Turnover of TechnoCorp Solutions Pvt Ltd (PAN: AAACT1234F) for the last 3 financial years is as follows:
+FY 2023-24: ₹2.40 Crores
+FY 2024-25: ₹2.95 Crores
+FY 2025-26: ₹3.20 Crores
+Average Annual Turnover: ₹2.85 Crores.
+
+Audited Balance Sheets and Income Tax Return acknowledgments have been verified.
+UDIN: 26984120BBBBBB1245`);
     }
   };
 
@@ -222,7 +290,7 @@ export default function GeMCompliancePortal() {
               <Zap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <div className="flex flex-col">
                 <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">Evaluation Efficiency</span>
-                <span className="text-xs font-black text-emerald-700 dark:text-emerald-400">78% Effort Time Reduced</span>
+                <span className="text-xs font-black text-emerald-700 dark:text-emerald-400">78% Effort Time Saved</span>
               </div>
             </div>
           </div>
@@ -526,137 +594,265 @@ export default function GeMCompliancePortal() {
                     </div>
                   )}
 
-                  {/* 10 Statutory Portal Inspection Matrix */}
-                  <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                      <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-indigo-600" /> Multi-Portal Statutory Inspection Matrix (10 Government Databases)
-                      </h3>
-                      <span className="text-xs text-slate-400 font-mono">Real-time Cross-Verification</span>
-                    </div>
+                  {/* Navigation Tab Bar for Inspector */}
+                  <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+                    <button
+                      onClick={() => setActiveTab('PORTALS')}
+                      className={`px-4 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-2 ${
+                        activeTab === 'PORTALS'
+                          ? 'bg-indigo-600 text-white shadow-md'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
+                      }`}
+                    >
+                      <Layers className="w-4 h-4" /> 10 Statutory Portals Matrix
+                    </button>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* 1. Udyam MSME */}
-                      {portalChecks?.udyam && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">1. Udyam / MSME Portal</span>
-                            {renderCheckStatusBadge(portalChecks.udyam.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.udyam.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.udyam.details}</p>
-                        </div>
-                      )}
-
-                      {/* 2. GSTN */}
-                      {portalChecks?.gstn && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">2. GSTN Tax Portal</span>
-                            {renderCheckStatusBadge(portalChecks.gstn.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.gstn.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.gstn.details}</p>
-                        </div>
-                      )}
-
-                      {/* 3. Income Tax */}
-                      {portalChecks?.incomeTax && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">3. PAN & Income Tax e-Filing</span>
-                            {renderCheckStatusBadge(portalChecks.incomeTax.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.incomeTax.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.incomeTax.details}</p>
-                        </div>
-                      )}
-
-                      {/* 4. MCA21 */}
-                      {portalChecks?.mca21 && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">4. MCA21 Corporate Registry</span>
-                            {renderCheckStatusBadge(portalChecks.mca21.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.mca21.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.mca21.details}</p>
-                        </div>
-                      )}
-
-                      {/* 5. Startup India */}
-                      {portalChecks?.startupNsic && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">5. Startup India & NSIC</span>
-                            {renderCheckStatusBadge(portalChecks.startupNsic.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.startupNsic.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.startupNsic.details}</p>
-                        </div>
-                      )}
-
-                      {/* 6. EPFO & ESIC */}
-                      {portalChecks?.epfoEsic && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">6. EPFO & ESIC Compliance</span>
-                            {renderCheckStatusBadge(portalChecks.epfoEsic.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.epfoEsic.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.epfoEsic.details}</p>
-                        </div>
-                      )}
-
-                      {/* 7. Make in India */}
-                      {portalChecks?.makeInIndia && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">7. Make in India (Local Content)</span>
-                            {renderCheckStatusBadge(portalChecks.makeInIndia.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.makeInIndia.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.makeInIndia.details}</p>
-                        </div>
-                      )}
-
-                      {/* 8. OEM & DigiLocker */}
-                      {portalChecks?.oemDigiLocker && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">8. OEM Auth & DigiLocker</span>
-                            {renderCheckStatusBadge(portalChecks.oemDigiLocker.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.oemDigiLocker.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.oemDigiLocker.details}</p>
-                        </div>
-                      )}
-
-                      {/* 9. Blacklisting */}
-                      {portalChecks?.blacklisting && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">9. CPPP & GeM Blacklisting</span>
-                            {renderCheckStatusBadge(portalChecks.blacklisting.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.blacklisting.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.blacklisting.details}</p>
-                        </div>
-                      )}
-
-                      {/* 10. Tender Eligibility */}
-                      {portalChecks?.tenderEligibility && (
-                        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-extrabold text-slate-900 dark:text-white">10. Tender Specific Criteria</span>
-                            {renderCheckStatusBadge(portalChecks.tenderEligibility.status)}
-                          </div>
-                          <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.tenderEligibility.title}</p>
-                          <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.tenderEligibility.details}</p>
-                        </div>
-                      )}
-                    </div>
+                    <button
+                      onClick={() => setActiveTab('AI_DOC_PARSER')}
+                      className={`px-4 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-2 ${
+                        activeTab === 'AI_DOC_PARSER'
+                          ? 'bg-indigo-600 text-white shadow-md'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
+                      }`}
+                    >
+                      <FileSearch className="w-4 h-4" /> AI Document OCR & Cross-Checker
+                    </button>
                   </div>
+
+                  {/* TAB 1: 10 Statutory Portal Inspection Matrix */}
+                  {activeTab === 'PORTALS' && (
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                        <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                          <Layers className="w-4 h-4 text-indigo-600" /> Multi-Portal Statutory Inspection Matrix (10 Government Databases)
+                        </h3>
+                        <span className="text-xs text-slate-400 font-mono">Real-time Cross-Verification</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* 1. Udyam MSME */}
+                        {portalChecks?.udyam && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">1. Udyam / MSME Portal</span>
+                              {renderCheckStatusBadge(portalChecks.udyam.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.udyam.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.udyam.details}</p>
+                          </div>
+                        )}
+
+                        {/* 2. GSTN */}
+                        {portalChecks?.gstn && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">2. GSTN Tax Portal</span>
+                              {renderCheckStatusBadge(portalChecks.gstn.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.gstn.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.gstn.details}</p>
+                          </div>
+                        )}
+
+                        {/* 3. Income Tax */}
+                        {portalChecks?.incomeTax && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">3. PAN & Income Tax e-Filing</span>
+                              {renderCheckStatusBadge(portalChecks.incomeTax.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.incomeTax.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.incomeTax.details}</p>
+                          </div>
+                        )}
+
+                        {/* 4. MCA21 */}
+                        {portalChecks?.mca21 && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">4. MCA21 Corporate Registry</span>
+                              {renderCheckStatusBadge(portalChecks.mca21.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.mca21.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.mca21.details}</p>
+                          </div>
+                        )}
+
+                        {/* 5. Startup India */}
+                        {portalChecks?.startupNsic && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">5. Startup India & NSIC</span>
+                              {renderCheckStatusBadge(portalChecks.startupNsic.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.startupNsic.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.startupNsic.details}</p>
+                          </div>
+                        )}
+
+                        {/* 6. EPFO & ESIC */}
+                        {portalChecks?.epfoEsic && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">6. EPFO & ESIC Compliance</span>
+                              {renderCheckStatusBadge(portalChecks.epfoEsic.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.epfoEsic.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.epfoEsic.details}</p>
+                          </div>
+                        )}
+
+                        {/* 7. Make in India */}
+                        {portalChecks?.makeInIndia && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">7. Make in India (Local Content)</span>
+                              {renderCheckStatusBadge(portalChecks.makeInIndia.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.makeInIndia.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.makeInIndia.details}</p>
+                          </div>
+                        )}
+
+                        {/* 8. OEM & DigiLocker */}
+                        {portalChecks?.oemDigiLocker && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">8. OEM Auth & DigiLocker</span>
+                              {renderCheckStatusBadge(portalChecks.oemDigiLocker.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.oemDigiLocker.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.oemDigiLocker.details}</p>
+                          </div>
+                        )}
+
+                        {/* 9. Blacklisting */}
+                        {portalChecks?.blacklisting && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">9. CPPP & GeM Blacklisting</span>
+                              {renderCheckStatusBadge(portalChecks.blacklisting.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.blacklisting.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.blacklisting.details}</p>
+                          </div>
+                        )}
+
+                        {/* 10. Tender Eligibility */}
+                        {portalChecks?.tenderEligibility && (
+                          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-extrabold text-slate-900 dark:text-white">10. Tender Specific Criteria</span>
+                              {renderCheckStatusBadge(portalChecks.tenderEligibility.status)}
+                            </div>
+                            <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{portalChecks.tenderEligibility.title}</p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{portalChecks.tenderEligibility.details}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB 2: AI Document OCR & Cross-Verification Tool */}
+                  {activeTab === 'AI_DOC_PARSER' && (
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                        <div>
+                          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                            <FileSearch className="w-4 h-4 text-indigo-600" /> AI Document Verification & Cross-Checker
+                          </h3>
+                          <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                            Parses bidder documents (OEM Letters, CA Turnover Certificates, MII Declarations) and detects discrepancies against portal data.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                          <span className="text-xs font-bold text-slate-500 shrink-0">Sample Preset:</span>
+                          <button
+                            onClick={() => handleSampleDocFill('OEM_AUTHORIZATION')}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${
+                              docType === 'OEM_AUTHORIZATION' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                            }`}
+                          >
+                            OEM MAF Certificate
+                          </button>
+
+                          <button
+                            onClick={() => handleSampleDocFill('MAKE_IN_INDIA')}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${
+                              docType === 'MAKE_IN_INDIA' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                            }`}
+                          >
+                            Local Content Declaration
+                          </button>
+
+                          <button
+                            onClick={() => handleSampleDocFill('FINANCIAL_TURNOVER')}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 ${
+                              docType === 'FINANCIAL_TURNOVER' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                            }`}
+                          >
+                            CA Financial Turnover Cert
+                          </button>
+                        </div>
+
+                        <div>
+                          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                            Document Content Snippet (OCR / Text Input)
+                          </label>
+                          <textarea
+                            rows={6}
+                            value={docText}
+                            onChange={(e) => setDocText(e.target.value)}
+                            placeholder="Paste extracted document text here..."
+                            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-xs font-mono focus:ring-2 focus:ring-indigo-500"
+                          />
+                        </div>
+
+                        <button
+                          onClick={handleRunAiDocAnalysis}
+                          disabled={analyzingDoc || !docText.trim()}
+                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs py-3 rounded-xl shadow-lg shadow-indigo-500/20 transition flex items-center justify-center gap-2"
+                        >
+                          {analyzingDoc ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-amber-300" />}
+                          {analyzingDoc ? 'Analyzing Document with AI Engine...' : 'Run AI Document & Cross-Portal Verification'}
+                        </button>
+
+                        {/* AI Analysis Result Display */}
+                        {aiAnalysisResult && (
+                          <div className="mt-4 p-5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-black uppercase text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                                <Sparkles className="w-4 h-4" /> AI Document Audit Summary
+                              </span>
+                              <span className="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                                AI Confidence: {aiAnalysisResult.confidenceScore}%
+                              </span>
+                            </div>
+
+                            <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
+                              {aiAnalysisResult.aiAuditSummary}
+                            </p>
+
+                            {aiAnalysisResult.discrepancies?.length > 0 ? (
+                              <div className="p-3 rounded-xl bg-amber-100 dark:bg-amber-950/60 border border-amber-300 text-amber-900 dark:text-amber-200 text-xs font-medium space-y-1">
+                                <strong className="font-extrabold block">Discrepancies Flagged:</strong>
+                                {aiAnalysisResult.discrepancies.map((d, i) => (
+                                  <div key={i}>• {d}</div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 text-emerald-900 dark:text-emerald-200 text-xs font-semibold">
+                                ✓ No discrepancies found. Document text fully matches declared GeM portal data.
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-12 text-center text-slate-500">
