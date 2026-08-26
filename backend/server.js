@@ -14,6 +14,7 @@ import billingRoutes from './src/routes/billingRoutes.js';
 import platformRoutes from './src/routes/platformRoutes.js';
 import tenderRegRoutes from './src/routes/tenderRegRoutes.js';
 import companyBrainRoutes from './src/routes/companyBrainRoutes.js';
+import gemVerificationRoutes from './src/routes/gemVerificationRoutes.js';
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use('/api/billing', billingRoutes);
 app.use('/api/platform', platformRoutes);
 app.use('/api/tender-reg', tenderRegRoutes);
 app.use('/api/company-brain', companyBrainRoutes);
+app.use('/api/gem-verification', gemVerificationRoutes);
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {

@@ -3,14 +3,16 @@ import {
   FileText, 
   Brain, 
   Settings, 
-  LogOut
+  LogOut,
+  ShieldCheck
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-// Simplified Minimal Navigation - 3 Core Workflow Stage Items per role
+// Simplified Minimal Navigation - Core Workflow Stage Items per role
 const platformAdminLinks = [
   { label: 'Dashboard', to: '/super-admin/dashboard', icon: LayoutDashboard },
+  { label: 'GeM Verification', to: '/gem-compliance', icon: ShieldCheck },
   { label: 'Company Brain', to: '/company-brain', icon: Brain },
   { label: 'Tender Board', to: '/tender-reg', icon: FileText },
   { label: 'Platform Settings', to: '/super-admin/settings', icon: Settings }
@@ -18,6 +20,7 @@ const platformAdminLinks = [
 
 const companyOwnerLinks = [
   { label: 'Dashboard', to: '/owner/dashboard', icon: LayoutDashboard },
+  { label: 'GeM Verification', to: '/gem-compliance', icon: ShieldCheck },
   { label: 'Company Brain', to: '/company-brain', icon: Brain },
   { label: 'Tender Board', to: '/tender-reg', icon: FileText },
   { label: 'Settings', to: '/owner/settings', icon: Settings }
@@ -25,12 +28,14 @@ const companyOwnerLinks = [
 
 const companyAdminLinks = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'GeM Verification', to: '/gem-compliance', icon: ShieldCheck },
   { label: 'Company Brain', to: '/company-brain', icon: Brain },
   { label: 'Tender Board', to: '/tender-reg', icon: FileText }
 ];
 
 const employeeLinks = [
   { label: 'Dashboard', to: '/employee/dashboard', icon: LayoutDashboard },
+  { label: 'GeM Verification', to: '/gem-compliance', icon: ShieldCheck },
   { label: 'Company Brain', to: '/company-brain', icon: Brain },
   { label: 'Tender Board', to: '/tender-reg', icon: FileText }
 ];

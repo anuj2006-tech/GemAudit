@@ -38,6 +38,7 @@ import EmployeeDashboard from '../pages/employee/EmployeeDashboard';
 
 import TenderRegPage from '../pages/tenderReg/TenderRegPage';
 import BidDocumentSuitePage from '../pages/bid/BidDocumentSuitePage';
+import GeMCompliancePortal from '../pages/gemVerification/GeMCompliancePortal';
 
 import NotFoundPage from '../pages/errors/NotFoundPage';
 
@@ -162,7 +163,10 @@ const AppRoutes = () => {
         <ProtectedRoute allowedRoles={['BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'EMPLOYEE', 'VIEWER']}><ProfilePage /></ProtectedRoute>
       } />
 
-      {/* Company Brain MVP (Phase 1) Routes */}
+      {/* GeM Compliance Verification Engine Routes */}
+      <Route path="/gem-compliance" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMCompliancePortal /></ProtectedRoute>
+      } />
       <Route path="/bid-documents" element={
         <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><BidDocumentSuitePage /></ProtectedRoute>
       } />
