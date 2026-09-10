@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Tender AI - Enterprise Bidding & Document Verification Console
 
 Tender AI is a state-of-the-art, multi-tenant enterprise SaaS platform designed for bid management, tender document verification, and AI-assisted compliance analysis. It enables companies to upload bid evidence (certificates, credentials, financial records) to an isolated document vault, automatically parse and extract key entities, index the content with vector embeddings, and verify compliance against seeded government tenders using automated RAG (Retrieval-Augmented Generation) pipelines.
@@ -149,3 +150,6 @@ docker-compose up --build
 
 ### 📝 Bid Compliance Matcher (`/api/tender-reg`)
 * `POST /api/tender-reg/companies/:compId/documents/:docId/match` - Triggers AI compliance evaluator to cross-reference extracted document facts with pre-seeded tender requirements. Returns match confidence scoring and requirement satisfaction tables.
+=======
+# GemAudit
+>>>>>>> 509ad4598f21af3549a7e3f66f61e70b123a0a36
