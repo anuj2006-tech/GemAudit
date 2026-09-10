@@ -1,791 +1,697 @@
 import { useState, useEffect, useRef } from 'react';
-import DashboardLayout from '../../layouts/DashboardLayout';
-import PageHeader from '../../components/common/PageHeader';
+import { Link, useNavigate } from 'react-router-dom';
 import TenderAnalystChatbot from '../../components/common/TenderAnalystChatbot';
 import { BidDocumentGeneratorModal } from '../../components/documents/BidDocumentGeneratorModal';
 import { 
-  Sparkles, 
-  UploadCloud, 
-  Building2, 
+  LayoutDashboard, 
   FileText, 
-  CheckCircle2, 
-  AlertTriangle, 
+  Folder, 
+  CheckSquare, 
+  Bookmark, 
+  CreditCard, 
+  Share2, 
+  HelpCircle, 
   XCircle, 
+  CheckCircle2, 
+  Info, 
   ChevronDown, 
-  ChevronUp, 
-  Award, 
-  Calendar, 
-  TrendingUp, 
-  ShieldCheck,
-  RefreshCw,
-  Sliders,
-  Check,
-  Bot,
-  X,
-  MessageSquare
+  Video, 
+  MessageSquare, 
+  X, 
+  Building2, 
+  Link as LinkIcon,
+  Check
 } from 'lucide-react';
 
-
-
-const SECTORS = [
-  'Electrical & Solar Energy',
-  'IT Services & Software',
-  'Construction & Infrastructure',
-  'Medical Supplies & Equipment',
-  'Defense & Heavy Machinery'
+const INITIAL_LOGS = [
+  'Starting analysis process for 6a93421fd0f66787b4dd16c9',
+  'Estimating document complexity...',
+  'Loading tender details...',
+  'Tender loaded: 2026_IITDW_848886_1',
+  'Reusing existing analysis metrics for tender 6a8a5d63602ca769992c8908: 12 pages, 70584 chars',
+  'Analysis complexity assessment completed (reused)',
+  'Analysis initiated — preparing document pipeline...',
+  'Starting analysis process for 6a93421fd0f66787b4dd16c9',
+  'Analysis request received initialising pipeline...'
 ];
 
-const DEFAULT_COMPANY = {
-  name: 'Sunrise Solar & Electricals Ltd',
-  sector: 'Electrical & Solar Energy',
-  turnover_lakhs: '200',
-  years_experience: '4',
-  certifications: 'ISO 9001, Class A Electrical License, MNRE Registration'
-};
-
-const DEFAULT_DOC_TEXT = `OFFICIAL EXPERIENCE & ACCREDITATION CERTIFICATE
-Company: Sunrise Solar & Electricals Ltd
-Registration No: ELEC/2021/8849
-Operating Experience: 4 Years (Established 2021)
-Annual Financial Turnover (FY 2024-25): INR 200 Lakhs (₹2.0 Crore)
-
-ACCORDED CERTIFICATIONS:
-1. ISO 9001:2015 Quality Management Systems Accreditation
-2. Class A Electrical Contractor License (State Inspectorate)
-3. MNRE Approved Channel Partner for Rooftop Solar Projects
-
-PROJECT EXECUTION RECORD:
-- Completed 8.5MW Grid-Tied Rooftop Solar PV installation for Educational Campuses.
-- High Voltage Substation erection & maintenance contracts completed across 3 districts.`;
-
 const TenderRegPage = () => {
-  // Step State: 1 = Profile & Upload, 2 = Processing, 3 = Results
-  const [step, setStep] = useState(1);
-  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
+  const [activeNav, setActiveNav] = useState('All Tenders');
+  const [activeTab, setActiveTab] = useState('Eligibility'); // 'Eligibility' | 'Detailed Info' | 'Documents'
+  const [logs, setLogs] = useState(INITIAL_LOGS);
   
-  // Company Form State
-  const [companyForm, setCompanyForm] = useState(DEFAULT_COMPANY);
-  
-  // Document Input State
-  const [docFilename, setDocFilename] = useState('Sunrise_Experience_Cert.pdf');
-  const [docText, setDocText] = useState(DEFAULT_DOC_TEXT);
-  const [docBase64, setDocBase64] = useState('');
-  const [isDragOver, setIsDragOver] = useState(false);
-
-  // Match Results & Chat State
-  const [isMatching, setIsMatching] = useState(false);
-  const [matchData, setMatchData] = useState(null);
-  const [expandedTenderId, setExpandedTenderId] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
+  // Floating Actions State
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [processCount, setProcessCount] = useState(1);
+  
+  // Edit Profile / Re-analysis modal
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [companyName, setCompanyName] = useState('Anuj Gangawane');
+  const [companyTurnover, setCompanyTurnover] = useState('200');
+  const [companyExperience, setCompanyExperience] = useState('4');
+  const [companySector, setCompanySector] = useState('Electrical & Solar Energy');
+  const [isEligibleState, setIsEligibleState] = useState(false);
+
+  // Bid document generator
   const [isBidModalOpen, setIsBidModalOpen] = useState(false);
-  const [selectedTenderForBid, setSelectedTenderForBid] = useState(null);
 
-
-  // ---------------------------------------------------------
-  // Form Handlers
-  // ---------------------------------------------------------
-  const handleLoadPreset = () => {
-    setCompanyForm(DEFAULT_COMPANY);
-    setDocText(DEFAULT_DOC_TEXT);
-    setDocBase64('');
-    setDocFilename('Sunrise_Experience_Cert.pdf');
+  // Clear logs handler
+  const handleClearLogs = () => {
+    setLogs([]);
   };
 
-  const handleFormChange = (e) => {
-    setCompanyForm({ ...companyForm, [e.target.name]: e.target.value });
-  };
-
-  const processSelectedFile = (file) => {
-    if (!file) return;
-    setDocFilename(file.name);
-
-    // If PDF or binary document, read as DataURL Base64 for server-side pdf-parse!
-    if (file.type.includes('pdf') || file.name.toLowerCase().endsWith('.pdf')) {
-      const readerDataUrl = new FileReader();
-      readerDataUrl.onload = (evt) => {
-        setDocBase64(evt.target.result || '');
-      };
-      readerDataUrl.readAsDataURL(file);
-
-      const readerText = new FileReader();
-      readerText.onload = (evt) => {
-        setDocText(evt.target.result || `Extracted text from ${file.name}`);
-      };
-      readerText.readAsText(file);
-    } else {
-      setDocBase64('');
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        setDocText(evt.target.result || `Extracted text from ${file.name}`);
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  const handleFileSelect = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      processSelectedFile(e.target.files[0]);
-    }
-  };
-
-  const handleDrop = (e) => {
+  // Re-run simulation
+  const handleSaveProfileAndRerun = (e) => {
     e.preventDefault();
-    setIsDragOver(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      processSelectedFile(e.dataTransfer.files[0]);
-    }
+    setIsProfileModalOpen(false);
+    setLogs(prev => [
+      `Starting analysis process for updated company profile: ${companyName}`,
+      `Re-evaluating mandatory criteria against tender 2026_IITDW_848886_1...`,
+      `Financial threshold verified: ₹${companyTurnover} Lakhs (Min req: ₹150 Lakhs)`,
+      `Experience verified: ${companyExperience} Years (Min req: 3 Years)`,
+      `Analysis completed — Status: ${Number(companyTurnover) >= 150 ? 'Eligible' : 'Not Eligible'}`,
+      ...prev
+    ]);
+    setIsEligibleState(Number(companyTurnover) >= 150 && Number(companyExperience) >= 3);
   };
 
-
-  // ---------------------------------------------------------
-  // Run End-to-End AI Matching Engine
-  // ---------------------------------------------------------
-  const handleRunMatcher = async () => {
-    if (!docText.trim() && !docBase64) {
-      alert('Please enter or upload a company certificate document text.');
-      return;
-    }
-
-    setIsMatching(true);
-    setErrorMessage('');
-    setStep(2);
-
-    try {
-      // 1. Create Company Profile
-      const compRes = await fetch('/api/tender-reg/companies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(companyForm)
-      }).catch(() => null);
-
-      const company = (compRes && compRes.ok) 
-        ? await compRes.json() 
-        : { id: 'comp_default_101', name: companyForm.name || 'Sunrise Solar & Electricals Ltd' };
-
-      // 2. Synchronous Document Upload & AI Analysis Summary
-      const docRes = await fetch(`/api/tender-reg/companies/${company.id}/documents`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          filename: docFilename || 'Company_Certificate.pdf',
-          text: docText || 'Company qualification certificate in Electrical & Solar Energy.',
-          base64: docBase64 || ''
-        })
-      }).catch(() => null);
-
-      const document = (docRes && docRes.ok) 
-        ? await docRes.json() 
-        : { id: 'doc_default_101', filename: docFilename || 'Company_Certificate.pdf' };
-
-      // 3. AI Tender Matcher Call
-      const matchRes = await fetch(`/api/tender-reg/companies/${company.id}/documents/${document.id}/match`, {
-        method: 'POST'
-      }).catch(() => null);
-
-      let results;
-      if (matchRes && matchRes.ok) {
-        results = await matchRes.json();
-      } else {
-        // Fallback matched results scoped strictly to RPF Tender
-        results = {
-          company_id: company.id,
-          document_id: document.id,
-          matches: [
-            {
-              tender_id: 'tender_solar_101',
-              tender: {
-                id: 'REDA/SOLAR/2026/10MW',
-                title: 'Design, Supply & Commissioning of 10MW Grid-Connected Rooftop Solar Power Plant',
-                department: 'State Renewable Energy Development Agency (REDA)',
-                sector: 'Electrical & Solar Energy',
-                min_turnover_lakhs: 150,
-                min_years_experience: 3,
-                required_certifications: ['ISO 9001', 'Class A Electrical Contractor License', 'MNRE Registration']
-              },
-              match_score: 92,
-              eligibility_status: 'eligible',
-              reasoning: 'Company meets turnover (₹200 Lakhs >= ₹150 Lakhs) and experience (4 Years >= 3 Years) criteria.',
-              breakdown: {
-                turnover_check: 'PASS',
-                experience_check: 'PASS',
-                certification_check: 'PASS'
-              }
-            }
-          ]
-        };
-      }
-
-      setMatchData(results);
-      setStep(3);
-      if (results.matches && results.matches.length > 0) {
-        setExpandedTenderId(results.matches[0].tender_id);
-      }
-    } catch (err) {
-      console.error('TenderReg Match Error:', err);
-      setErrorMessage('An unexpected error occurred during matching.');
-      setStep(1);
-    } finally {
-      setIsMatching(false);
-    }
+  const currentTender = {
+    id: '2026_IITDW_848886_1',
+    title: 'Supply, Installation, Testing & Commissioning of High-Efficiency Solar & Electrical Infrastructure',
+    department: 'Indian Institute of Technology (IIT) Infrastructure Division',
+    minTurnover: '₹150 Lakhs',
+    minExperience: '3 Years',
+    deadline: '15-Sep-2026 15:00 IST',
+    emdAmount: '₹2,50,000 (Exempted for MSE/Startup)',
+    documentsCount: 4
   };
 
   return (
-    <DashboardLayout>
-      <PageHeader 
-        title="TenderReg — AI Tender Matcher" 
-        subtitle="Match company credentials and uploaded evidence against live government tenders using rule-based eligibility & LLM reasoning" 
-      />
-
-      <div className="space-y-8 max-w-6xl mx-auto pb-12">
+    <div className="min-h-screen bg-[#fafbfc] text-[#1f2937] font-sans flex flex-col antialiased selection:bg-pink-500 selection:text-white">
+      
+      <div className="flex flex-1">
         
-        {/* Step Indicator Header */}
-        <div className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:px-6 shadow-xl">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 font-mono font-bold text-base shadow-sm">
-              AI
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-white tracking-tight">TenderReg Autonomous Match Pipeline</h2>
-              <p className="text-xs text-slate-400 font-mono">Instant single-stage eligibility evaluation & LLM scoring engine</p>
+        {/* ========================================================= */}
+        {/* LEFT SIDEBAR (Matching Screenshot Exactly) */}
+        {/* ========================================================= */}
+        <aside className="w-64 bg-white border-r border-[#e5e7eb] flex flex-col shrink-0 min-h-screen py-5 px-4 select-none">
+          
+          {/* Logo with Stylized Type & Flare */}
+          <div className="px-2 mb-6 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 cursor-pointer" onClick={() => navigate('/')}>
+              <span className="text-[26px] font-black tracking-tight text-[#111827] font-serif lowercase">
+                minaions
+              </span>
+              <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-[#e0007b] to-[#7b00ff] shadow-sm animate-pulse" />
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleLoadPreset}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-500/10 text-xs font-semibold text-indigo-300 hover:bg-indigo-500/20 transition"
+          {/* User Account Card */}
+          <div className="mb-6 bg-[#f9fafb] border border-[#e5e7eb] rounded-2xl p-2.5 flex items-center justify-between shadow-xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#ec008c] via-[#b800b8] to-[#7928ca] flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-sm">
+                <Building2 className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-[#111827] truncate leading-tight">{companyName}</p>
+                <p className="text-[10px] text-[#6b7280] font-medium">Active Company</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsProfileModalOpen(true)}
+              className="text-[#9ca3af] hover:text-[#4b5563] p-1 transition"
+              title="Edit Profile"
             >
-              <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-              <span>Load Preset Sample</span>
+              <ChevronDown className="w-4 h-4" />
             </button>
-            {step === 3 && (
-              <button
-                onClick={() => setStep(1)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700 transition"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                <span>New Match Run</span>
-              </button>
-            )}
           </div>
-        </div>
 
-        {/* ---------------------------------------------------------
-            STEP 1 & 2: COMPANY PROFILE & DOCUMENT UPLOAD FORM
-           --------------------------------------------------------- */}
-        {step === 1 && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Navigation Links */}
+          <nav className="space-y-1 flex-1">
+            {[
+              { name: 'Dashboard', icon: LayoutDashboard, path: '/super-admin/dashboard' },
+              { name: 'All Tenders', icon: FileText, path: '/tender-reg' },
+              { name: 'My Companies', icon: Folder, path: '/company-brain' },
+              { name: 'Processed Tenders', icon: CheckSquare, path: '/gem-compliance-fastapi' },
+              { name: 'Bookmarks', icon: Bookmark, path: '/tender-reg' },
+              { name: 'Plans', icon: CreditCard, path: '/bid-documents' },
+              { name: 'Connect To OEM', icon: LinkIcon, path: '/tender-reg' },
+              { name: 'Help', icon: HelpCircle, path: '/tender-reg' },
+            ].map((item) => {
+              const Icon = item.icon;
+              const isActive = activeNav === item.name;
+
+              return (
+                <button
+                  key={item.name}
+                  onClick={() => {
+                    setActiveNav(item.name);
+                    if (item.path && item.path !== '/tender-reg') {
+                      navigate(item.path);
+                    }
+                  }}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 text-left ${
+                    isActive
+                      ? 'bg-gradient-to-r from-[#e6007a] via-[#b800b8] to-[#7b00ff] text-white shadow-[0_4px_14px_rgba(184,0,184,0.35)]'
+                      : 'text-[#4b5563] hover:bg-[#f3f4f6] hover:text-[#111827]'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#6b7280]'}`} />
+                  <span className={isActive ? 'font-bold' : 'font-medium'}>{item.name}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Bottom helper */}
+          <div className="pt-4 border-t border-[#f3f4f6] px-2">
+            <p className="text-[11px] text-[#9ca3af] font-medium">TenderAI Intelligence v2.4</p>
+          </div>
+        </aside>
+
+        {/* ========================================================= */}
+        {/* MAIN BODY AREA */}
+        {/* ========================================================= */}
+        <main className="flex-1 flex flex-col p-6 lg:p-8 max-w-[1400px] mx-auto w-full gap-6">
+          
+          {/* Top Page Header */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-[26px] font-extrabold text-[#111827] tracking-tight">
+              Tender Analysis Report
+            </h1>
+            <button 
+              onClick={() => {
+                navigator.clipboard?.writeText(window.location.href);
+                alert('Tender report link copied to clipboard!');
+              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-[#e5e7eb] text-xs font-semibold text-[#374151] hover:bg-[#f9fafb] hover:border-[#d1d5db] shadow-xs transition"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Share Report</span>
+            </button>
+          </div>
+
+          {/* Layout Columns: Main Report (Left) + Process Logs (Right) */}
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
             
-            {/* Left Column: Company Profile Form */}
-            <div className="lg:col-span-6 rounded-3xl border border-slate-800 bg-slate-950/70 p-6 sm:p-8 shadow-2xl space-y-6">
-              <div className="flex items-center gap-2.5 border-b border-slate-800/80 pb-4">
-                <Building2 className="h-5 w-5 text-indigo-400" />
-                <h3 className="text-base font-extrabold text-white tracking-tight">
-                  Step 1: Company Profile Credentials
-                </h3>
+            {/* ------------------------------------------------------- */}
+            {/* CENTER/LEFT: TABS & ASSESSMENT REPORT */}
+            {/* ------------------------------------------------------- */}
+            <div className="xl:col-span-8 space-y-6">
+              
+              {/* Segmented Top Tabs */}
+              <div className="bg-[#f1f3f9] p-1.5 rounded-2xl flex items-center gap-1.5 shadow-inner">
+                
+                <button
+                  onClick={() => setActiveTab('Eligibility')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'Eligibility'
+                      ? 'bg-white text-[#111827] shadow-[0_2px_8px_rgba(0,0,0,0.06)]'
+                      : 'text-[#6b7280] hover:text-[#111827]'
+                  }`}
+                >
+                  <XCircle className="w-4 h-4 text-[#ef4444]" />
+                  <span>Eligibility</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('Detailed Info')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'Detailed Info'
+                      ? 'bg-white text-[#111827] shadow-[0_2px_8px_rgba(0,0,0,0.06)]'
+                      : 'text-[#6b7280] hover:text-[#111827]'
+                  }`}
+                >
+                  <Info className="w-4 h-4 text-[#6b7280]" />
+                  <span>Detailed Info</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('Documents')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'Documents'
+                      ? 'bg-white text-[#111827] shadow-[0_2px_8px_rgba(0,0,0,0.06)]'
+                      : 'text-[#6b7280] hover:text-[#111827]'
+                  }`}
+                >
+                  <FileText className="w-4 h-4 text-[#6b7280]" />
+                  <span>Documents</span>
+                </button>
+
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={companyForm.name}
-                    onChange={handleFormChange}
-                    placeholder="e.g. Sunrise Electricals Ltd"
-                    className="w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Primary Industry Sector
-                  </label>
-                  <select
-                    name="sector"
-                    value={companyForm.sector}
-                    onChange={handleFormChange}
-                    className="w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition cursor-pointer"
-                  >
-                    {SECTORS.map(s => (
-                      <option key={s} value={s} className="bg-slate-950 text-white">{s}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                      Annual Turnover (₹ Lakhs)
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        name="turnover_lakhs"
-                        value={companyForm.turnover_lakhs}
-                        onChange={handleFormChange}
-                        placeholder="200"
-                        className="w-full rounded-xl border border-slate-800 bg-slate-900 pl-4 pr-10 py-2.5 text-sm text-white font-mono focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
-                      />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-500">Lakhs</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                      Years Experience
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        name="years_experience"
-                        value={companyForm.years_experience}
-                        onChange={handleFormChange}
-                        placeholder="4"
-                        className="w-full rounded-xl border border-slate-800 bg-slate-900 pl-4 pr-10 py-2.5 text-sm text-white font-mono focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
-                      />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-500">Yrs</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Certifications (Comma separated)
-                  </label>
-                  <input
-                    type="text"
-                    name="certifications"
-                    value={companyForm.certifications}
-                    onChange={handleFormChange}
-                    placeholder="ISO 9001, Class A License, MNRE Registration"
-                    className="w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Company Document Upload */}
-            <div className="lg:col-span-6 rounded-3xl border border-slate-800 bg-slate-950/70 p-6 sm:p-8 shadow-2xl space-y-6 flex flex-col">
-              <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
-                <div className="flex items-center gap-2.5">
-                  <FileText className="h-5 w-5 text-indigo-400" />
-                  <h3 className="text-base font-extrabold text-white tracking-tight">
-                    Step 2: Upload Evidence Document
-                  </h3>
-                </div>
-                <span className="text-[11px] font-mono text-slate-400 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">
-                  {docFilename}
-                </span>
-              </div>
-
-              {/* Hidden Native File Input */}
-              <input 
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileSelect}
-                accept=".pdf,.txt,.doc,.docx,.md"
-                className="hidden"
-              />
-
-              {/* Drag & Drop Zone */}
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
-                onDragLeave={() => setIsDragOver(false)}
-                onDrop={handleDrop}
-                className={`rounded-2xl border-2 border-dashed p-6 text-center cursor-pointer transition-all duration-200 ${
-                  isDragOver ? 'border-indigo-500 bg-indigo-500/10' : 'border-slate-800 bg-slate-900/40 hover:border-indigo-500/60 hover:bg-slate-900/80'
-                }`}
-              >
-                <div className="flex flex-col items-center justify-center gap-2 text-xs text-slate-400">
-                  <UploadCloud className="h-6 w-6 text-indigo-400 animate-bounce" />
-                  <span className="font-semibold text-slate-200">Click to select file or drag & drop PDF/TXT file</span>
-                  <span className="text-[10px] text-slate-500 font-mono">Supports PDF, TXT, DOC, DOCX up to 25MB</span>
-                </div>
-              </div>
-
-
-
-              {errorMessage && (
-                <p className="text-xs font-mono text-rose-400 bg-rose-500/10 p-3 rounded-xl border border-rose-500/20">
-                  {errorMessage}
-                </p>
-              )}
-
-              {/* CTA Action Button */}
-              <button
-                onClick={handleRunMatcher}
-                className="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-xl shadow-orange-500/20 active:scale-[0.99] transition"
-              >
-                <span>Run AI Tender Matcher</span>
-                <Sparkles className="h-4.5 w-4.5" />
-              </button>
-
-            </div>
-
-          </div>
-        )}
-
-        {/* ---------------------------------------------------------
-            STEP 2: PROCESSING LOADING STATE
-           --------------------------------------------------------- */}
-        {step === 2 && (
-          <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-12 text-center shadow-2xl space-y-6 max-w-xl mx-auto my-12">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 shadow-inner mx-auto animate-pulse">
-              <RefreshCw className="h-8 w-8 animate-spin" />
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="text-lg font-extrabold text-white tracking-tight">Evaluating Tender Eligibility & LLM Fit</h3>
-              <p className="text-xs text-slate-400 font-mono">
-                Executing rule-based parameter check + OpenRouter LLM comparative analysis...
-              </p>
-            </div>
-
-            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-400 animate-pulse w-3/4" />
-            </div>
-          </div>
-        )}
-
-        {/* ---------------------------------------------------------
-            STEP 3: RESULTS SCREEN
-           --------------------------------------------------------- */}
-        {step === 3 && matchData && (
-          <div className="space-y-8">
-
-
-            {/* Ranked Tender Match Results List */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between px-2">
-                <h3 className="text-xs font-mono uppercase tracking-widest text-slate-400 font-bold">
-                  Ranked Government Tender Matches ({matchData.matches.length})
-                </h3>
-                <span className="text-[11px] font-mono text-slate-500">Sorted by AI Match Score</span>
-              </div>
-
-              <div className="space-y-4">
-                {matchData.matches.map(matchItem => {
-                  const tender = matchItem.tender;
-                  const isExpanded = expandedTenderId === tender.id;
-
-                  // Color Coding for Match Score
-                  let scoreBadgeClass = 'bg-rose-500/15 text-rose-400 border-rose-500/30';
-                  if (matchItem.eligibility_status === 'eligible' || matchItem.match_score >= 75) {
-                    scoreBadgeClass = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-                  } else if (matchItem.eligibility_status === 'partial' || matchItem.match_score >= 40) {
-                    scoreBadgeClass = 'bg-amber-500/15 text-amber-400 border-amber-500/30';
-                  }
-
-                  // Eligibility Stamp Badge
-                  let eligBadgeClass = 'bg-slate-800 text-slate-400 border-slate-700';
-                  let EligIcon = AlertTriangle;
-                  let eligText = 'PARTIAL MATCH';
-
-                  if (matchItem.eligibility_status === 'eligible') {
-                    eligBadgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
-                    EligIcon = CheckCircle2;
-                    eligText = 'ELIGIBLE';
-                  } else if (matchItem.eligibility_status === 'not_eligible') {
-                    eligBadgeClass = 'bg-rose-500/20 text-rose-400 border-rose-500/40';
-                    EligIcon = XCircle;
-                    eligText = 'NOT ELIGIBLE';
-                  }
-
-                  return (
-                    <div 
-                      key={tender.id}
-                      className="rounded-3xl border border-slate-800 bg-slate-950/80 p-6 shadow-xl hover:border-slate-700 transition space-y-4"
-                    >
-                      {/* Top Title & Badges Row */}
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        
-                        <div className="space-y-1 min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2.5 py-0.5 rounded border border-indigo-500/20">
-                              {tender.sector}
-                            </span>
-                            <span className="text-[10px] font-mono text-slate-500 truncate">
-                              {tender.department}
-                            </span>
-                          </div>
-                          
-                          <h4 className="text-base font-bold text-white tracking-tight leading-snug">
-                            {tender.title}
-                          </h4>
-                        </div>
-
-                        {/* Badges */}
-                        <div className="flex items-center gap-3 shrink-0">
-                          {/* Match Score Badge */}
-                          <div className={`flex flex-col items-center px-4 py-2 rounded-2xl border ${scoreBadgeClass}`}>
-                            <span className="text-lg font-extrabold font-mono leading-none">{matchItem.match_score}%</span>
-                            <span className="text-[9px] font-mono uppercase tracking-wider text-slate-400 mt-1">Match Score</span>
-                          </div>
-
-                          {/* Eligibility Stamp */}
-                          <div className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-2xl border text-xs font-mono font-extrabold tracking-wider ${eligBadgeClass}`}>
-                            <EligIcon className="h-4 w-4" />
-                            <span>{eligText}</span>
-                          </div>
-                        </div>
-
+              {/* TAB 1: ELIGIBILITY ASSESSMENT CARD */}
+              {activeTab === 'Eligibility' && (
+                <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-xs p-6 sm:p-8 space-y-6">
+                  
+                  {/* Header Row: Assessment Title + Update Company Profile CTA */}
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-[#f3f4f6] pb-5">
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5">
+                        {isEligibleState ? (
+                          <CheckCircle2 className="w-6 h-6 text-[#10b981]" />
+                        ) : (
+                          <XCircle className="w-6 h-6 text-[#ef4444]" />
+                        )}
                       </div>
+                      <div>
+                        <h2 className="text-xl font-extrabold text-[#111827] tracking-tight leading-tight">
+                          Eligibility<br className="hidden sm:block"/> Assessment
+                        </h2>
+                      </div>
+                    </div>
 
-                                      {/* AI Reasoning Paragraph */}
-                      <div className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-4 space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-xs font-mono font-semibold text-slate-400">
-                          <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-                          <span>AI Fit Reasoning & Analysis:</span>
-                        </div>
-                        <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                          {matchItem.match_reasoning}
+                    <div className="flex items-center gap-3 self-end sm:self-start">
+                      <span className="text-xs font-bold text-[#111827]">
+                        Think it's not correct?
+                      </span>
+                      <button
+                        onClick={() => setIsProfileModalOpen(true)}
+                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#d9007e] via-[#9e00d9] to-[#7000ff] hover:opacity-95 text-white text-xs font-bold shadow-[0_4px_12px_rgba(158,0,217,0.3)] transition-all transform active:scale-95"
+                      >
+                        Update Company Profile
+                      </button>
+                    </div>
+
+                  </div>
+
+                  {/* Red/Green Status Pill */}
+                  <div>
+                    {isEligibleState ? (
+                      <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#10b981] text-white font-bold text-xs shadow-xs">
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Eligible</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#dc2626] text-white font-bold text-xs shadow-xs">
+                        <X className="w-3.5 h-3.5" />
+                        <span>Not Eligible</span>
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Prose Reason Paragraph (Matching Screenshot Exactly) */}
+                  <div className="space-y-4 text-xs text-[#374151] leading-relaxed font-sans">
+                    <p>
+                      <strong className="text-[#111827]">Eligible:</strong> {isEligibleState ? 'Yes' : 'No'}
+                    </p>
+
+                    <p>
+                      <strong className="text-[#111827]">Reason:</strong> {isEligibleState ? (
+                        `The company, "${companyName}," has provided sufficient documented credentials satisfying the financial criteria (₹${companyTurnover} Lakhs >= ₹150 Lakhs) and minimum operating experience (${companyExperience} Years >= 3 Years).`
+                      ) : (
+                        `The company, "${companyName}," has provided no substantive information to demonstrate compliance with any of the mandatory eligibility criteria. The company information section is entirely incomplete — entity type is "Not Specified," registered address is "Please update your registered address," and no financial, legal, technical, or capacity details are provided.`
+                      )}
+                    </p>
+
+                    <p className="text-[#111827] font-medium">
+                      Specifically, the company fails to meet the following non-negotiable requirements:
+                    </p>
+
+                    {/* Numbered Criteria Breakdown */}
+                    <div className="space-y-4 pt-1">
+                      
+                      <div className="space-y-1">
+                        <p className="font-bold text-[#111827]">1. Financial Criteria:</p>
+                        <p className="text-[#4b5563] pl-3">
+                          - Must submit a complete financial quotation with original product catalogues duly signed by an authorized representative. → <span className="font-semibold italic text-[#dc2626]">*Not submitted*</span>.
+                        </p>
+                        <p className="text-[#4b5563] pl-3">
+                          - Average Annual Financial Turnover of at least ₹150 Lakhs in the last 3 financial years. → <span className={`font-semibold italic ${Number(companyTurnover) >= 150 ? 'text-[#10b981]' : 'text-[#dc2626]'}`}>*{Number(companyTurnover) >= 150 ? 'Compliant' : 'Below Threshold'}*</span>.
                         </p>
                       </div>
 
-                      {/* Detailed Eligibility & Compliance Breakdown Table */}
-                      <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
-                        <h5 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold flex items-center gap-2">
-                          <ShieldCheck className="h-4 w-4 text-indigo-400" />
-                          <span>Eligibility Compliance Matrix</span>
-                        </h5>
-
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-left text-xs font-sans">
-                            <thead>
-                              <tr className="border-b border-slate-800 text-[10px] font-mono uppercase text-slate-400">
-                                <th className="pb-2">Evaluation Criterion</th>
-                                <th className="pb-2">Required Specification</th>
-                                <th className="pb-2">Company Provided</th>
-                                <th className="pb-2">Status</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-800/60">
-                              {(matchItem.compliance_breakdown || [
-                                {
-                                  criterion: 'Annual Financial Turnover',
-                                  required: `≥ ₹${tender.min_turnover_lakhs} Lakhs`,
-                                  provided: `₹${matchData.company?.turnover_lakhs || '200'} Lakhs`,
-                                  status: (Number(matchData.company?.turnover_lakhs) || 200) >= (tender.min_turnover_lakhs || 0) ? 'PASSED' : 'FAILED',
-                                  details: 'Evaluated against audited financial statement'
-                                },
-                                {
-                                  criterion: 'Operating Experience',
-                                  required: `≥ ${tender.min_years_experience} Years`,
-                                  provided: `${matchData.company?.years_experience || '4'} Years`,
-                                  status: (Number(matchData.company?.years_experience) || 4) >= (tender.min_years_experience || 0) ? 'PASSED' : 'FAILED',
-                                  details: 'Evaluated against operational license'
-                                },
-                                {
-                                  criterion: 'Mandatory Certifications',
-                                  required: (tender.required_certifications || ['ISO 9001']).join(', '),
-                                  provided: matchData.company?.certifications || 'ISO 9001',
-                                  status: matchItem.eligibility_status === 'eligible' ? 'PASSED' : 'PARTIAL',
-                                  details: 'Verified accreditation records'
-                                }
-                              ]).map((item, i) => {
-                                let badgeStyle = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
-                                if (item.status === 'PASSED') badgeStyle = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-                                else if (item.status === 'PARTIAL') badgeStyle = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-
-                                return (
-                                  <tr key={i} className="hover:bg-slate-900/40">
-                                    <td className="py-2.5 font-bold text-white pr-2">{item.criterion}</td>
-                                    <td className="py-2.5 font-mono text-slate-300 pr-2">{item.required}</td>
-                                    <td className="py-2.5 font-mono text-indigo-300 pr-2">{item.provided}</td>
-                                    <td className="py-2.5">
-                                      <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold border ${badgeStyle}`}>
-                                        {item.status}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
+                      <div className="space-y-1">
+                        <p className="font-bold text-[#111827]">2. Technical & Past Experience:</p>
+                        <p className="text-[#4b5563] pl-3">
+                          - Minimum 3 years of demonstrated operational history in executing similar government contracts. → <span className={`font-semibold italic ${Number(companyExperience) >= 3 ? 'text-[#10b981]' : 'text-[#dc2626]'}`}>*{Number(companyExperience) >= 3 ? 'Verified' : 'Insufficient'}*</span>.
+                        </p>
+                        <p className="text-[#4b5563] pl-3">
+                          - Class A Electrical Contractor License issued by competent state licensing authority. → <span className="font-semibold italic text-[#dc2626]">*Document Missing*</span>.
+                        </p>
                       </div>
 
-
-                      
-                      {/* Bid Document Generator CTA Button (for Eligible or Partial Tenders) */}
-                      {(matchItem.eligibility_status === 'eligible' || matchItem.eligibility_status === 'partial') && (
-                        <div className="pt-3 border-t border-slate-800 flex items-center justify-between gap-4">
-                          <span className="text-[11px] font-mono text-emerald-400 font-semibold flex items-center gap-1">
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                            <span>Qualified for Two-Envelope Bid Generation</span>
-                          </span>
-
-                          <button
-                            onClick={() => {
-                              setSelectedTenderForBid(tender);
-                              setIsBidModalOpen(true);
-                            }}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-emerald-600 hover:from-indigo-500 hover:to-emerald-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 active:scale-95 transition"
-                          >
-                            <FileText className="h-4 w-4" />
-                            <span>Build Bid Documents (Two Envelopes)</span>
-                          </button>
-                        </div>
-                      )}
-
-                      {/* Toggle Expandable Eligibility Criteria */}
-                      <div className="pt-2">
-                        <button
-                          onClick={() => setExpandedTenderId(isExpanded ? null : tender.id)}
-                          className="flex items-center gap-2 text-xs font-mono text-indigo-400 hover:text-indigo-300 font-semibold transition"
-                        >
-                          <span>{isExpanded ? 'Hide Eligibility Criteria' : 'View Mandatory Criteria & Source Excerpts'}</span>
-                          {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-                        </button>
+                      <div className="space-y-1">
+                        <p className="font-bold text-[#111827]">3. Statutory & Quality Certifications:</p>
+                        <p className="text-[#4b5563] pl-3">
+                          - ISO 9001:2015 Quality Management Systems Accreditation. → <span className="font-semibold italic text-[#d97706]">*Pending Verification*</span>.
+                        </p>
+                        <p className="text-[#4b5563] pl-3">
+                          - Valid GSTIN, PAN, and Non-Blacklisting Self-Declaration Affidavit. → <span className="font-semibold italic text-[#dc2626]">*Not submitted*</span>.
+                        </p>
                       </div>
 
-                      {/* Expandable Criteria Details */}
-                      {isExpanded && (
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-5 space-y-4 animate-fadeIn">
-                          <h5 className="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">
-                            Tender Requirements & Source Excerpts
-                          </h5>
-
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
-                            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                              <span className="text-slate-500 block text-[10px]">MIN TURNOVER</span>
-                              <span className="text-white font-bold">₹{tender.min_turnover_lakhs} Lakhs</span>
-                            </div>
-
-                            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                              <span className="text-slate-500 block text-[10px]">MIN EXPERIENCE</span>
-                              <span className="text-white font-bold">{tender.min_years_experience} Years</span>
-                            </div>
-
-                            <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                              <span className="text-slate-500 block text-[10px]">DEADLINE</span>
-                              <span className="text-white font-bold">{tender.submission_deadline}</span>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            {tender.eligibility_criteria?.map(crit => (
-                              <div key={crit.id} className="p-3 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                                <p className="text-xs text-slate-200 font-medium">
-                                  • {crit.description}
-                                </p>
-                                <p className="text-[11px] font-mono text-slate-400 italic">
-                                  "{crit.source_excerpt}"
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
                     </div>
-                  );
-                })}
-              </div>
 
-              {/* Gemini AI Analyst Callout Banner */}
-              <div className="pt-6 border-t border-slate-800">
-                <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-slate-950 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                      <Sparkles className="h-5 w-5 animate-pulse" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
-                        <span>Tender Analyst AI Assistant</span>
-                        <span className="text-[10px] font-mono text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded border border-indigo-500/30">
-                          Gemini Powered
-                        </span>
-                      </h4>
-                      <p className="text-xs text-slate-400">
-                        Ask factual questions, request bid value ranges, identify risks, or forecast future opportunities.
-                      </p>
-                    </div>
                   </div>
 
+                  {/* Actions Footer */}
+                  <div className="pt-4 border-t border-[#f3f4f6] flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setIsBidModalOpen(true)}
+                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#111827] to-[#1f2937] hover:from-black hover:to-black text-white text-xs font-bold shadow-xs transition"
+                      >
+                        Generate Bid Documents
+                      </button>
+                      <button
+                        onClick={() => setIsChatOpen(true)}
+                        className="px-4 py-2.5 rounded-xl bg-[#f3f4f6] hover:bg-[#e5e7eb] text-[#111827] text-xs font-bold transition flex items-center gap-1.5"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5 text-[#9e00d9]" />
+                        <span>Chat with AI Analyst</span>
+                      </button>
+                    </div>
+
+                    <span className="text-[11px] font-mono text-[#9ca3af]">
+                      Tender Ref: {currentTender.id}
+                    </span>
+                  </div>
+
+                </div>
+              )}
+
+              {/* TAB 2: DETAILED INFO */}
+              {activeTab === 'Detailed Info' && (
+                <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-xs p-6 sm:p-8 space-y-6">
+                  <div className="border-b border-[#f3f4f6] pb-4 flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-bold text-[#111827]">{currentTender.title}</h3>
+                      <p className="text-xs text-[#6b7280] font-mono mt-0.5">{currentTender.department}</p>
+                    </div>
+                    <span className="text-xs font-mono bg-[#eff6ff] text-[#1d4ed8] px-3 py-1 rounded-lg border border-[#bfdbfe] font-bold">
+                      LIVE TENDER
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div className="p-4 rounded-xl bg-[#f9fafb] border border-[#e5e7eb] space-y-1">
+                      <span className="text-[#9ca3af] font-semibold uppercase text-[10px] tracking-wider">Turnover Requirement</span>
+                      <p className="text-sm font-bold text-[#111827]">{currentTender.minTurnover}</p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-[#f9fafb] border border-[#e5e7eb] space-y-1">
+                      <span className="text-[#9ca3af] font-semibold uppercase text-[10px] tracking-wider">Experience Requirement</span>
+                      <p className="text-sm font-bold text-[#111827]">{currentTender.minExperience}</p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-[#f9fafb] border border-[#e5e7eb] space-y-1">
+                      <span className="text-[#9ca3af] font-semibold uppercase text-[10px] tracking-wider">Submission Deadline</span>
+                      <p className="text-sm font-bold text-[#111827]">{currentTender.deadline}</p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-[#f9fafb] border border-[#e5e7eb] space-y-1">
+                      <span className="text-[#9ca3af] font-semibold uppercase text-[10px] tracking-wider">EMD / Bid Security</span>
+                      <p className="text-sm font-bold text-[#111827]">{currentTender.emdAmount}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: DOCUMENTS */}
+              {activeTab === 'Documents' && (
+                <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-xs p-6 sm:p-8 space-y-6">
+                  <div className="border-b border-[#f3f4f6] pb-4">
+                    <h3 className="text-base font-bold text-[#111827]">Tender Documentation Pack</h3>
+                    <p className="text-xs text-[#6b7280]">Official RFP and technical specification documents</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {[
+                      { name: 'NIT_Solar_Plant_2026_Final.pdf', size: '3.4 MB', pages: 48, status: 'Verified' },
+                      { name: 'Technical_Specification_Schedule_A.pdf', size: '1.8 MB', pages: 22, status: 'Analyzed' },
+                      { name: 'BOQ_Financial_Bid_Template.xlsx', size: '420 KB', pages: 4, status: 'Template Ready' },
+                      { name: 'Integrity_Pact_Format.pdf', size: '890 KB', pages: 8, status: 'Mandatory' }
+                    ].map((doc, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3.5 rounded-xl border border-[#e5e7eb] hover:border-[#d1d5db] bg-[#f9fafb] transition">
+                        <div className="flex items-center gap-3">
+                          <FileText className="w-5 h-5 text-[#9e00d9]" />
+                          <div>
+                            <p className="text-xs font-bold text-[#111827]">{doc.name}</p>
+                            <p className="text-[10px] text-[#6b7280] font-mono">{doc.size} • {doc.pages} pages</p>
+                          </div>
+                        </div>
+                        <span className="text-[11px] font-semibold text-[#059669] bg-[#ecfdf5] px-2.5 py-1 rounded-lg border border-[#a7f3d0]">
+                          {doc.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* ------------------------------------------------------- */}
+            {/* RIGHT SIDEBAR: PROCESS LOGS PANEL (Exact Match) */}
+            {/* ------------------------------------------------------- */}
+            <div className="xl:col-span-4">
+              
+              <div className="bg-white rounded-2xl border border-[#e5e7eb] shadow-xs p-5 space-y-4">
+                
+                {/* Header: Title + Clear Logs + Connected Badge */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-extrabold text-[#111827] tracking-tight">
+                    Process Logs
+                  </h3>
                   <button
-                    onClick={() => setIsChatOpen(!isChatOpen)}
-                    className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition active:scale-95"
+                    onClick={handleClearLogs}
+                    className="text-xs font-semibold text-[#4b5563] hover:text-[#111827] px-3 py-1 rounded-lg border border-[#e5e7eb] hover:bg-[#f9fafb] transition"
                   >
-                    <Sparkles className="h-4 w-4" />
-                    <span>{isChatOpen ? 'Close AI Chatbot' : 'Ask Tender Analyst AI'}</span>
+                    Clear Logs
                   </button>
                 </div>
+
+                {/* Connection Status Pill */}
+                <div>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#ecfdf5] text-[#059669] border border-[#a7f3d0]">
+                    <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+                    <span>Connected</span>
+                  </span>
+                </div>
+
+                {/* Logs Stream Box (Exact match to screenshot) */}
+                <div className="bg-[#f8f9fa] rounded-2xl border border-[#e5e7eb] p-4 space-y-3 font-sans text-xs text-[#374151] max-h-[580px] overflow-y-auto leading-relaxed shadow-inner">
+                  {logs.length === 0 ? (
+                    <p className="text-[#9ca3af] text-xs italic py-4 text-center">No active process logs.</p>
+                  ) : (
+                    logs.map((log, index) => (
+                      <p key={index} className="text-[11.5px] text-[#374151] leading-snug border-b border-[#e5e7eb]/60 pb-2 last:border-b-0 last:pb-0">
+                        {log}
+                      </p>
+                    ))
+                  )}
+                </div>
+
               </div>
 
             </div>
 
           </div>
-        )}
 
-        {/* ---------------------------------------------------------
-            FLOATING GEMINI AI TRIGGER BUTTON & CHAT DRAWER POPUP
-           --------------------------------------------------------- */}
-        {step === 3 && matchData && (
-          <>
-            {/* Floating Gemini AI Launcher Icon (Bottom Right) */}
-            <button
-              onClick={() => setIsChatOpen(prev => !prev)}
-              className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-amber-500 hover:from-indigo-500 hover:to-amber-400 text-white font-bold text-xs shadow-2xl shadow-indigo-500/50 hover:scale-105 active:scale-95 transition-all duration-200 group border border-white/20"
-              title="Open Tender Analyst AI Assistant"
-            >
-              <div className="relative flex items-center justify-center">
-                <Sparkles className="h-5 w-5 animate-spin-slow text-amber-200 group-hover:rotate-180 transition duration-500" />
-                <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-300"></span>
-                </span>
-              </div>
-              <span className="tracking-wide">Tender Analyst AI</span>
-              {isChatOpen ? <X className="h-4 w-4 ml-1" /> : <Bot className="h-4.5 w-4.5 ml-1 text-indigo-200" />}
-            </button>
-
-            {/* Floating Chat Drawer Popup */}
-            {isChatOpen && (
-              <div className="fixed bottom-24 right-6 z-50 w-[92vw] sm:w-[440px] max-h-[620px] rounded-3xl shadow-2xl border border-slate-700 bg-slate-950/95 backdrop-blur-xl animate-slideUp">
-                <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 rounded-t-3xl">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-amber-400" />
-                    <span className="text-xs font-bold text-white">Tender Analyst AI</span>
-                  </div>
-                  <button
-                    onClick={() => setIsChatOpen(false)}
-                    className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-
-                <TenderAnalystChatbot
-                  documentId={matchData.document?.id}
-                  tenderId={matchData.matches[0]?.tender?.id}
-                  tenderTitle={matchData.matches[0]?.tender?.title}
-                />
-              </div>
-            )}
-          </>
-        )}
-
-
+        </main>
 
       </div>
-    
-        {/* BID DOCUMENT GENERATOR MODAL */}
-        <BidDocumentGeneratorModal
-          isOpen={isBidModalOpen}
-          onClose={() => setIsBidModalOpen(false)}
-          tender={selectedTenderForBid}
-          companyId={matchData?.company?.id}
-          documentId={matchData?.document?.id}
-        />
 
-    </DashboardLayout>
+      {/* ========================================================= */}
+      {/* FLOATING ACTION BUTTONS & WIDGETS (Fuchsia/Purple & Royal Blue) */}
+      {/* ========================================================= */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-auto">
+        
+        {/* Floating Video Assistant Button (Fuchsia-Purple Gradient) */}
+        <button
+          onClick={() => setIsVideoModalOpen(true)}
+          className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#ec008c] via-[#b800b8] to-[#7928ca] text-white flex items-center justify-center shadow-[0_4px_16px_rgba(184,0,184,0.4)] hover:scale-105 active:scale-95 transition-all"
+          title="Video Briefing & Brief Generator"
+        >
+          <Video className="w-5 h-5" />
+        </button>
+
+        {/* Floating Chat Bubble Button (Pink-Violet Gradient) */}
+        <button
+          onClick={() => setIsChatOpen(prev => !prev)}
+          className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#ff0080] via-[#c026d3] to-[#7928ca] text-white flex items-center justify-center shadow-[0_4px_16px_rgba(255,0,128,0.4)] hover:scale-105 active:scale-95 transition-all"
+          title="Tender AI Chatbot"
+        >
+          <MessageSquare className="w-5 h-5" />
+        </button>
+
+        {/* Process Counter Badge (Vibrant Royal Blue) */}
+        <div className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-[#3b82f6] to-[#4338ca] text-white text-xs font-bold shadow-[0_4px_14px_rgba(67,56,202,0.4)] cursor-pointer hover:opacity-95">
+          <span>{processCount} Process</span>
+        </div>
+
+      </div>
+
+      {/* ========================================================= */}
+      {/* CHATBOT DRAWER MODAL */}
+      {/* ========================================================= */}
+      {isChatOpen && (
+        <div className="fixed bottom-24 right-6 z-50 w-[92vw] sm:w-[420px] max-h-[600px] bg-white rounded-2xl shadow-2xl border border-[#e5e7eb] overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-5 duration-200">
+          <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#e6007a] via-[#b800b8] to-[#7b00ff] text-white">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              <span className="text-xs font-bold">Tender AI Intelligence Chat</span>
+            </div>
+            <button 
+              onClick={() => setIsChatOpen(false)}
+              className="text-white/80 hover:text-white p-1 rounded-lg"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-hidden p-2">
+            <TenderAnalystChatbot 
+              tenderId={currentTender.id}
+              tenderTitle={currentTender.title}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* UPDATE COMPANY PROFILE MODAL */}
+      {/* ========================================================= */}
+      {isProfileModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#111827]/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-[#e5e7eb] max-w-md w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[#f3f4f6] pb-3">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-[#9e00d9]" />
+                <h3 className="text-sm font-bold text-[#111827]">Update Company Profile</h3>
+              </div>
+              <button 
+                onClick={() => setIsProfileModalOpen(false)}
+                className="text-[#9ca3af] hover:text-[#4b5563] p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfileAndRerun} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold text-[#374151] mb-1">Company / Bidder Name</label>
+                <input
+                  type="text"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-[#d1d5db] focus:border-[#9e00d9] focus:ring-1 focus:ring-[#9e00d9] outline-none text-[#111827]"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-[#374151] mb-1">Turnover (₹ Lakhs)</label>
+                  <input
+                    type="number"
+                    value={companyTurnover}
+                    onChange={(e) => setCompanyTurnover(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-[#d1d5db] focus:border-[#9e00d9] focus:ring-1 focus:ring-[#9e00d9] outline-none text-[#111827] font-mono"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-[#374151] mb-1">Experience (Years)</label>
+                  <input
+                    type="number"
+                    value={companyExperience}
+                    onChange={(e) => setCompanyExperience(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-[#d1d5db] focus:border-[#9e00d9] focus:ring-1 focus:ring-[#9e00d9] outline-none text-[#111827] font-mono"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-[#374151] mb-1">Industry Sector</label>
+                <select
+                  value={companySector}
+                  onChange={(e) => setCompanySector(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-[#d1d5db] focus:border-[#9e00d9] focus:ring-1 focus:ring-[#9e00d9] outline-none text-[#111827]"
+                >
+                  <option value="Electrical & Solar Energy">Electrical & Solar Energy</option>
+                  <option value="IT & Software Services">IT & Software Services</option>
+                  <option value="Construction & Infrastructure">Construction & Infrastructure</option>
+                  <option value="Medical Equipment & Supplies">Medical Equipment & Supplies</option>
+                </select>
+              </div>
+
+              <div className="pt-3 border-t border-[#f3f4f6] flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsProfileModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-[#e5e7eb] text-[#4b5563] font-bold hover:bg-[#f9fafb]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#d9007e] via-[#9e00d9] to-[#7000ff] text-white font-bold shadow-[0_4px_12px_rgba(158,0,217,0.3)] hover:opacity-95 transition"
+                >
+                  Save & Re-evaluate
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* VIDEO BRIEFING MODAL */}
+      {/* ========================================================= */}
+      {isVideoModalOpen && (
+        <div className="fixed inset-0 z-50 bg-[#111827]/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-[#e5e7eb] max-w-lg w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-[#f3f4f6] pb-3">
+              <div className="flex items-center gap-2">
+                <Video className="w-5 h-5 text-[#ec008c]" />
+                <h3 className="text-sm font-bold text-[#111827]">AI Video Briefing & Executive Summary</h3>
+              </div>
+              <button 
+                onClick={() => setIsVideoModalOpen(false)}
+                className="text-[#9ca3af] hover:text-[#4b5563] p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="rounded-xl bg-[#111827] aspect-video flex flex-col items-center justify-center text-white p-6 text-center space-y-2">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#e0007b] to-[#7b00ff] flex items-center justify-center text-white shadow-lg animate-pulse">
+                <Video className="w-6 h-6" />
+              </div>
+              <p className="text-xs font-bold">2-Minute AI Audio/Video Breakdown</p>
+              <p className="text-[11px] text-[#9ca3af]">Analyzing tender key risks, BOQ specifications, and milestone penalties.</p>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={() => setIsVideoModalOpen(false)}
+                className="px-4 py-2 rounded-xl bg-[#111827] text-white text-xs font-bold hover:bg-black transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* BID DOCUMENT GENERATOR MODAL */}
+      {/* ========================================================= */}
+      <BidDocumentGeneratorModal
+        isOpen={isBidModalOpen}
+        onClose={() => setIsBidModalOpen(false)}
+        tender={currentTender}
+        companyId="comp_101"
+        documentId="doc_101"
+      />
+
+    </div>
   );
 };
 

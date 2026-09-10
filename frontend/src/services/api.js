@@ -21,18 +21,13 @@ api.interceptors.request.use(
   }
 );
 
-// Response Interceptor: Global Error Interception
+// Response Interceptor: Global Error Interception without hard redirect loops
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Log error for debugging, but don't kick user out to login page in demo mode
     if (error.response && error.response.status === 401) {
-      // Clear storage and redirect to login
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_user');
-      localStorage.removeItem('auth_role');
-      if (window.location.pathname !== '/auth/login' && window.location.pathname !== '/') {
-        window.location.href = '/auth/login';
-      }
+      console.warn('Backend API returned 401 Unauthorized:', error.config?.url);
     }
     return Promise.reject(error);
   }

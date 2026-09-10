@@ -14,5 +14,7 @@ __pycache__/
 **/__pycache__/ 
 *.pyc
 *.log 
-
- 
+*.db
+*.sqlite3
+venv/
+.venv/

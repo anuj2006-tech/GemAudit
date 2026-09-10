@@ -39,6 +39,12 @@ import EmployeeDashboard from '../pages/employee/EmployeeDashboard';
 import TenderRegPage from '../pages/tenderReg/TenderRegPage';
 import BidDocumentSuitePage from '../pages/bid/BidDocumentSuitePage';
 import GeMCompliancePortal from '../pages/gemVerification/GeMCompliancePortal';
+import GeMComplianceDashboard from '../pages/gemVerification/GeMComplianceDashboard';
+import GeMOverviewDashboard from '../pages/gemVerification/GeMOverviewDashboard';
+import GeMAnalyticsPage from '../pages/gemVerification/GeMAnalyticsPage';
+import GeMAuditTrailPage from '../pages/gemVerification/GeMAuditTrailPage';
+import GeMWorkflowPage from '../pages/gemVerification/GeMWorkflowPage';
+import PitchVideoStudioPage from '../pages/pitchVideo/PitchVideoStudioPage';
 
 import NotFoundPage from '../pages/errors/NotFoundPage';
 
@@ -164,6 +170,24 @@ const AppRoutes = () => {
       } />
 
       {/* GeM Compliance Verification Engine Routes */}
+      <Route path="/gem-compliance-dashboard" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMOverviewDashboard /></ProtectedRoute>
+      } />
+      <Route path="/gem-compliance-fastapi" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMComplianceDashboard /></ProtectedRoute>
+      } />
+      <Route path="/gem-compliance/analytics" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMAnalyticsPage /></ProtectedRoute>
+      } />
+      <Route path="/gem-compliance/audit-trail" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMAuditTrailPage /></ProtectedRoute>
+      } />
+      <Route path="/gem-compliance/workflow" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMWorkflowPage /></ProtectedRoute>
+      } />
+      <Route path="/pitch-video" element={
+        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><PitchVideoStudioPage /></ProtectedRoute>
+      } />
       <Route path="/gem-compliance" element={
         <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMCompliancePortal /></ProtectedRoute>
       } />

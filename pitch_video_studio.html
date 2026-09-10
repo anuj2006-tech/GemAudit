@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeM Audit — AI Pitch Video Studio & Motion Player</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    .glow-effect { animation: pulseGlow 4s infinite ease-in-out; }
+    .fade-in { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes laserVerticalSweep {
+      0% { top: 0%; opacity: 0.85; }
+      48% { opacity: 1; }
+      50% { top: 96%; opacity: 0.9; }
+      98% { opacity: 1; }
+      100% { top: 0%; opacity: 0.85; }
+    }
+    @keyframes laserAngleSweep {
+      0% { transform: translateY(-70%) rotate(-12deg); opacity: 0.7; }
+      50% { transform: translateY(75%) rotate(-12deg); opacity: 1; }
+      100% { transform: translateY(-70%) rotate(-12deg); opacity: 0.7; }
+    }
+    .animate-laser-sweep { animation: laserVerticalSweep 3s ease-in-out infinite; }
+    .animate-laser-angle { animation: laserAngleSweep 3.2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center p-4 lg:p-8 font-sans">
+
+  <!-- Header -->
+  <header class="w-full max-w-6xl flex flex-col md:flex-row items-center justify-between pb-6 border-b border-slate-800 gap-4">
+    <div class="flex items-center gap-3">
+      <div class="p-2.5 bg-gradient-to-tr from-emerald-500 to-cyan-500 rounded-xl shadow-lg shadow-emerald-500/20">
+        <i class="fa-solid fa-film text-xl text-white"></i>
+      </div>
+      <div>
+        <h1 class="text-xl lg:text-2xl font-black tracking-tight text-white flex items-center gap-2">
+          GeM Audit <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">AI PITCH STUDIO</span>
+        </h1>
+        <p class="text-xs text-slate-400">Cinematic 1080p Pitch Video Engine with AI Voiceover & Live Registry Sandbox</p>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-emerald-500/40 text-xs text-slate-300">
+        <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i>
+        <select id="voiceModeSelect" onchange="onVoiceModeChange(this.value)" class="bg-transparent text-emerald-300 font-bold focus:outline-none cursor-pointer">
+          <option value="studio" class="bg-slate-900 text-emerald-300">🎙️ Studio Voice (Neerja AI)</option>
+          <option value="browser" class="bg-slate-900 text-slate-200">🗣️ Browser TTS</option>
+        </select>
+      </div>
+
+      <button id="muteBtn" onclick="toggleMute()" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900 border border-slate-700 text-slate-300 hover:text-white flex items-center gap-2 transition">
+        <i id="muteIcon" class="fa-solid fa-volume-high"></i>
+        <span id="muteLabel">AI Voice Active</span>
+      </button>
+
+      <button id="recordBtn" onclick="toggleRecording()" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition active:scale-95">
+        <i class="fa-solid fa-circle-dot"></i>
+        <span>Record & Download (.webm)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Video Cinema Canvas Box -->
+  <main class="w-full max-w-6xl mt-6">
+    <div id="videoContainer" class="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl flex flex-col justify-between select-none">
+      
+      <!-- Top Overlay Info Bar -->
+      <div class="absolute top-0 left-0 right-0 z-30 p-4 lg:p-6 flex items-center justify-between bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent">
+        <div class="flex items-center gap-3">
+          <span id="sceneTag" class="px-3 py-1 bg-emerald-500/20 backdrop-blur-md border border-emerald-500/40 text-emerald-300 text-xs font-black uppercase tracking-wider rounded-lg flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            THE PROBLEM
+          </span>
+          <h2 id="sceneTitle" class="text-sm lg:text-base font-bold text-white/90 drop-shadow">
+            Scene 1: The Procurement Crisis
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span id="timecode" class="text-xs font-mono bg-slate-950/80 px-2.5 py-1 rounded-md border border-slate-800 text-slate-300">
+            00:00 / 01:40
+          </span>
+          <button onclick="toggleFullscreen()" class="p-1.5 rounded-lg bg-slate-950/60 hover:bg-slate-800 text-slate-300 hover:text-white transition">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Scene Viewport -->
+      <div id="sceneViewport" class="w-full h-full relative flex items-center justify-center overflow-hidden">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Dynamic Highlighted Subtitles Bar -->
+      <div class="absolute bottom-16 left-6 right-6 z-30 flex justify-center pointer-events-none">
+        <div class="px-6 py-2.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-700/60 shadow-2xl text-center max-w-2xl transform transition-all">
+          <p id="subtitleText" class="text-xs lg:text-sm font-bold text-amber-300 drop-shadow">
+            "India processes over ₹4,00,000+ Crore in public tenders every year."
+          </p>
+        </div>
+      </div>
+
+      <!-- Bottom Video Timeline & Controls -->
+      <div class="relative z-30 p-4 bg-slate-950/95 border-t border-slate-800 flex flex-col gap-2">
+        <div id="timelineBar" class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
+          <!-- Multi-scene segments filled via JS -->
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <div class="flex items-center gap-2">
+            <button id="playBtn" onclick="togglePlay()" class="p-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow-md active:scale-95">
+              <i id="playIcon" class="fa-solid fa-play ml-0.5"></i>
+            </button>
+            <button onclick="jumpToScene(0)" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="Replay">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </div>
+
+          <div id="scenePills" class="hidden md:flex items-center gap-1.5">
+            <!-- Scene buttons -->
+          </div>
+
+          <div id="sceneCounter" class="text-xs text-slate-400 font-mono">
+            Scene 1 / 6
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Storyboard Cards -->
+  <section class="w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="storyboardGrid">
+    <!-- Generated dynamically -->
+  </section>
+
+  <script>
+    const SCENES = [
+      {
+        id: 1,
+        title: "The Paperwork Problem",
+        duration: 18,
+        audioUrl: "frontend/public/audio/pitch/scene1.mp3",
+        tag: "THE PROBLEM",
+        voiceover: "Every year, the government gives out lakhs of crores in contracts. But officers waste days checking piles of paper by hand. Dishonest bidders use fake certificates to win contracts, causing public projects to get delayed for years.",
+        subtitles: [
+          { text: "The government awards lakhs of crores in contracts every year.", start: 0, end: 6 },
+          { text: "Officers waste days checking huge piles of papers by hand.", start: 6, end: 12 },
+          { text: "Dishonest bidders use fake certificates, causing long project delays.", start: 12, end: 18 }
+        ],
+        render: () => `
+          <div class="w-full h-full relative flex items-center justify-between p-8 lg:p-14 fade-in bg-slate-950">
+            <img src="frontend/public/images/problem_officer.jpg" onerror="this.src='https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1200&auto=format&fit=crop&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-35 filter brightness-90 contrast-125 scale-105" />
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent z-10"></div>
+            <div class="relative z-20 max-w-xl space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-400 text-xs font-bold">
+                <i class="fa-solid fa-triangle-exclamation"></i> THE BIG PROBLEM
+              </div>
+              <h1 class="text-3xl lg:text-5xl font-black text-white leading-tight tracking-tight">
+                Lakhs of Crores <br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300">
+                  Trapped in Slow Paperwork &amp; Fake Bids
+                </span>
+              </h1>
+              <div class="grid grid-cols-2 gap-3 pt-2">
+                <div class="p-3.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-rose-500/30 space-y-1">
+                  <div class="text-rose-400 text-xs font-bold uppercase flex items-center gap-1.5"><i class="fa-regular fa-clock"></i> 5 to 7 Days Lost</div>
+                  <p class="text-xs text-slate-300">Officers spend days reading hundreds of PDF pages by hand.</p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-rose-500/30 space-y-1">
+                  <div class="text-rose-400 text-xs font-bold uppercase flex items-center gap-1.5"><i class="fa-solid fa-file-excel"></i> Fake Documents</div>
+                  <p class="text-xs text-slate-300">Edited tax returns, fake sales numbers, and blacklisted companies.</p>
+                </div>
+              </div>
+            </div>
+            <div class="relative z-20 hidden lg:flex flex-col items-center justify-center p-6 bg-rose-950/50 backdrop-blur-xl border border-rose-500/40 rounded-2xl text-center max-w-xs space-y-2">
+              <i class="fa-solid fa-ban text-3xl text-rose-400"></i>
+              <div class="text-2xl font-black text-rose-200">Thousands of Crores</div>
+              <div class="text-xs font-medium text-rose-300/90">Lost when projects stall due to dishonest contractors.</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 2,
+        title: "Meet GeM Audit (Bid Document Verification)",
+        duration: 18,
+        audioUrl: "frontend/public/audio/pitch/scene2.mp3",
+        tag: "STEP 1: 3-SECOND VERIFICATION",
+        voiceover: "Meet GeM Audit. Earlier, it took days of manual work, but with this, now our AI reads the bid documents and verifies all information against government portals in just three seconds. Right away, it catches two fake claims and warns the officer.",
+        subtitles: [
+          { text: "Earlier it took days of manual work checking papers.", start: 0, end: 5 },
+          { text: "Now GeM Audit verifies bid documents with portals in 3 seconds.", start: 5, end: 12 },
+          { text: "Instantly catches two fake claims and warns the officer.", start: 12, end: 18 }
+        ],
+        render: () => `
+          <div class="w-full h-full relative flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 fade-in bg-slate-950 gap-6 overflow-hidden">
+            <!-- Background ambient lighting -->
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10"></div>
+            <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <!-- Left: Explainer & Stats -->
+            <div class="relative z-20 max-w-md space-y-3.5">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-bold shadow-lg shadow-emerald-500/10">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> BID DOCUMENT VERIFICATION
+              </div>
+
+              <h1 class="text-2xl lg:text-4xl font-black text-white leading-tight">
+                Days of Manual Work.<br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">
+                  Now Verified in 3 Seconds
+                </span>
+              </h1>
+
+              <p class="text-xs lg:text-sm text-slate-300 leading-relaxed">
+                Earlier it took days of manual work checking papers. Now, GeM Audit reads the contractor's bid documents and verifies all information directly against official government portals in just 3 seconds.
+              </p>
+
+              <div class="grid grid-cols-2 gap-2.5 pt-1">
+                <div class="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2 text-xs">
+                  <i class="fa-regular fa-clock text-rose-400 text-base"></i>
+                  <div>
+                    <div class="text-[10px] text-rose-300/80 font-medium">Earlier Process</div>
+                    <div class="text-rose-200 font-bold text-xs">Days of Manual Work</div>
+                  </div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center gap-2 text-xs">
+                  <i class="fa-solid fa-check text-emerald-400 text-base"></i>
+                  <div>
+                    <div class="text-[10px] text-emerald-300/80 font-medium">With GeM Audit</div>
+                    <div class="text-emerald-200 font-bold text-xs">3-Second Portal Match</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Micro Portal Check Pill Badges -->
+              <div class="flex flex-wrap gap-1.5 pt-1">
+                <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700/80 text-[10px] text-slate-300 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> GST Tax Portal
+                </span>
+                <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700/80 text-[10px] text-slate-300 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Income Tax PAN
+                </span>
+                <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700/80 text-[10px] text-slate-300 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Company Registry
+                </span>
+                <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700/80 text-[10px] text-slate-300 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> DigiLocker Proofs
+                </span>
+              </div>
+            </div>
+
+            <!-- Right: Forensic Bid Document Verification UI Display -->
+            <div class="relative z-20 flex-1 max-w-xl flex flex-col items-center">
+              <div class="relative rounded-2xl overflow-hidden border border-cyan-500/40 bg-slate-950 shadow-2xl shadow-cyan-500/20 group w-full">
+                <!-- Top status bar on image -->
+                <div class="absolute top-0 left-0 right-0 z-30 px-3.5 py-2 bg-slate-950/90 backdrop-blur-md border-b border-cyan-500/30 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span class="font-mono font-bold text-cyan-300 text-[11px]">GOVTECH AI COMPARISON: BID vs GOVT DATABASE</span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold">
+                    77% INFLATION CAUGHT
+                  </span>
+                </div>
+
+                <!-- Image Container with Relative Positioning for Exact Laser Overlay -->
+                <div class="relative w-full overflow-hidden pt-7 pb-1 flex items-center justify-center bg-slate-950">
+                  <!-- Forensic Visual Image -->
+                  <img 
+                    src="frontend/public/images/gem_bid_document_verification.png" 
+                    onerror="this.src='images/gem_bid_document_verification.png'"
+                    alt="GeM Audit Bid Document Forensic Verification"
+                    class="w-full h-auto max-h-[370px] object-contain filter contrast-110 brightness-105"
+                  />
+
+                  <!-- Animated Scanning Blue Laser Overlay directly targeting the Submitted Bid Document -->
+                  <div class="absolute left-[5.4%] top-[18%] w-[30.8%] h-[71%] pointer-events-none overflow-hidden rounded z-20">
+                    <!-- 1. Horizontal Moving Laser Beam -->
+                    <div class="absolute left-0 right-0 h-1 bg-cyan-300 shadow-[0_0_15px_#22d3ee,0_0_30px_#06b6d4,0_0_45px_#38bdf8] animate-laser-sweep"></div>
+                    
+                    <!-- 2. Trailing Laser Light Gradient -->
+                    <div class="absolute left-0 right-0 h-14 bg-gradient-to-b from-cyan-400/30 via-cyan-400/10 to-transparent -translate-y-full animate-laser-sweep"></div>
+                    
+                    <!-- 3. High-Energy Angled Laser Beam sweeping across document text -->
+                    <div class="absolute -left-12 -right-12 h-2.5 bg-cyan-300/80 shadow-[0_0_20px_#22d3ee,0_0_40px_#06b6d4] animate-laser-angle blur-[0.5px]"></div>
+                    <div class="absolute -left-12 -right-12 h-20 bg-gradient-to-b from-cyan-400/25 to-transparent animate-laser-angle -translate-y-10"></div>
+
+                    <!-- 4. Live OCR Scanning Status Badge -->
+                    <div class="absolute bottom-2 left-2 right-2 px-1.5 py-1 rounded bg-slate-950/90 border border-cyan-500/40 flex items-center justify-between text-[9px] font-mono text-cyan-300 backdrop-blur-sm">
+                      <span class="flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span> SCANNING...
+                      </span>
+                      <span class="text-rose-400 font-bold">MISMATCH</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Alert Banner synced to Step 2 -->
+                <div class="px-3.5 py-2 bg-slate-950/90 backdrop-blur-md border-t border-rose-500/40 flex items-center justify-between text-xs z-30">
+                  <div class="flex items-center gap-1.5 text-rose-300 font-bold text-[11px]">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400 animate-pulse"></i>
+                    <span>Discrepancy Caught: ₹18.4Cr Claimed vs ₹4.2Cr Central GST Portal</span>
+                  </div>
+                  <span class="font-mono text-[10px] text-cyan-300 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
+                    Forwarded to Step 2 →
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 3,
+        title: "Catching Fake Claims Live",
+        duration: 18,
+        audioUrl: "frontend/public/audio/pitch/scene3.mp3",
+        tag: "STEP 2: LIVE CHECK",
+        voiceover: "Here is that live verification in action. In the bid document, the contractor claimed eighteen crore rupees in sales, but the government tax portal showed only four crore. The AI catches the lie instantly and prepares the rejection letter.",
+        subtitles: [
+          { text: "Here is that live verification in action, inspecting the flagged claims.", start: 0, end: 6 },
+          { text: "Bid document claimed ₹18 Crore, but tax portal showed only ₹4 Crore.", start: 6, end: 12 },
+          { text: "Catches the lie instantly and prepares a rejection letter automatically.", start: 12, end: 18 }
+        ],
+        render: () => `
+          <div class="w-full h-full relative flex flex-col justify-center p-6 lg:p-12 fade-in bg-slate-950">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h2 class="text-xl lg:text-2xl font-black text-white flex items-center gap-2">
+                  Live Claim Checker
+                  <span class="text-xs font-normal text-rose-400 bg-rose-500/20 border border-rose-500/40 px-2.5 py-0.5 rounded-full">INSPECTING 2 FLAGGED CLAIMS</span>
+                </h2>
+                <p class="text-xs text-slate-400">Step 2: Deep check on the GST and Worker mismatches flagged in Step 1</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-700 space-y-3">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                  <span class="text-xs font-bold text-slate-300"><i class="fa-regular fa-file-pdf text-rose-400 mr-1.5"></i> What Bidder Claimed</span>
+                  <span class="text-[10px] font-mono text-slate-400">Submitted PDF</span>
+                </div>
+                <div class="space-y-2 text-xs">
+                  <div><span class="text-slate-400 text-[11px]">Claimed Annual Sales:</span><div class="text-base font-bold text-slate-200">₹18.40 Crore</div></div>
+                  <div><span class="text-slate-400 text-[11px]">Claimed Workers:</span><div class="text-base font-bold text-slate-200">120 Full-Time Staff</div></div>
+                </div>
+              </div>
+              <div class="p-4 rounded-xl bg-rose-950/40 border-2 border-rose-500/60 space-y-3 shadow-lg shadow-rose-500/10">
+                <div class="flex items-center justify-between pb-2 border-b border-rose-800/40">
+                  <span class="text-xs font-bold text-rose-300"><i class="fa-solid fa-database text-rose-400 mr-1.5"></i> Real Government Records</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500/30 text-rose-200">77% FAKE INFLATION</span>
+                </div>
+                <div class="space-y-2 text-xs">
+                  <div><span class="text-rose-300 text-[11px]">Actual Sales on Tax Portal:</span><div class="text-base font-black text-rose-400">₹4.20 Crore (CAUGHT)</div></div>
+                  <div><span class="text-rose-300 text-[11px]">Actual Registered Workers:</span><div class="text-base font-black text-rose-400">14 Workers (CAUGHT)</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2 text-slate-300">
+                <i class="fa-solid fa-circle-xmark text-rose-400"></i>
+                <span><strong>Action Taken:</strong> Bidder disqualified for submitting false documents</span>
+              </div>
+              <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-1 rounded border border-emerald-500/30">Auto-Written Rejection Letter Ready</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 4,
+        title: "Permanent Digital Proof",
+        duration: 18,
+        audioUrl: "frontend/public/audio/pitch/scene4.mp3",
+        tag: "SAFETY & TRUST",
+        voiceover: "To keep everything fair and protect officers from false blame, GeM Audit locks every decision with a secure digital stamp. This creates an unchangeable record that can be shown in court to prove everything was done honestly.",
+        subtitles: [
+          { text: "Every decision is locked with an unchangeable digital stamp.", start: 0, end: 6 },
+          { text: "Creates a permanent record to protect honest officers.", start: 6, end: 12 },
+          { text: "Proves everything was fair and stops arguments.", start: 12, end: 18 }
+        ],
+        render: () => `
+          <div class="w-full h-full relative flex flex-col justify-center items-center p-6 lg:p-12 fade-in bg-slate-950 text-center space-y-4">
+            <div class="p-4 bg-emerald-500/20 rounded-2xl border border-emerald-500/40 shadow-xl shadow-emerald-500/20">
+              <i class="fa-solid fa-stamp text-4xl text-emerald-400"></i>
+            </div>
+            <div class="max-w-md space-y-2">
+              <h2 class="text-2xl lg:text-3xl font-black text-white">Permanent Digital Proof</h2>
+              <p class="text-xs lg:text-sm text-slate-400">Every single check, score, and decision is locked with a digital seal that no one can tamper with or edit.</p>
+            </div>
+            <div class="w-full max-w-lg p-3.5 rounded-xl bg-slate-900 border border-emerald-500/40 font-mono text-xs text-left space-y-1.5 shadow-2xl">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800 pb-1.5">
+                <span>DIGITAL SECURITY SEAL</span>
+                <span class="text-emerald-400 font-bold">● PERMANENT &amp; UNCHANGEABLE</span>
+              </div>
+              <div class="text-emerald-300 text-xs break-all">SEAL-0x7f8a9e3b4d1c2a0f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5</div>
+              <div class="text-[10px] text-slate-500 flex justify-between pt-1">
+                <span>Status: Fully Protected</span>
+                <span>Ready for Legal &amp; Audit Inspection</span>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 5,
+        title: "The 48-Hour Help Bot",
+        duration: 18,
+        audioUrl: "frontend/public/audio/pitch/scene5.mp3",
+        tag: "48-HOUR GeM DEADLINE",
+        voiceover: "On the government portal, if an officer asks for extra proof, sellers get only forty-eight hours to reply or their bid is rejected. Our AI finds the right past certificates in seconds and writes the reply letter for them, saving their bid on time.",
+        subtitles: [
+          { text: "On the portal, sellers get only 48 hours to answer questions.", start: 0, end: 5 },
+          { text: "If they miss this 48-hour deadline, their bid is rejected immediately.", start: 5, end: 11 },
+          { text: "Our AI finds the right papers and writes the reply letter in 45 seconds.", start: 11, end: 18 }
+        ],
+        render: () => `
+          <div class="w-full h-full relative flex items-center justify-between p-8 lg:p-14 fade-in bg-slate-950">
+            <div class="max-w-md space-y-3.5 text-left">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold">
+                <i class="fa-solid fa-clock animate-pulse"></i> 48-HOUR DEADLINE RULE
+              </div>
+              <h2 class="text-2xl lg:text-3xl font-black text-white leading-tight">
+                48-Hour Reply Helper<br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-300">Beat The Clock, Save Your Bid</span>
+              </h2>
+
+              <!-- 3-point Simple Explainer -->
+              <div class="space-y-1.5 text-xs text-slate-300">
+                <div class="flex items-start gap-2">
+                  <span class="text-amber-400 font-bold shrink-0">● The Rule:</span>
+                  <span>Buyers give sellers only 48 hours to answer questions.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-rose-400 font-bold shrink-0">● The Danger:</span>
+                  <span>Miss the 48 hours = <strong class="text-rose-300 font-semibold">Immediate bid rejection</strong>.</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-emerald-400 font-bold shrink-0">● AI Helper:</span>
+                  <span>Finds the right past papers &amp; writes the reply in 45 seconds.</span>
+                </div>
+              </div>
+              
+              <!-- Clarification Query Box -->
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-semibold text-amber-400 flex items-center gap-1">
+                    <i class="fa-regular fa-envelope-open"></i> Question from Buyer:
+                  </span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono">
+                    48h Clock Ticking
+                  </span>
+                </div>
+                <div class="font-medium text-slate-200 text-[11px]">
+                  "Please submit proof of 3 past highway projects and manufacturer approval letter"
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: AI Instant Response Card -->
+            <div class="hidden sm:flex flex-col max-w-xs w-full p-4 rounded-xl bg-slate-900/90 border border-amber-500/40 shadow-xl space-y-2 text-xs">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div class="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <i class="fa-solid fa-bolt text-amber-400"></i> Found in 45 Seconds
+                </div>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                  On Time
+                </span>
+              </div>
+              
+              <div class="space-y-1.5 text-[11px]">
+                <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <span class="truncate mr-2"><i class="fa-regular fa-file-pdf text-amber-400 mr-1"></i> Highway-Project-Proof.pdf</span>
+                  <span class="text-emerald-400 font-bold text-[10px]">FOUND (98%)</span>
+                </div>
+                <div class="p-2 rounded bg-slate-950/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <span class="truncate mr-2"><i class="fa-regular fa-file-pdf text-amber-400 mr-1"></i> Manufacturer-Letter.pdf</span>
+                  <span class="text-emerald-400 font-bold text-[10px]">VERIFIED</span>
+                </div>
+              </div>
+
+              <div class="p-2 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-center space-y-0.5 pt-1.5">
+                <div class="text-[11px] text-emerald-300 font-bold flex items-center justify-center gap-1">
+                  <i class="fa-solid fa-circle-check text-emerald-400"></i> Reply Letter Written in 45 Seconds
+                </div>
+                <div class="text-[9px] text-emerald-400/80">Bid safely submitted before deadline expires</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 6,
+        title: "Fast, Clean & Honest Bids",
+        duration: 18,
+        audioUrl: "frontend/public/audio/pitch/scene6.mp3",
+        tag: "BIG IMPACT",
+        voiceover: "GeM Audit cuts tender checking time from seven days down to just eight minutes, stopping all fraud. We are making government buying fast, simple, and completely honest for India.",
+        subtitles: [
+          { text: "Checking time cut from 7 days to just 8 minutes—96% faster.", start: 0, end: 6 },
+          { text: "Stops fake companies and false documents completely.", start: 6, end: 12 },
+          { text: "Making government purchasing fast, simple, and honest.", start: 12, end: 18 }
+        ],
+        render: () => `
+          <div class="w-full h-full relative flex flex-col justify-center items-center p-6 lg:p-12 fade-in bg-slate-950 text-center space-y-5">
+            <div class="space-y-1">
+              <h1 class="text-3xl lg:text-5xl font-black text-white tracking-tight">Fast, Simple &amp; Honest Bidding</h1>
+              <p class="text-xs lg:text-sm text-slate-400">Real, measurable speed and trust for government purchasing.</p>
+            </div>
+            <div class="grid grid-cols-3 gap-4 w-full max-w-2xl">
+              <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
+                <div class="text-2xl lg:text-3xl font-black text-emerald-400">96%</div>
+                <div class="text-xs font-bold text-slate-200">Faster Checking</div>
+                <div class="text-[11px] text-slate-400">7 Days → 8 Minutes</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
+                <div class="text-2xl lg:text-3xl font-black text-cyan-400">0%</div>
+                <div class="text-xs font-bold text-slate-200">Fake Papers</div>
+                <div class="text-[11px] text-slate-400">Direct Government Check</div>
+              </div>
+              <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
+                <div class="text-2xl lg:text-3xl font-black text-amber-400">100%</div>
+                <div class="text-xs font-bold text-slate-200">Permanent Proof</div>
+                <div class="text-[11px] text-slate-400">Digital Safety Seals</div>
+              </div>
+            </div>
+            <div class="text-xs text-slate-400 font-mono">GeM Audit AI • Making Government Procurement Honest &amp; Fast</div>
+          </div>
+        `
+      }
+    ];
+
+    let currentSceneIdx = 0;
+    let isPlaying = false;
+    let isMuted = false;
+    let timerInterval = null;
+    let sceneProgress = 0;
+    let overallTime = 0;
+    let voiceMode = 'studio'; // 'studio' | 'browser'
+    const audioPlayer = new Audio();
+    const totalDuration = SCENES.reduce((acc, s) => acc + s.duration, 0);
+
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let isRecording = false;
+
+    function renderScene() {
+      const scene = SCENES[currentSceneIdx];
+      document.getElementById('sceneViewport').innerHTML = scene.render();
+      document.getElementById('sceneTag').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ${scene.tag}`;
+      document.getElementById('sceneTitle').innerText = `Scene ${scene.id}: ${scene.title}`;
+      document.getElementById('sceneCounter').innerText = `Scene ${currentSceneIdx + 1} / ${SCENES.length}`;
+      updateSubtitle();
+      updatePills();
+    }
+
+    function updateSubtitle() {
+      const scene = SCENES[currentSceneIdx];
+      const elapsed = (sceneProgress / 100) * scene.duration;
+      const sub = scene.subtitles.find(s => elapsed >= s.start && elapsed <= s.end) || scene.subtitles[0];
+      document.getElementById('subtitleText').innerText = `"${sub.text}"`;
+    }
+
+    function buildTimeline() {
+      const timeline = document.getElementById('timelineBar');
+      timeline.innerHTML = '';
+      SCENES.forEach((s, idx) => {
+        const seg = document.createElement('div');
+        seg.style.width = `${(s.duration / totalDuration) * 100}%`;
+        seg.className = 'h-full border-r border-slate-950 relative';
+        seg.innerHTML = `<div id="seg-fill-${idx}" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-100" style="width: 0%"></div>`;
+        timeline.appendChild(seg);
+      });
+    }
+
+    function buildPills() {
+      const container = document.getElementById('scenePills');
+      container.innerHTML = '';
+      SCENES.forEach((s, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `pill-${idx}`;
+        btn.onclick = () => jumpToScene(idx);
+        btn.className = `px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
+          idx === currentSceneIdx 
+            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+            : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+        }`;
+        btn.innerText = `Scene ${s.id}`;
+        container.appendChild(btn);
+      });
+    }
+
+    function updatePills() {
+      SCENES.forEach((s, idx) => {
+        const btn = document.getElementById(`pill-${idx}`);
+        if (!btn) return;
+        if (idx === currentSceneIdx) {
+          btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold transition bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        } else {
+          btn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold transition bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800';
+        }
+      });
+    }
+
+    function buildStoryboard() {
+      const grid = document.getElementById('storyboardGrid');
+      grid.innerHTML = '';
+      SCENES.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.onclick = () => jumpToScene(idx);
+        card.className = 'p-4 rounded-xl border border-slate-800/80 bg-slate-950/60 hover:border-slate-700 cursor-pointer transition';
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-emerald-400">SCENE ${s.id} (${s.duration}s)</span>
+            <span class="text-[10px] text-slate-500 uppercase font-mono">${s.tag}</span>
+          </div>
+          <h4 class="text-sm font-bold text-white mb-1.5">${s.title}</h4>
+          <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">${s.voiceover}</p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function formatSpeechText(text) {
+      if (!text) return '';
+      return text
+        // Fix 'AI' pronunciation so TTS speaks 'A. I.' (Ay-Eye) instead of 'eye' or 'ay'
+        .replace(/\bAI\b/g, 'A. I.')
+        .replace(/\bAi\b/g, 'A. I.')
+        .replace(/\bA\.I\.\b/g, 'A. I.')
+        .replace(/\bA\.I\b/g, 'A. I.')
+        .replace(/₹/g, 'rupees ')
+        .replace(/\bCr\b/gi, 'crore')
+        .replace(/\bLakh\b/gi, 'lakh');
+    }
+
+    function onVoiceModeChange(mode) {
+      voiceMode = mode;
+      if (voiceMode === 'studio') {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      } else {
+        audioPlayer.pause();
+      }
+      const label = document.getElementById('muteLabel');
+      if (!isMuted && label) {
+        label.innerText = voiceMode === 'studio' ? 'Studio Voice Active' : 'AI Voice Active';
+      }
+      if (isPlaying) {
+        playSceneAudio();
+      }
+    }
+
+    function playSceneAudio() {
+      if (isMuted) return;
+      const scene = SCENES[currentSceneIdx];
+
+      if (voiceMode === 'studio' && scene.audioUrl) {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        audioPlayer.pause();
+        audioPlayer.src = scene.audioUrl;
+        audioPlayer.currentTime = 0;
+        audioPlayer.play().catch(err => {
+          console.warn("Studio voiceover autoplay blocked or file missing, falling back to speech synthesis:", err);
+          speakVoiceover();
+        });
+      } else {
+        audioPlayer.pause();
+        speakVoiceover();
+      }
+    }
+
+    function speakVoiceover() {
+      if (isMuted || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const formatted = formatSpeechText(SCENES[currentSceneIdx].voiceover);
+      const utterance = new SpeechSynthesisUtterance(formatted);
+      utterance.rate = 1.02;
+      utterance.pitch = 1.0;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(v => (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('India') || v.name.includes('English (India)')) && v.lang.startsWith('en')) || voices.find(v => v.lang.startsWith('en'));
+      if (preferredVoice) utterance.voice = preferredVoice;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const icon = document.getElementById('playIcon');
+      if (isPlaying) {
+        icon.className = 'fa-solid fa-pause';
+        playSceneAudio();
+        timerInterval = setInterval(onTick, 100);
+      } else {
+        icon.className = 'fa-solid fa-play ml-0.5';
+        audioPlayer.pause();
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        clearInterval(timerInterval);
+      }
+    }
+
+    function onTick() {
+      const scene = SCENES[currentSceneIdx];
+      const step = 100 / (scene.duration * 10);
+      sceneProgress += step;
+      overallTime += 0.1;
+
+      // Update segment fill
+      const segFill = document.getElementById(`seg-fill-${currentSceneIdx}`);
+      if (segFill) segFill.style.width = `${Math.min(sceneProgress, 100)}%`;
+
+      document.getElementById('timecode').innerText = `${formatTime(overallTime)} / ${formatTime(totalDuration)}`;
+      updateSubtitle();
+
+      if (sceneProgress >= 100) {
+        // Let studio audio finish speaking naturally if still playing
+        if (voiceMode === 'studio' && !audioPlayer.paused && !audioPlayer.ended && !isMuted) {
+          return;
+        }
+        // Let browser voiceover finish naturally if still speaking
+        if (voiceMode === 'browser' && 'speechSynthesis' in window && window.speechSynthesis.speaking && !isMuted) {
+          return;
+        }
+        if (currentSceneIdx < SCENES.length - 1) {
+          jumpToScene(currentSceneIdx + 1);
+        } else {
+          togglePlay();
+          sceneProgress = 100;
+        }
+      }
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function jumpToScene(idx) {
+      audioPlayer.pause();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentSceneIdx = idx;
+      sceneProgress = 0;
+      SCENES.forEach((s, i) => {
+        const f = document.getElementById(`seg-fill-${i}`);
+        if (f) f.style.width = i < idx ? '100%' : '0%';
+      });
+      overallTime = SCENES.slice(0, idx).reduce((acc, s) => acc + s.duration, 0);
+      renderScene();
+      if (isPlaying) {
+        playSceneAudio();
+      }
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      audioPlayer.muted = isMuted;
+      const icon = document.getElementById('muteIcon');
+      const label = document.getElementById('muteLabel');
+      if (isMuted) {
+        icon.className = 'fa-solid fa-volume-xmark text-rose-400';
+        label.innerText = 'Muted';
+        audioPlayer.pause();
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      } else {
+        icon.className = 'fa-solid fa-volume-high text-emerald-400';
+        label.innerText = voiceMode === 'studio' ? 'Studio Voice Active' : 'AI Voice Active';
+        if (isPlaying) playSceneAudio();
+      }
+    }
+
+    function toggleFullscreen() {
+      const el = document.getElementById('videoContainer');
+      if (!document.fullscreenElement) {
+        el.requestFullscreen().catch(err => alert(err.message));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    async function toggleRecording() {
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+          mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+          recordedChunks = [];
+          mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `GeM_Audit_Pitch_Video_${Date.now()}.webm`;
+            a.click();
+            document.getElementById('recordBtn').innerHTML = `<i class="fa-solid fa-circle-dot"></i><span>Record & Download (.webm)</span>`;
+            document.getElementById('recordBtn').className = 'px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition';
+            isRecording = false;
+          };
+          mediaRecorder.start();
+          isRecording = true;
+          document.getElementById('recordBtn').innerHTML = `<i class="fa-solid fa-stop text-white"></i><span>Stop & Save Recording</span>`;
+          document.getElementById('recordBtn').className = 'px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-rose-600/30 flex items-center gap-2 animate-pulse';
+          jumpToScene(0);
+          if (!isPlaying) togglePlay();
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        if (mediaRecorder) mediaRecorder.stop();
+      }
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      buildTimeline();
+      buildPills();
+      buildStoryboard();
+      renderScene();
+    });
+  </script>
+</body>
+</html>

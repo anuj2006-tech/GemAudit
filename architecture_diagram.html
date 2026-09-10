@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SYSTEM ARCHITECTURE: GeM AUDIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --primary: #0284c7;
+      --dark: #0f172a;
+      --text: #334155;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #f1f5f9;
+      color: var(--dark);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      max-width: 900px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      color: #0369a1;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 34px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    p.subtitle {
+      color: #64748b;
+      font-size: 15px;
+    }
+    .container {
+      width: 100%;
+      max-width: 1150px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .diagram-img-card {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+    .diagram-img-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .step-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 800;
+      color: #0284c7;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .step-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    .step-desc {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    .footer-actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .btn-secondary {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+    .btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="badge">🏛️ SIH 2026 Presentation Architecture</div>
+    <h1>SYSTEM ARCHITECTURE: GeM AUDIT</h1>
+    <p class="subtitle">Detailed project workflow from PDF ingestion to multi-portal verification & officer decision</p>
+  </div>
+
+  <div class="container">
+    <div class="diagram-img-card">
+      <img src="./frontend/public/images/gem_audit_project_architecture.jpg" alt="SYSTEM ARCHITECTURE: GeM AUDIT" />
+    </div>
+
+    <div class="flow-steps">
+      <div class="step-box">
+        <span class="step-num">Step 01: Intake</span>
+        <div class="step-title">Tender & Document Queue</div>
+        <p class="step-desc">Officer picks a live GeM tender. Uploaded bidder PDFs (CA Turnover Certificate, Udyam URN, GST returns, OEM MAF) enter the verification queue.</p>
+      </div>
+      <div class="step-box">
+        <span class="step-num">Step 02: AI Forensics</span>
+        <div class="step-title">Gemini 2.5 Flash OCR</div>
+        <p class="step-desc">Extracts declared financial figures, registration IDs, and dates. Scans for font tampering, altered turnover numbers, or forged certificates.</p>
+      </div>
+      <div class="step-box">
+        <span class="step-num">Step 03: Verification</span>
+        <div class="step-title">10+ Statutory Registries</div>
+        <p class="step-desc">FastAPI engine cross-references claims against GSTN (actual GSTR filings), MCA21 (Director DIN), Udyam (MSME), and CPPP (Blacklist).</p>
+      </div>
+      <div class="step-box">
+        <span class="step-num">Step 04: Action & Audit</span>
+        <div class="step-title">Officer HUD & SHA-256 Seal</div>
+        <p class="step-desc">Officer reviews highlighted red flags and clicks Qualify, Clarify, or Disqualify. Cryptographic audit trail logged for CVC vigilance defense.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-actions">
+    <a href="./frontend/public/images/gem_audit_project_architecture.jpg" download="SYSTEM_ARCHITECTURE_GeM_AUDIT.jpg" class="btn btn-primary">⬇️ Download High-Res Slide Image</a>
+    <button onclick="window.print()" class="btn btn-secondary">🖨️ Print / Save as PDF</button>
+  </div>
+</body>
+</html>
