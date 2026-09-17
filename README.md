@@ -1,15 +1,22 @@
-# 🏛️ GeM Audit AI — Forensic Bid Verification & Compliance Platform
+# 🏛️ GemAudit — AI-Powered Forensic Bid Verification & Compliance Platform
 
-> **AI-Powered Fraud Prevention, 10-Portal Statutory Cross-Checks & Cryptographic Audit Seals for Government Procurement (GeM & CPPP)**
+> **Automated Fraud Prevention, 10-Portal Statutory Cross-Checks & Cryptographic Audit Seals for Public Procurement (GeM & CPPP)**  
+> *Developed for Smart India Hackathon 2026 • Problem Statement: Automated Tender Compliance & Fraud Detection*
 
-India processes over **₹4,00,000+ Crore ($48B+)** in public procurement annually across **GeM (Government e-Marketplace)** and **CPPP (Central Public Procurement Portal)**. 
+---
 
-**GeM Audit AI** is an enterprise GovTech forensic platform engineered for procurement evaluators, vigilance officers, and tender committees. It cuts tender scrutiny from **7 days to 8 minutes (a 96% reduction)**, eliminates corrupt shell contractors before contract award, and protects honest officers with tamper-evident cryptographic digital seals (`SHA-256`).
+## 📌 Executive Summary
+
+India's government processes over **₹4,00,000+ Crore ($48B+)** in public procurement annually across **GeM (Government e-Marketplace)** and **CPPP (Central Public Procurement Portal)**. 
+
+Evaluating contractor bids manually takes **5 to 7 days per tender**, relies on sample paper scrutiny, and frequently misses sophisticated PDF tampering, shell companies, and fraudulent tax turnover declarations.
+
+**GemAudit** is an enterprise GovTech forensic platform engineered for procurement evaluators, vigilance officers, and tender evaluation committees. It cuts tender scrutiny from **7 days to 8 minutes (a 96% reduction)**, eliminates corrupt shell contractors before contract award, and protects honest procurement officers with tamper-evident cryptographic digital seals (`SHA-256`).
 
 ---
 
 ## 📑 Table of Contents
-1. [Key Features & Forensic Capabilities](#-key-features--forensic-capabilities)
+1. [Key Features & Capabilities](#-key-features--capabilities)
 2. [End-to-End System Architecture](#-end-to-end-system-architecture)
 3. [The 10 Statutory Registry Verification Matrix](#-the-10-statutory-registry-verification-matrix)
 4. [Document Tampering & Forensic OCR Engine](#-document-tampering--forensic-ocr-engine)
@@ -17,19 +24,21 @@ India processes over **₹4,00,000+ Crore ($48B+)** in public procurement annual
 6. [Technology Stack](#-technology-stack)
 7. [Local Setup & Execution Guide](#-local-setup--execution-guide)
 8. [Core API Endpoints](#-core-api-endpoints)
-9. [Impact & Benchmarks (Manual vs. GeM Audit AI)](#-impact--benchmarks-manual-vs-gem-audit-ai)
+9. [Impact & Benchmarks (Manual vs. GemAudit)](#-impact--benchmarks-manual-vs-gemaudit)
+10. [SIH Deliverables & Presentation Slides](#-sih-deliverables--presentation-slides)
 
 ---
 
-## 🌟 Key Features & Forensic Capabilities
+## 🌟 Key Features & Capabilities
 
-* **⚡ 96% Faster Procurement:** Evaluates 100+ page contractor bid packages in under **8 minutes** instead of 5 to 7 days of manual committee paperwork.
-* **🛡️ 10-Portal Multi-Registry Verification:** Concurrently queries **10 official statutory government databases** in under **3 seconds** via secure gateways (API Setu).
-* **🔍 Multi-Layer Document Tamper Detection:** Catches photoshopped balance sheets, altered CA turnover figures, modified dates, and fake MSME exemption certificates.
-* **🔒 100% Cryptographic Audit Trail (`SHA-256`):** Digitally signs and seals every verification timestamp, discrepancy score, and officer decision — creating immutable evidence for **CVC (Central Vigilance Commission)** and **CAG** audits.
-* **⚖️ Zero Discretionary Bias & Bribery:** Replaces subjective human discretion with objective mathematical verification against live government tax returns and ministry registries.
-* **⏱️ 48-Hour Seller Clarification Helper:** Automates GeM's mandatory 48-hour seller response window and drafts legally defensible rejection notices with one click.
-* **🎬 Pitch Video Studio & Motion Visualizer:** Integrated presentation studio with synced Edge-TTS narration for stakeholder and investor demonstrations.
+- **⚡ 96% Faster Procurement:** Evaluates 100+ page contractor bid packages in under **8 minutes** instead of 5 to 7 days of manual committee paperwork.
+- **🛡️ 10-Portal Multi-Registry Verification:** Concurrently queries **10 official statutory government databases** in under **3 seconds** via secure gateways (API Setu).
+- **🔍 Multi-Layer Document Tamper Detection:** Catches photoshopped balance sheets, altered CA turnover figures, modified dates, and fake MSME exemption certificates using Error Level Analysis (ELA) and PDF metadata stream parsing.
+- **🔒 100% Cryptographic Audit Trail (`SHA-256`):** Digitally signs and seals every verification timestamp, discrepancy score, and officer decision — creating immutable evidence for **CVC (Central Vigilance Commission)** and **CAG** audits.
+- **⚖️ Zero Discretionary Bias & Bribery:** Replaces subjective human discretion with objective mathematical verification against live government tax returns and ministry registries.
+- **⏱️ 48-Hour Seller Clarification Helper:** Automates GeM's mandatory 48-hour seller response window and drafts legally defensible rejection notices with one click.
+- **🎬 Pitch Video Studio & Motion Visualizer:** Integrated presentation studio with synced Edge-TTS natural voice narration for stakeholder and jury demonstrations.
+- **🚀 Instant Demo Access:** No tedious login gate for evaluators — launches directly into the procurement officer workspace.
 
 ---
 
@@ -53,7 +62,7 @@ graph TB
 
     subgraph NodeGateway ["API Gateway & Enterprise Core (Node.js / Express)"]
         Node_Server["Express Server (Port 5000)"]
-        AuthService["JWT + Argon2 Role-Based Access Control"]
+        AuthService["Role-Based Access & Officer Profiles"]
         AuditLogger["System Audit Trail Logger"]
     end
 
@@ -73,7 +82,7 @@ graph TB
 
 ## 🌐 The 10 Statutory Registry Verification Matrix
 
-GeM Audit AI cross-references vendor submissions against 10 authoritative public databases in under 3 seconds:
+GemAudit cross-references vendor submissions against 10 authoritative public databases in under 3 seconds:
 
 | # | Statutory Registry | Verification Checks & Discrepancy Detection |
 | :-: | :--- | :--- |
@@ -92,7 +101,7 @@ GeM Audit AI cross-references vendor submissions against 10 authoritative public
 
 ## 🔬 Document Tampering & Forensic OCR Engine
 
-The platform identifies forged certificates through a **4-layer forensic inspection**:
+The platform identifies forged contractor certificates through a **4-layer forensic inspection**:
 
 1. **PDF Structure & Metadata Inspection:** Checks internal `CreatorTool` tags for Photoshop, Canva, or online editor signatures, creation vs. modification date discrepancies, and unmerged revision streams.
 2. **Error Level Analysis (ELA):** Analyzes pixel compression noise. Resaved or digitally pasted numbers stand out as glowing high-frequency artifact hotspots.
@@ -104,9 +113,9 @@ The platform identifies forged certificates through a **4-layer forensic inspect
 ## 📁 Repository Directory Map
 
 ```text
-Legal-tenders/
-├── fastapi_backend/                    # Python / FastAPI Forensic Verification Service
-│   ├── main.py                         # FastAPI application entrypoint (Port 8000)
+GemAudit/
+├── fastapi_backend/                    # Python / FastAPI Forensic Verification Service (Port 8000)
+│   ├── main.py                         # FastAPI application entrypoint
 │   ├── database.py                     # SQLite / PostgreSQL engine config
 │   ├── models.py                       # SQLAlchemy models for statutory checks & audits
 │   ├── schemas.py                      # Pydantic request/response validation
@@ -118,6 +127,7 @@ Legal-tenders/
 ├── backend/                            # Node.js / Express Enterprise Gateway (Port 5000)
 │   ├── server.js                       # Express application bootstrap
 │   ├── package.json                    # Gateway dependencies (Helmet, Argon2, JWT)
+│   ├── migrations/                     # SQL migration references
 │   └── src/
 │       ├── controllers/                # Auth, tender registry, and compliance controllers
 │       ├── middleware/                 # Rate limiters, role auth, security guards
@@ -127,21 +137,37 @@ Legal-tenders/
 ├── frontend/                           # React 18 + Vite + Tailwind CSS (Port 3000)
 │   ├── src/
 │   │   ├── components/                 # UI components, badges, charts, modal viewers
-│   │   ├── context/                    # AuthContext (Role & session management)
+│   │   ├── context/                    # AuthContext (Officer session & workspace)
 │   │   ├── pages/
 │   │   │   ├── gemVerification/        # Compliance portal, audit trail, analytics pages
 │   │   │   ├── pitchVideo/             # Pitch Video Studio
-│   │   │   └── auth/                   # Login & registration workspaces
-│   │   ├── routes/AppRoutes.jsx        # Complete client-side route registry
+│   │   │   └── tenderReg/              # Tender management & registration
+│   │   ├── routes/AppRoutes.jsx        # Complete client-side route registry (login bypassed)
 │   │   └── services/                   # API connectors (gemFastapiService.js, gemService.js)
 │   ├── vite.config.js                  # Vite bundler options (port 3000, /api proxy)
 │   └── package.json
 │
-├── audio/                              # Generated narration audio files (.mp3)
-├── images/                             # Architectural graphics and diagrams
-├── generate_voiceovers.py              # Edge-TTS script for video voiceovers
-├── docker-compose.yml                  # Multi-container orchestration stack
-└── README.md                           # This platform documentation
+├── slides/                             # SIH Interactive Presentation Slides & Diagrams
+│   ├── sih_references_and_data_sources_slide.html   # Hexagonal Process Chain with Working Links
+│   ├── sih_feasibility_viability_slide.html         # Slide 4: Feasibility & Viability Matrices
+│   ├── sih_impact_and_benefits_slide.html           # Slide 5: Social & Quantitative Impact
+│   ├── gem_impact_benefits_circular_diagram.html    # Split Circular Impact Wheel
+│   ├── procurement_impact_wheel.html                # 6-Dimension Procurement Wheel
+│   ├── comparison_bar_chart.html                    # Legacy vs GemAudit Performance Bar Chart
+│   └── feasibility_viability_panels.html            # Feasibility & Viability Bento Grid
+│
+├── docs/                               # Project Guides & Technical Documentation
+│   ├── TEAM_HANDOFF_AND_PROJECT_GUIDE.md            # Comprehensive Architecture & Execution Guide
+│   ├── TEAM_HANDOFF_AND_PROJECT_GUIDE.html          # Styled HTML Technical Guide
+│   └── tender_platform_technical_report.md          # Technical Audit Report
+│
+├── audio/                              # Generated Narration Audio Files (.mp3)
+├── GeM_Audit_Pitch_Presentation.mp4    # 1080p Pitch Presentation Video
+├── generate_voiceovers.py              # Edge-TTS Natural Human Voice Generation Script
+├── render_pitch_video.py               # Automated Video Render Script (Playwright + FFmpeg)
+├── pitch_video_studio.html             # Standalone Pitch Video Studio Runner
+├── docker-compose.yml                  # Container stack orchestration
+└── README.md                           # Platform Documentation
 ```
 
 ---
@@ -151,10 +177,11 @@ Legal-tenders/
 | Layer | Technologies Used | Purpose & Advantages |
 | :--- | :--- | :--- |
 | **Frontend** | React 18, Vite, Tailwind CSS, Lucide React, FontAwesome | Fast, responsive, dark-mode glassmorphism interface |
-| **Forensic Backend** | Python 3.10+, FastAPI, Uvicorn, SQLAlchemy, Pydantic | High-speed concurrent statutory API lookups & OCR |
-| **Gateway Backend** | Node.js, Express, Helmet, Argon2, JWT, Rate Limiting | Enterprise session security, tenant management, RBAC |
+| **Forensic Backend** | Python 3.10+, FastAPI, Uvicorn, SQLAlchemy, Pydantic | High-speed concurrent statutory API lookups & pixel OCR |
+| **Gateway Backend** | Node.js, Express, Helmet, Argon2, JWT, Rate Limiting | Enterprise session security, tender management, RBAC |
 | **Databases** | SQLite (`gem_compliance.db`) & PostgreSQL (Supabase) | Local zero-config testing cache + cloud storage with RLS |
-| **Audio & Motion** | Microsoft Edge-TTS, HTML5 Canvas | Synced narration for automated video presentation studio |
+| **Audio & TTS** | Microsoft Edge-TTS (`en-IN-NeerjaExpressiveNeural`, `en-IN-PrabhatNeural`) | Expressive natural human narration for video studio |
+| **Video Rendering** | Playwright, FFmpeg, HTML5 Canvas | Automated 60fps MP4 video generation with synced subtitles |
 
 ---
 
@@ -169,7 +196,7 @@ Legal-tenders/
 
 ### Step 1: Start the FastAPI Forensic Backend
 ```bash
-cd Legal-tenders/fastapi_backend
+cd fastapi_backend
 
 # Create & activate virtual environment
 python -m venv .venv
@@ -191,7 +218,7 @@ python -m uvicorn main:app --reload --port 8000
 
 ### Step 2: Start the Node.js Gateway Backend
 ```bash
-cd Legal-tenders/backend
+cd backend
 
 # Install dependencies
 npm install
@@ -200,12 +227,13 @@ npm install
 npm start
 ```
 * **Gateway API:** `http://localhost:5000`
+* **Health Endpoint:** `http://localhost:5000/health`
 
 ---
 
 ### Step 3: Start the Frontend Application
 ```bash
-cd Legal-tenders/frontend
+cd frontend
 
 # Install dependencies
 npm install
@@ -214,6 +242,7 @@ npm install
 npm run dev
 ```
 * **Web Portal:** `http://localhost:3000`
+* **Direct Compliance Dashboard:** `http://localhost:3000/gem-compliance-dashboard`
 
 ---
 
@@ -227,16 +256,15 @@ npm run dev
 * `GET /api/tenders` — Seeded GeM tenders with compliance milestones
 
 ### 🔑 Gateway Backend (`http://localhost:5000`)
-* `POST /api/auth/login` — Secure login returning JWT and role-based permissions
-* `POST /api/auth/register` — Onboards organizations, owner accounts, and departments
 * `GET /api/gem-verification/stats` — Global procurement analytics and time-saved metrics
+* `GET /api/tenders` — Tender management and bid proposal listings
 * `GET /health` — Health check endpoint
 
 ---
 
-## 📊 Impact & Benchmarks (Manual vs. GeM Audit AI)
+## 📊 Impact & Benchmarks (Manual vs. GemAudit)
 
-| Benchmark Dimension | Legacy Manual Evaluation | With GeM Audit AI | Value Delivered |
+| Benchmark Dimension | Legacy Manual Evaluation | With GemAudit | Value Delivered |
 | :--- | :---: | :---: | :--- |
 | **Evaluation Speed** | 5 to 7 Days (10,080 Mins) | **8 Minutes** | **⚡ 96% Time Saved** |
 | **Review Cost per Tender** | ₹15,000 (Committee fees) | **₹5 (Cloud compute)** | **💰 99.9% Cost Slashed** |
@@ -246,14 +274,19 @@ npm run dev
 
 ---
 
-## 🏛️ Smart India Hackathon (SIH 2026) Deliverables
+## 🏛️ SIH Deliverables & Presentation Slides
 
-* **Slide 4 (Feasibility & Viability):** [`sih_feasibility_viability_slide.html`](file:///c:/Users/QCCS/OneDrive/Desktop/leagal_tender%282%29/sih_feasibility_viability_slide.html)
-* **Slide 5 (Benefits & Social Impact):** [`sih_impact_and_benefits_slide.html`](file:///c:/Users/QCCS/OneDrive/Desktop/leagal_tender%282%29/sih_impact_and_benefits_slide.html)
-* **Split Circular Comparison Diagram:** [`gem_impact_benefits_circular_diagram.html`](file:///c:/Users/QCCS/OneDrive/Desktop/leagal_tender%282%29/gem_impact_benefits_circular_diagram.html)
-* **Comparative Performance Bar Chart:** [`comparison_bar_chart.html`](file:///c:/Users/QCCS/OneDrive/Desktop/leagal_tender%282%29/comparison_bar_chart.html)
-* **Team Technical Handoff Guide:** [`TEAM_HANDOFF_AND_PROJECT_GUIDE.md`](file:///c:/Users/QCCS/OneDrive/Desktop/leagal_tender%282%29/TEAM_HANDOFF_AND_PROJECT_GUIDE.md)
+All official Smart India Hackathon deliverables are pre-packaged in the [`slides/`](slides/) and [`docs/`](docs/) directories:
+
+1. **Slide: References & Data Sources:** [`slides/sih_references_and_data_sources_slide.html`](slides/sih_references_and_data_sources_slide.html)  
+   *Interactive horizontal hexagonal process chain with working live hyperlinks and Dark/Beige theme toggle.*
+2. **Slide 4: Feasibility & Viability:** [`slides/sih_feasibility_viability_slide.html`](slides/sih_feasibility_viability_slide.html)
+3. **Slide 5: Benefits & Social Impact:** [`slides/sih_impact_and_benefits_slide.html`](slides/sih_impact_and_benefits_slide.html)
+4. **Split Circular Comparison Wheel:** [`slides/gem_impact_benefits_circular_diagram.html`](slides/gem_impact_benefits_circular_diagram.html)
+5. **Comparative Performance Bar Chart:** [`slides/comparison_bar_chart.html`](slides/comparison_bar_chart.html)
+6. **Pitch Video Studio:** [`pitch_video_studio.html`](pitch_video_studio.html)
+7. **Team Technical Handoff Guide:** [`docs/TEAM_HANDOFF_AND_PROJECT_GUIDE.md`](docs/TEAM_HANDOFF_AND_PROJECT_GUIDE.md)
 
 ---
 
-*Authored for the GeM Audit AI Platform Team • Smart India Hackathon 2026*
+*Authored for the GemAudit Platform Team • Smart India Hackathon 2026*
