@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeM Audit AI — Feasibility & Viability Presentation Cards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #020617;
+      color: #f8fafc;
+    }
+
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Certificate / Ledger Holographic Glows */
+    .ledger-card-emerald {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(6, 78, 59, 0.25) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      box-shadow: 0 12px 36px -10px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .ledger-card-cyan {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(14, 116, 144, 0.25) 100%);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      box-shadow: 0 12px 36px -10px rgba(6, 182, 212, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    /* Subtle security guilloche pattern overlay */
+    .security-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
+      background-size: 16px 16px;
+    }
+
+    /* Corner Security Seals */
+    .corner-bracket {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: rgba(56, 189, 248, 0.6);
+      pointer-events: none;
+    }
+    .corner-tl { top: 6px; left: 6px; border-top: 2px solid; border-left: 2px solid; }
+    .corner-tr { top: 6px; right: 6px; border-top: 2px solid; border-right: 2px solid; }
+    .corner-bl { bottom: 6px; left: 6px; border-bottom: 2px solid; border-left: 2px solid; }
+    .corner-br { bottom: 6px; right: 6px; border-bottom: 2px solid; border-right: 2px solid; }
+
+    .item-pill {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s ease;
+    }
+    .item-pill:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      background: rgba(30, 41, 59, 0.8);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center justify-center min-h-screen">
+
+  <div class="w-full max-w-6xl space-y-4">
+    
+    <!-- Top Bar with Instructions -->
+    <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-xs text-slate-400">
+      <span class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>DOMAIN-STYLED PRESENTATION PANELS FOR SLIDES</span>
+      </span>
+      <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-camera"></i> Ready for Slide Screenshot
+      </button>
+    </div>
+
+    <!-- 2-COLUMN CERTIFICATE / LEDGER CONTAINER -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+      
+      <!-- ============================================== -->
+      <!-- CARD 1: FEASIBILITY ANALYSIS (CYAN THEME) -->
+      <!-- ============================================== -->
+      <div class="ledger-card-cyan rounded-2xl p-6 security-pattern overflow-hidden">
+        <!-- Security Corner Accents -->
+        <div class="corner-bracket corner-tl !border-cyan-400/70"></div>
+        <div class="corner-bracket corner-tr !border-cyan-400/70"></div>
+        <div class="corner-bracket corner-bl !border-cyan-400/70"></div>
+        <div class="corner-bracket corner-br !border-cyan-400/70"></div>
+
+        <!-- Certificate Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-cyan-500/30 mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shadow-lg shadow-cyan-500/20">
+              <i class="fa-solid fa-microchip text-lg"></i>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono-code uppercase tracking-widest text-cyan-400 font-bold">DEPLOYMENT SPECIFICATION</div>
+              <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                FEASIBILITY ANALYSIS
+              </h2>
+            </div>
+          </div>
+          <!-- Rating Badge -->
+          <div class="flex items-center gap-1 text-amber-400 bg-slate-950/80 px-2.5 py-1 rounded-lg border border-amber-500/30 text-xs font-bold">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+        </div>
+
+        <!-- 4 Items List -->
+        <div class="space-y-3">
+          
+          <!-- Item 1: Infrastructure -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-network-wired text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                Zero Infrastructure Overhaul
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Plugs into official statutory APIs (GSTN, MCA, EPFO, PAN) via authorized gateways like API Setu. Requires zero changes to existing GeM servers.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 2: OCR -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                Sub-3-Second Forensic OCR
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Extracts and verifies financial claims from 100-page bid PDFs in under 3 seconds at just ₹5 to ₹10 per check, requiring no costly hardware.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 3: Rollout -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-bolt text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                Plug-and-Play Rollout
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Deploys smoothly as a browser tool or API plugin. Can be piloted in one ministry (like Railways) and expanded nationwide with zero downtime.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 4: Officer Control -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-user-shield text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                Full Officer Control & Safety
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Preserves human authority with strict manual overrides, 48-hour deadline tracking, and auto-drafted legal rejection notices.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Ledger Footer -->
+        <div class="mt-4 pt-3 border-t border-cyan-500/20 flex items-center justify-between text-[10px] font-mono-code text-cyan-400/80">
+          <span>● ADAPTER PATTERN INTEGRATION</span>
+          <span>READY FOR DEPLOYMENT</span>
+        </div>
+      </div>
+
+
+      <!-- ============================================== -->
+      <!-- CARD 2: VIABILITY (EMERALD GREEN THEME) -->
+      <!-- ============================================== -->
+      <div class="ledger-card-emerald rounded-2xl p-6 security-pattern overflow-hidden">
+        <!-- Security Corner Accents -->
+        <div class="corner-bracket corner-tl !border-emerald-400/70"></div>
+        <div class="corner-bracket corner-tr !border-emerald-400/70"></div>
+        <div class="corner-bracket corner-bl !border-emerald-400/70"></div>
+        <div class="corner-bracket corner-br !border-emerald-400/70"></div>
+
+        <!-- Certificate Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-emerald-500/30 mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shadow-lg shadow-emerald-500/20">
+              <i class="fa-solid fa-shield-halved text-lg"></i>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono-code uppercase tracking-widest text-emerald-400 font-bold">GOVERNANCE & TRUST ASSURANCE</div>
+              <h2 class="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                VIABILITY & AUDIT SAFETY
+              </h2>
+            </div>
+          </div>
+          <!-- Verified Seal -->
+          <div class="flex items-center gap-1.5 text-emerald-300 bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/40 text-xs font-bold font-mono-code">
+            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+            <span>VERIFIED</span>
+          </div>
+        </div>
+
+        <!-- 4 Items List -->
+        <div class="space-y-3">
+          
+          <!-- Item 1: Proven Tech -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-certificate text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                Proven Technology Model
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Built on the same trusted frameworks powering DigiLocker and GST e-Invoicing, ensuring 100% operational reliability from Day 1.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 2: Zero Bias -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-scale-balanced text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                Zero Bias & Fair Play
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Replaces human favoritism with objective mathematical checks—stopping corrupt shell companies and giving honest MSMEs a fair chance.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 3: Audit Shield -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-stamp text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                Bulletproof Audit Shield
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Locks every decision with a tamper-proof digital seal, protecting honest officers from false CVC and CAG vigilance investigations.
+              </p>
+            </div>
+          </div>
+
+          <!-- Item 4: Market Demand -->
+          <div class="item-pill rounded-xl p-3.5 flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-lg bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 shadow-sm">
+              <i class="fa-solid fa-chart-line text-sm"></i>
+            </div>
+            <div class="space-y-0.5">
+              <h3 class="text-sm font-bold text-white flex items-center gap-1.5">
+                ₹4 Lakh Crore Market Demand
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Directly protects India's massive public procurement market, cutting tender review costs from ₹15,000 down to ₹5 per check.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Ledger Footer -->
+        <div class="mt-4 pt-3 border-t border-emerald-500/20 flex items-center justify-between text-[10px] font-mono-code text-emerald-400/80">
+          <span>● CVC & CAG AUDIT COMPLIANT</span>
+          <span>SHA-256 SEALED</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

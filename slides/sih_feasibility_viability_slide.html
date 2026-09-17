@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIH Slide 4: Feasibility and Viability — GeM Audit AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* 16:9 Standard Slide Ratio (1280x720 Base Scale) */
+    .slide-canvas {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      background: #d5e5db; /* Light sage green pastel from SIH template */
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+      user-select: none;
+    }
+
+    .title-font {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.06em;
+    }
+
+    /* Pinned Kraft Paper Cards */
+    .pinned-card {
+      background: #9d8b70; /* Authentic kraft paper brown */
+      box-shadow: 5px 8px 18px rgba(0, 0, 0, 0.35), inset 0 0 40px rgba(0, 0, 0, 0.15);
+      position: relative;
+      color: #f5eedc;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+    }
+
+    .pinned-card-middle {
+      background: #607274; /* Slate muted contrast for center card */
+      box-shadow: 5px 8px 18px rgba(0, 0, 0, 0.35), inset 0 0 40px rgba(0, 0, 0, 0.2);
+      position: relative;
+      color: #f5eedc;
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+    }
+
+    /* 3D Realistic Pushpins */
+    .pushpin {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      z-index: 30;
+      filter: drop-shadow(3px 5px 3px rgba(0,0,0,0.45));
+    }
+    .pin-red {
+      background: radial-gradient(circle at 35% 35%, #ff4d4d, #b30000 70%, #660000);
+      border-radius: 50%;
+      border: 1px solid #ff9999;
+    }
+    .pin-red::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Stamp / Rating Elements */
+    .rating-stars {
+      color: #2b303a;
+      letter-spacing: 4px;
+      filter: drop-shadow(1px 1px 0px rgba(255,255,255,0.3));
+    }
+
+    .verified-stamp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border: 3px solid #2b303a;
+      border-radius: 50%;
+      color: #2b303a;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    /* Bottom Foundation Graphic Bar */
+    .bottom-platform-road {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #273746;
+      border-top: 4px solid #1a252f;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 10;
+    }
+
+    .road-dash {
+      width: 60px;
+      height: 8px;
+      background: #e5e8e8;
+      border-radius: 3px;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Header -->
+  <div class="w-full max-w-[1280px] mb-3 flex items-center justify-between text-xs text-slate-300">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-bold text-slate-200">SIH SLIDE 4 TEMPLATE RECREATION: FEASIBILITY & VIABILITY</span>
+    </div>
+    <div class="flex gap-2">
+      <button onclick="window.print()" class="px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition flex items-center gap-1.5 shadow">
+        <i class="fa-solid fa-camera"></i> Save / Print as PDF (Full Slide)
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- 16:9 SLIDE CANVAS (SIH IDEA SUBMISSION TEMPLATE) -->
+  <!-- ================================================================= -->
+  <div id="slideCanvas" class="slide-canvas">
+
+    <!-- 1. TOP HEADER ROW -->
+    <div class="pt-5 px-10 flex items-center justify-between">
+      <!-- Team Logo Oval (Left) -->
+      <div class="w-28 h-14 rounded-full border-2 border-slate-700 bg-slate-100/60 flex flex-col items-center justify-center text-center shadow-sm">
+        <span class="text-[11px] font-black text-slate-800 leading-tight">Your Team</span>
+        <span class="text-[10px] font-bold text-slate-600">Name</span>
+      </div>
+
+      <!-- Slide Title (Center) -->
+      <div class="text-center">
+        <h1 class="text-4xl font-black text-slate-800 title-font tracking-wide drop-shadow-sm">
+          FEASIBILITY AND VIABILITY
+        </h1>
+        <div class="w-96 h-0.5 mx-auto mt-1.5 border-b-2 border-dashed border-slate-600/60"></div>
+      </div>
+
+      <!-- SIH Logo / Ministry Emblem (Right) -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-emerald-500 flex items-center justify-center text-white shadow font-bold text-xs">
+          SIH
+        </div>
+        <div class="text-right leading-tight">
+          <div class="text-[10px] font-extrabold text-slate-800 uppercase tracking-tighter">SMART INDIA</div>
+          <div class="text-[11px] font-black text-slate-900 uppercase tracking-tight">HACKATHON</div>
+          <div class="text-[10px] font-bold text-emerald-700 font-mono">2026</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 2. MAIN 3 PINNED CARDS GRID -->
+    <div class="px-10 mt-5 grid grid-cols-3 gap-6 h-[510px] relative z-20">
+
+      <!-- ======================================================= -->
+      <!-- CARD 1: FEASIBILITY ANALYSIS -->
+      <!-- ======================================================= -->
+      <div class="pinned-card rounded-xl p-5 flex flex-col justify-between">
+        <!-- Red Pushpin at top right -->
+        <div class="pushpin pin-red -top-2.5 -right-2.5"></div>
+        <div class="pushpin pin-red -top-2.5 -left-2.5"></div>
+
+        <div>
+          <!-- Card Header -->
+          <div class="text-center pb-2 border-b border-amber-200/30">
+            <h2 class="text-lg font-black tracking-wider text-amber-100 uppercase title-font">
+              FEASIBILITY ANALYSIS
+            </h2>
+            <!-- Star Rating Iconography -->
+            <div class="rating-stars text-base mt-0.5 text-slate-900">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star-half-stroke"></i>
+            </div>
+          </div>
+
+          <!-- Content Points with domain iconography -->
+          <div class="space-y-3 pt-3 text-[11px] leading-snug text-amber-50">
+            
+            <div>
+              <span class="font-extrabold text-amber-200 underline decoration-amber-300/40">Zero Infrastructure Overhaul:</span>
+              <span>Plugs directly into official statutory APIs (GSTN, MCA, EPFO, PAN) via authorized gateways like API Setu. Requires zero modifications to existing GeM servers.</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-amber-200 underline decoration-amber-300/40">Sub-3-Second Forensic OCR:</span>
+              <span>Extracts and verifies financial claims from 100-page bid PDFs in under 3 seconds at just ₹5 to ₹10 per check, requiring no costly hardware.</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-amber-200 underline decoration-amber-300/40">Plug-and-Play Rollout:</span>
+              <span>Deploys smoothly as a browser tool or API plugin. Can be piloted in one ministry (like Railways) and expanded nationwide with zero downtime.</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-amber-200 underline decoration-amber-300/40">Full Officer Control & Safety:</span>
+              <span>Preserves human authority with strict manual overrides, 48-hour deadline tracking, and auto-drafted legal rejection notices.</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Micro Tag at bottom -->
+        <div class="text-[9px] font-mono text-amber-300/80 pt-1 border-t border-amber-300/20 flex justify-between">
+          <span>● ADAPTER PATTERN</span>
+          <span>PILOT READY</span>
+        </div>
+      </div>
+
+
+      <!-- ======================================================= -->
+      <!-- CARD 2: VIABILITY -->
+      <!-- ======================================================= -->
+      <div class="pinned-card-middle rounded-xl p-5 flex flex-col justify-between">
+        <!-- Red Pushpin at top right -->
+        <div class="pushpin pin-red -top-2.5 -right-2.5"></div>
+        <div class="pushpin pin-red -top-2.5 -left-2.5"></div>
+
+        <div>
+          <!-- Card Header -->
+          <div class="text-center pb-2 border-b border-slate-300/30">
+            <h2 class="text-lg font-black tracking-wider text-slate-100 uppercase title-font">
+              VIABILITY
+            </h2>
+            <!-- Checkmark Stamp Iconography -->
+            <div class="mt-1 flex justify-center">
+              <div class="verified-stamp !border-emerald-300 !text-emerald-300 scale-75">
+                ✓
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Points -->
+          <div class="space-y-3 pt-2 text-[11px] leading-snug text-slate-100">
+
+            <div>
+              <span class="font-extrabold text-emerald-300 underline decoration-emerald-400/40">Proven Technology Model:</span>
+              <span>Built on the same trusted frameworks powering DigiLocker and GST e-Invoicing, ensuring 100% operational reliability from Day 1.</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-emerald-300 underline decoration-emerald-400/40">Zero Bias & Fair Play:</span>
+              <span>Replaces human favoritism with objective mathematical checks—stopping corrupt shell companies and giving honest MSMEs a fair chance.</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-emerald-300 underline decoration-emerald-400/40">Bulletproof Audit Shield:</span>
+              <span>Locks every decision with a tamper-proof digital seal, protecting honest officers from false CVC and CAG vigilance investigations.</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-emerald-300 underline decoration-emerald-400/40">Ensures Officer Trust:</span>
+              <span>Visual traffic-light dashboards (🟢 Compliant vs 🔴 Mismatch) end paperwork fatigue and speed up contract approvals.</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Micro Tag at bottom -->
+        <div class="text-[9px] font-mono text-emerald-300/80 pt-1 border-t border-emerald-400/20 flex justify-between">
+          <span>● CVC & CAG COMPLIANT</span>
+          <span>SHA-256 SEAL</span>
+        </div>
+      </div>
+
+
+      <!-- ======================================================= -->
+      <!-- CARD 3: BUSINESS POTENTIAL (WITH DOMAIN ILLUSTRATION) -->
+      <!-- ======================================================= -->
+      <div class="pinned-card rounded-xl p-5 flex flex-col justify-between overflow-hidden">
+        <!-- Red Pushpin at top right -->
+        <div class="pushpin pin-red -top-2.5 -right-2.5"></div>
+        <div class="pushpin pin-red -top-2.5 -left-2.5"></div>
+
+        <div class="relative z-20">
+          <!-- Card Header -->
+          <div class="text-center pb-2 border-b border-amber-200/30">
+            <h2 class="text-lg font-black tracking-wider text-amber-100 uppercase title-font">
+              BUSINESS POTENTIAL
+            </h2>
+            <div class="text-xs text-amber-300 font-bold mt-1 tracking-widest uppercase">
+              🏛️ SCALE & PUBLIC ROI
+            </div>
+          </div>
+
+          <!-- Content Points -->
+          <div class="space-y-3 pt-3 text-[11px] leading-snug text-amber-50">
+
+            <div>
+              <span class="font-extrabold text-amber-200 underline decoration-amber-300/40">Government Cost Savings:</span>
+              <span>Automates manual monitoring to cut tender evaluation cycles from 7 days to 8 minutes (96% reduction), optimizing senior officer allocation and saving thousands of crores in stalled projects.</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-amber-200 underline decoration-amber-300/40">Sustainable Revenue Generation:</span>
+              <span>Creates a direct high-margin revenue model via B2G procurement licenses for PSUs and a ₹500–₹1,500 per-audit fee for private enterprise contractors (L&T, Tata).</span>
+            </div>
+
+            <div>
+              <span class="font-extrabold text-amber-200 underline decoration-amber-300/40">₹4 Lakh Crore Market Access:</span>
+              <span>Directly serves all central ministries, railways, state tenders, and 150,000+ registered government buyers on GeM.</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Domain Creative Vector Art (Replacing the bus with Indian Secretariat & Digital Shield) -->
+        <div class="relative z-10 -mb-2 -mr-2 mt-2 flex justify-end items-end">
+          <div class="flex items-center gap-3 p-2 bg-slate-950/60 rounded-tl-xl border-t border-l border-amber-400/30 backdrop-blur-sm shadow-xl">
+            <div class="text-amber-300 text-3xl">
+              <i class="fa-solid fa-building-columns"></i>
+            </div>
+            <div class="text-emerald-400 text-3xl animate-pulse">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="text-right">
+              <div class="text-[9px] font-black text-amber-200 uppercase">GeM Ecosystem</div>
+              <div class="text-[8px] font-mono text-emerald-300">₹4,00,000+ Cr Protected</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- 3. BOTTOM HIGHWAY / FOUNDATION STRIP -->
+    <div class="bottom-platform-road">
+      <div class="road-dash"></div>
+      <div class="road-dash"></div>
+      <div class="road-dash"></div>
+      <div class="road-dash"></div>
+      <div class="road-dash"></div>
+      <div class="road-dash"></div>
+      <div class="road-dash"></div>
+      <div class="road-dash"></div>
+    </div>
+
+    <!-- 4. TEMPLATE FOOTER BAR -->
+    <div class="absolute bottom-1 left-0 right-0 z-20 px-10 flex items-center justify-between text-[10px] text-slate-300 font-bold font-mono">
+      <span>@SIH Idea submission- Template</span>
+      <span>4</span>
+    </div>
+
+  </div>
+
+</body>
+</html>

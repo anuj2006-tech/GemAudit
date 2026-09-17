@@ -1,8 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LandingPage from '../pages/LandingPage';
-import LoginPage from '../pages/auth/LoginPage';
-import RegisterPage from '../pages/auth/RegisterPage';
 
 // Platform Admin Page Imports
 import SuperAdminDashboard from '../pages/superAdmin/SuperAdminDashboard';
@@ -48,24 +46,8 @@ import PitchVideoStudioPage from '../pages/pitchVideo/PitchVideoStudioPage';
 
 import NotFoundPage from '../pages/errors/NotFoundPage';
 
-/**
- * Route protection wrapper evaluating user session and role authorization.
- */
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, role } = useAuth();
-
-  if (!user) {
-    return <Navigate to="/auth/login" replace />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(role)) {
-    // Bounce user to their matching dashboard
-    if (role === 'PLATFORM_ADMIN') return <Navigate to="/super-admin/dashboard" replace />;
-    if (role === 'COMPANY_OWNER') return <Navigate to="/owner/dashboard" replace />;
-    if (role === 'ADMIN' || role === 'COMPANY_ADMIN') return <Navigate to="/admin/dashboard" replace />;
-    return <Navigate to="/employee/dashboard" replace />;
-  }
-
+// Route protection wrapper: direct open access without login gate
+const ProtectedRoute = ({ children }) => {
   return children;
 };
 
@@ -74,8 +56,8 @@ const AppRoutes = () => {
     <Routes>
       {/* Public Pages */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/auth/login" element={<LoginPage />} />
-      <Route path="/auth/register" element={<RegisterPage />} />
+      <Route path="/auth/login" element={<Navigate to="/gem-compliance-dashboard" replace />} />
+      <Route path="/auth/register" element={<Navigate to="/gem-compliance-dashboard" replace />} />
       <Route path="/tender-reg" element={<TenderRegPage />} />
 
       {/* 1. PLATFORM_ADMIN (Super Admin) Scope */}

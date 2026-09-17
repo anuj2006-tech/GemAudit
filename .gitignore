@@ -18,3 +18,5 @@ __pycache__/
 *.sqlite3
 venv/
 .venv/
+temp_video_build/
+.agents/

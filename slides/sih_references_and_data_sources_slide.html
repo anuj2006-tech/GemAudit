@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slide: References & Data Sources (Hexagon Process Chain)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* CSS Hexagon Shape with SVG or clip-path */
+    .hex-shape {
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      transition: all 0.3s ease;
+    }
+    .hex-shape:hover {
+      transform: translateY(-6px) scale(1.03);
+    }
+
+    /* Dark Mode Defaults */
+    .theme-dark {
+      background-color: #030712;
+      color: #f8fafc;
+    }
+    .theme-dark .slide-card {
+      background: #060c18;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .theme-dark .hex-container {
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .theme-dark .hex-container:hover {
+      border-color: #38bdf8;
+      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.3);
+    }
+    .theme-dark .hex-title {
+      color: #ffffff;
+    }
+    .theme-dark .hex-sub {
+      color: #94a3b8;
+    }
+    .theme-dark .hex-link {
+      color: #38bdf8;
+      text-decoration: underline;
+    }
+    .theme-dark .hex-link:hover {
+      color: #7dd3fc;
+    }
+    .theme-dark .connector-line {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    /* Canva Theme (Matching the user's reference image exactly: warm golden-sand background & amber hexes) */
+    .theme-canva {
+      background-color: #dedac5;
+      color: #1c1917;
+    }
+    .theme-canva .slide-card {
+      background: #eae7d6;
+      border-color: #c9c3a7;
+    }
+    .theme-canva .hex-container {
+      background: linear-gradient(180deg, #c4af75 0%, #af995d 100%);
+      border: 1px solid #998348;
+    }
+    .theme-canva .hex-container:hover {
+      background: linear-gradient(180deg, #ceb97e 0%, #b8a265 100%);
+      box-shadow: 0 10px 25px -5px rgba(138, 118, 64, 0.35);
+    }
+    .theme-canva .hex-title {
+      color: #111827;
+      font-weight: 800;
+    }
+    .theme-canva .hex-sub {
+      color: #374151;
+    }
+    .theme-canva .hex-link {
+      color: #1d4ed8;
+      font-weight: 800;
+      text-decoration: underline;
+    }
+    .theme-canva .hex-link:hover {
+      color: #1e40af;
+    }
+    .theme-canva .connector-line {
+      border-color: #998348;
+    }
+  </style>
+</head>
+<body id="bodyRoot" class="theme-dark min-h-screen flex flex-col items-center justify-center p-2 lg:p-6 select-none">
+
+  <!-- Top View Mode Switcher -->
+  <div class="w-full max-w-7xl flex items-center justify-between pb-3 px-2">
+    <div class="flex items-center gap-2 text-xs font-semibold">
+      <span class="text-slate-400">Layout:</span>
+      <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">
+        Horizontal Hexagon Chain (From Reference Image)
+      </span>
+    </div>
+
+    <!-- Theme Toggle Buttons -->
+    <div class="flex items-center gap-2">
+      <button 
+        onclick="setTheme('dark')" 
+        id="btnDark"
+        class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-white border border-slate-700 shadow-sm"
+      >
+        <i class="fa-solid fa-moon text-cyan-400"></i> Dark Studio Theme
+      </button>
+      <button 
+        onclick="setTheme('canva')" 
+        id="btnCanva"
+        class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800"
+      >
+        <i class="fa-solid fa-palette text-amber-400"></i> Canva Beige Theme (As In Image)
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Slide Widescreen Container (16:9) -->
+  <div class="slide-card w-full max-w-7xl aspect-[16/9] border rounded-3xl p-6 lg:p-10 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-all duration-300">
+    
+    <!-- Top Slide Header -->
+    <div class="flex items-start justify-between relative z-10 border-b pb-4 border-current/10">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase mb-1.5 bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+          <i class="fa-solid fa-cubes-stacked"></i> Statutory Data &amp; Architecture References
+        </div>
+        <h1 class="text-2xl lg:text-3xl font-black tracking-tight leading-snug">
+          Statutory Verification Pipeline &amp; Integration Architecture
+        </h1>
+        <p class="text-xs opacity-75 mt-0.5">
+          End-to-end statutory triangulation chain referenced from official government registries &amp; open specifications.
+        </p>
+      </div>
+
+      <div class="hidden md:flex flex-col items-end text-right">
+        <span class="text-xs font-mono font-bold opacity-80">SMART INDIA HACKATHON 2026</span>
+        <span class="text-[10px] font-mono px-2 py-0.5 rounded border border-emerald-500/40 text-emerald-400 bg-emerald-500/10 mt-1">
+          Problem Statement #1624
+        </span>
+      </div>
+    </div>
+
+    <!-- HEXAGON ROADMAP CHAIN (8-NODE HORIZONTAL PIPELINE) -->
+    <div class="relative w-full my-auto py-2">
+      
+      <!-- Horizontal Connecting Arrow Track (Top & Bottom Track Lines) -->
+      <div class="absolute top-[28px] left-8 right-8 border-t-2 border-dashed connector-line pointer-events-none z-0"></div>
+      <div class="absolute bottom-[28px] left-8 right-8 border-b-2 border-dashed connector-line pointer-events-none z-0"></div>
+
+      <!-- Arrowheads traveling across the chain -->
+      <div class="absolute top-[21px] left-1/4 -translate-x-1/2 text-xs connector-line text-current/60 z-0">▶</div>
+      <div class="absolute top-[21px] left-1/2 -translate-x-1/2 text-xs connector-line text-current/60 z-0">▶</div>
+      <div class="absolute top-[21px] left-3/4 -translate-x-1/2 text-xs connector-line text-current/60 z-0">▶</div>
+      <div class="absolute bottom-[21px] left-1/3 -translate-x-1/2 text-xs connector-line text-current/60 z-0">▶</div>
+      <div class="absolute bottom-[21px] left-2/3 -translate-x-1/2 text-xs connector-line text-current/60 z-0">▶</div>
+
+      <!-- 8 Hexagon Grid Items -->
+      <div class="grid grid-cols-4 lg:grid-cols-8 gap-3 relative z-10">
+        
+        <!-- HEX 1: GeM Portal -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            Statutory 48h Window
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">01 • PORTAL</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              GeM Core Rules
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              Clause 4.2 GTC &amp; Clarification
+            </p>
+            <a 
+              href="https://gem.gov.in/page/detail/26" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open Official GeM GTC Documentation"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- HEX 2: CPPP Debarment -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            Debarment &amp; Blacklist
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">02 • CPPP</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              CPPP Register
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              Debarment protocols &amp; logs
+            </p>
+            <a 
+              href="https://eprocure.gov.in/cppp/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open Official CPPP Portal"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- HEX 3: MCA-21 Database -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            Directors &amp; Active CIN
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">03 • MCA</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              MCA-21 System
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              CIN status &amp; Director DINs
+            </p>
+            <a 
+              href="https://www.mca.gov.in/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open Ministry of Corporate Affairs (MCA-21)"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- HEX 4: GSTN Tax Returns -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            Real Turnover GSTR-3B
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">04 • TAX</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              GSTN &amp; PAN IT
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              Active GSTIN &amp; filed turnover
+            </p>
+            <a 
+              href="https://www.gst.gov.in/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open GSTN Portal"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- HEX 5: EPFO & ESIC Payroll -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            Stop Ghost Staffing
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">05 • LABOUR</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              EPFO &amp; ESIC
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              Real employee contributions
+            </p>
+            <a 
+              href="https://www.epfindia.gov.in/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open EPFO Portal"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- HEX 6: National API Setu -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            Sovereign Gateway
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">06 • API</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              API Setu
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              National exchange network
+            </p>
+            <a 
+              href="https://apisetu.gov.in/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open National API Setu Platform"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- HEX 7: DigiLocker & e-Invoice -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            Credential Authenticity
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">07 • CRYPTO</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              DigiLocker
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              Digital signature blueprint
+            </p>
+            <a 
+              href="https://www.digilocker.gov.in/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open DigiLocker Platform"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- HEX 8: pgvector RAG Indexing -->
+        <div class="flex flex-col items-center">
+          <div class="text-[11px] font-semibold text-center h-10 flex items-end pb-1.5 opacity-85 leading-tight">
+            1536-dim RAG Search
+          </div>
+          <div class="hex-container hex-shape w-full aspect-[1/1.12] rounded-xl flex flex-col justify-center items-center p-3 text-center shadow-lg relative group">
+            <span class="text-[9px] font-mono opacity-70 uppercase tracking-wider mb-0.5">08 • RAG</span>
+            <h3 class="hex-title text-xs lg:text-[13px] font-bold leading-tight">
+              pgvector Stack
+            </h3>
+            <p class="hex-sub text-[10px] mt-1 line-clamp-2 leading-tight">
+              Vector indexing &amp; embeddings
+            </p>
+            <a 
+              href="https://github.com/pgvector/pgvector" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="hex-link text-xs font-black tracking-wider uppercase mt-2 inline-flex items-center gap-1 group-hover:scale-110 transition"
+              title="Open pgvector Open Source Repository"
+            >
+              LINK <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Metadata Bar -->
+    <div class="flex items-center justify-between pt-3 border-t border-current/10 text-xs font-mono opacity-80">
+      <div class="flex items-center gap-3">
+        <span class="font-bold flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          GeM Audit AI
+        </span>
+        <span>•</span>
+        <span>Statutory Authority: General Financial Rules (GFR 2017) &amp; GeM GTC</span>
+      </div>
+      <div>
+        SLIDE: REFERENCES &amp; TECHNICAL ARCHITECTURE
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function setTheme(theme) {
+      const root = document.getElementById('bodyRoot');
+      const btnDark = document.getElementById('btnDark');
+      const btnCanva = document.getElementById('btnCanva');
+
+      if (theme === 'canva') {
+        root.className = 'theme-canva min-h-screen flex flex-col items-center justify-center p-2 lg:p-6 select-none';
+        btnCanva.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-amber-800 text-amber-100 border border-amber-900 shadow-sm';
+        btnDark.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-transparent text-stone-700 hover:text-stone-900 border border-stone-400';
+      } else {
+        root.className = 'theme-dark min-h-screen flex flex-col items-center justify-center p-2 lg:p-6 select-none';
+        btnDark.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-white border border-slate-700 shadow-sm';
+        btnCanva.className = 'px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800';
+      }
+    }
+  </script>
+</body>
+</html>

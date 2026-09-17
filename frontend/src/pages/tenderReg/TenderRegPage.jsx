@@ -167,7 +167,7 @@ const TenderRegPage = () => {
 
           {/* Bottom helper */}
           <div className="pt-4 border-t border-[#f3f4f6] px-2">
-            <p className="text-[11px] text-[#9ca3af] font-medium">TenderAI Intelligence v2.4</p>
+            <p className="text-[11px] text-[#9ca3af] font-medium">GeM Audit AI Forensic Engine</p>
           </div>
         </aside>
 
@@ -514,7 +514,7 @@ const TenderRegPage = () => {
         <button
           onClick={() => setIsChatOpen(prev => !prev)}
           className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#ff0080] via-[#c026d3] to-[#7928ca] text-white flex items-center justify-center shadow-[0_4px_16px_rgba(255,0,128,0.4)] hover:scale-105 active:scale-95 transition-all"
-          title="Tender AI Chatbot"
+          title="GeM Audit AI Assistant"
         >
           <MessageSquare className="w-5 h-5" />
         </button>
@@ -534,7 +534,7 @@ const TenderRegPage = () => {
           <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-[#e6007a] via-[#b800b8] to-[#7b00ff] text-white">
             <div className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
-              <span className="text-xs font-bold">Tender AI Intelligence Chat</span>
+              <span className="text-xs font-bold">GeM Audit AI Assistant</span>
             </div>
             <button 
               onClick={() => setIsChatOpen(false)}

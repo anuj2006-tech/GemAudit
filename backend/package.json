@@ -1,7 +1,7 @@
 {
-  "name": "tender-management-backend",
+  "name": "gem-audit-backend",
   "version": "1.0.0",
-  "description": "Secure backend for Legal Tenders application handling Superadmin & Admin auth with Supabase",
+  "description": "Secure API Gateway for GeM Audit AI Forensic Bid Verification Platform",
   "main": "server.js",
   "type": "module",
   "scripts": {

@@ -25,16 +25,7 @@ const LoginPage = () => {
     try {
       const result = await login(email, password);
       if (result?.success) {
-        const role = result.role;
-        if (role === 'PLATFORM_ADMIN') {
-          navigate('/super-admin/dashboard');
-        } else if (role === 'COMPANY_OWNER') {
-          navigate('/owner/dashboard');
-        } else if (role === 'ADMIN') {
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/employee/dashboard');
-        }
+        navigate('/gem-compliance-dashboard');
       }
     } catch (err) {
       const errorMsg = err.response?.data?.error || 'Authentication failed. Please check your credentials.';
@@ -67,15 +58,15 @@ const LoginPage = () => {
                   Back to Home
                 </button>
 
-                <span className="text-[11px] font-mono uppercase tracking-widest text-orange-300 bg-orange-400/10 px-3 py-1 rounded-full border border-orange-400/20">
-                  Tenant Access
+                <span className="text-[11px] font-mono uppercase tracking-widest text-indigo-300 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
+                  Officer Portal
                 </span>
               </div>
 
               <div className="mb-6">
-                <h1 className="text-3xl font-extrabold text-white tracking-tight">Welcome Back</h1>
+                <h1 className="text-3xl font-extrabold text-white tracking-tight">GeM Audit Console</h1>
                 <p className="mt-2 text-sm text-slate-400">
-                  Enter your credentials to access your company's secure bidding workspace.
+                  Enter your credentials to access the Government Procurement Verification & Forensic Workspace.
                 </p>
               </div>
 
@@ -90,7 +81,7 @@ const LoginPage = () => {
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                    Work Email Address
+                    Official Email Address
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
@@ -98,9 +89,9 @@ const LoginPage = () => {
                       type="email" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="name@company.com"
+                      placeholder="officer@gov.in"
                       required
-                      className="w-full rounded-xl border border-slate-800 bg-slate-900/80 pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition placeholder:text-slate-600"
+                      className="w-full rounded-xl border border-slate-800 bg-slate-900/80 pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition placeholder:text-slate-600"
                     />
                   </div>
                 </div>
@@ -119,7 +110,7 @@ const LoginPage = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
                       required
-                      className="w-full rounded-xl border border-slate-800 bg-slate-900/80 pl-11 pr-11 py-3 text-sm text-white focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition placeholder:text-slate-600"
+                      className="w-full rounded-xl border border-slate-800 bg-slate-900/80 pl-11 pr-11 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition placeholder:text-slate-600"
                     />
                     <button
                       type="button"
@@ -134,7 +125,7 @@ const LoginPage = () => {
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="btn-modern-primary w-full py-3.5 text-sm font-semibold flex items-center justify-center gap-2 mt-4"
+                  className="w-full py-3.5 text-sm font-semibold flex items-center justify-center gap-2 mt-4 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-xl shadow-lg shadow-indigo-500/25 transition-all"
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
@@ -143,7 +134,7 @@ const LoginPage = () => {
                     </span>
                   ) : (
                     <>
-                      <span>Sign In to Console</span>
+                      <span>Sign In to GeM Audit AI</span>
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}
@@ -152,35 +143,35 @@ const LoginPage = () => {
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-900 text-center text-xs text-slate-400">
-              New to TenderAI?{' '}
-              <Link to="/auth/register" className="text-orange-300 hover:text-orange-200 font-bold underline underline-offset-4">
-                Register company workspace
+              Government Procurement Officer?{' '}
+              <Link to="/gem-compliance-dashboard" className="text-indigo-400 hover:text-indigo-300 font-bold underline underline-offset-4">
+                Open Officer Workspace
               </Link>
             </div>
           </div>
 
-          <div className="md:col-span-5 bg-gradient-to-br from-slate-900 via-orange-900/80 to-orange-950 p-8 sm:p-12 text-white flex flex-col justify-between border-l border-slate-800/80 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-orange-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="md:col-span-5 bg-gradient-to-br from-slate-900 via-indigo-950/80 to-slate-950 p-8 sm:p-12 text-white flex flex-col justify-between border-l border-slate-800/80 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
             
             <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-10 cursor-pointer" onClick={() => navigate('/')}>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-white shadow-lg shadow-orange-400/30">
-                  <Brain className="h-5 w-5" />
+              <div className="flex items-center gap-3 mb-10 cursor-pointer" onClick={() => navigate('/gem-compliance-dashboard')}>
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-600 text-white shadow-lg shadow-indigo-500/30">
+                  <ShieldCheck className="h-5 w-5" />
                 </div>
-                <span className="text-xl font-extrabold tracking-tight">Tender<span className="gradient-accent">AI</span></span>
+                <span className="text-xl font-extrabold tracking-tight">GeM<span className="text-indigo-400">Audit AI</span></span>
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-400/20 border border-orange-400/30 text-orange-200 text-xs font-semibold mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-6">
                 <Sparkles className="h-3.5 w-3.5" />
-                Next-Gen Bid Copilot
+                Forensic Bid Verification Engine
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight gradient-title">
-                Unified SaaS Console for Enterprise Bidding
+              <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
+                AI Fraud Shield for Public Procurement
               </h2>
 
               <p className="mt-4 text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-                Access isolated vector search, automated RFC compliance scoring, and tenant-restricted audit logs.
+                Instant 10-portal statutory multi-registry checks, forensic PDF tamper detection, and cryptographic SHA-256 audit seals for GeM & CPPP tenders.
               </p>
             </div>
 
@@ -190,18 +181,18 @@ const LoginPage = () => {
                   <ShieldCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white">Postgres Row Level Security</h4>
-                  <p className="text-[11px] text-slate-400">Strict data boundary per company tenant</p>
+                  <h4 className="text-xs font-bold text-white">10 Statutory Portal Checks</h4>
+                  <p className="text-[11px] text-slate-400">GSTN, PAN, MCA-21, EPFO, ESIC in &lt; 3 seconds</p>
                 </div>
               </div>
 
               <div className="p-3.5 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex items-center gap-3">
-                <div className="h-8 w-8 rounded-xl bg-orange-400/10 flex items-center justify-center text-orange-300 shrink-0">
-                  <Brain className="h-4 w-4" />
+                <div className="h-8 w-8 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-300 shrink-0">
+                  <Lock className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-white">Isolated RAG Vector Store</h4>
-                  <p className="text-[11px] text-slate-400">Zero cross-tenant vector contamination</p>
+                  <h4 className="text-xs font-bold text-white">SHA-256 Cryptographic Stamp</h4>
+                  <p className="text-[11px] text-slate-400">Tamper-evident legal proof for CVC & CAG audits</p>
                 </div>
               </div>
             </div>

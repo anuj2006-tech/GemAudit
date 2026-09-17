@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeM Audit AI — 8 Pillars Public Procurement Impact Wheel</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 6 Pro Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <!-- html2canvas for HD export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    /* Light Theme (SIH Pastel Sage / Canvas Presentation Mode) */
+    body.light-theme {
+      --bg-color: #d5e5db;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #334155;
+      --accent-glow: rgba(14, 165, 233, 0.15);
+    }
+
+    .slide-canvas {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      background: var(--bg-color);
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.4s ease;
+    }
+
+    body.light-theme .slide-canvas {
+      background: #d5e5db;
+      border-color: #94a3b8;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    /* SVG Dashed Circle & Animation */
+    .circle-ring-dashed {
+      stroke-dasharray: 8 8;
+      animation: rotateRing 60s linear infinite;
+      transform-origin: center;
+    }
+
+    body.light-theme .circle-ring-dashed {
+      stroke: #0f172a !important;
+    }
+
+    @keyframes rotateRing {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .pulse-glow {
+      animation: pulseGlow 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.3)); }
+      100% { filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.7)); }
+    }
+
+    /* Node Icon Styling matching original diagram color palette */
+    .impact-node {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .impact-node:hover, .impact-node.active-node {
+      transform: scale(1.18);
+      z-index: 40;
+    }
+
+    .impact-node.peach-bg {
+      background: #e4b8a7;
+      border: 2.5px solid #1e293b;
+      color: #1e293b;
+    }
+    body.light-theme .impact-node.peach-bg {
+      background: #e4b8a7;
+      border: 2.5px solid #0f172a;
+      color: #0f172a;
+    }
+
+    .impact-node.white-bg {
+      background: #ffffff;
+      border: 2.5px solid #1e293b;
+      color: #0f172a;
+    }
+    body.light-theme .impact-node.white-bg {
+      background: #ffffff;
+      border: 2.5px solid #0f172a;
+      color: #0f172a;
+    }
+
+    .impact-node.active-node {
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.6), 0 0 0 4px rgba(56, 189, 248, 0.4);
+      border-color: #38bdf8 !important;
+    }
+
+    /* Glassmorphic Central Card */
+    .central-hub {
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      transition: all 0.4s ease;
+    }
+
+    body.light-theme .central-hub {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: #94a3b8;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Tooltip & Text Box Styling */
+    .node-label-box {
+      max-width: 200px;
+      transition: all 0.3s ease;
+    }
+
+    .node-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    body.light-theme .node-title {
+      color: #0f172a;
+    }
+
+    .node-desc {
+      font-size: 0.825rem;
+      line-height: 1.3;
+      color: var(--text-muted);
+    }
+
+    body.light-theme .node-desc {
+      color: #334155;
+    }
+
+    body.light-theme .canvas-text-main {
+      color: #0f172a !important;
+    }
+
+    body.light-theme .canvas-title {
+      color: #0f172a !important;
+    }
+  </style>
+</head>
+<body class="dark-theme">
+
+  <!-- Top Controls Header -->
+  <div class="w-full max-w-[1280px] mb-4 flex items-center justify-between px-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+        <i class="fa-solid fa-scale-balanced text-lg"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold tracking-tight font-['Space_Grotesk'] text-slate-100 dark-target-title">
+          GeM Audit AI <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 font-semibold border border-cyan-500/30">GovTech 2026</span>
+        </h1>
+        <p class="text-xs text-slate-400">8 Pillars of Impact & Benefits in Public Procurement</p>
+      </div>
+    </div>
+
+    <!-- Action Toolbar -->
+    <div class="flex items-center gap-3">
+      <button id="tourBtn" onclick="toggleTour()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-2 border border-slate-700 transition-all shadow-sm">
+        <i class="fa-solid fa-play text-cyan-400" id="tourIcon"></i>
+        <span id="tourBtnText">Auto Tour</span>
+      </button>
+
+      <button onclick="toggleTheme()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-2 border border-slate-700 transition-all shadow-sm">
+        <i class="fa-solid fa-circle-half-stroke text-amber-400"></i>
+        <span id="themeBtnText">Light Theme (SIH Pastel)</span>
+      </button>
+
+      <button onclick="exportPNG()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white text-xs font-semibold flex items-center gap-2 shadow-lg shadow-cyan-500/25 transition-all">
+        <i class="fa-solid fa-download"></i>
+        Export HD Image
+      </button>
+    </div>
+  </div>
+
+  <!-- 16:9 Interactive Presentation Canvas -->
+  <div id="captureCanvas" class="slide-canvas flex flex-col justify-between p-8 relative">
+    
+    <!-- Background Ambient Glows -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-cyan-500/5 blur-[120px] pointer-events-none"></div>
+
+    <!-- Header Section -->
+    <div class="w-full flex items-center justify-between z-10">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-wider mb-1">
+          <i class="fa-solid fa-shield-halved"></i> Strategic Procurement Transformation
+        </div>
+        <h2 class="text-3xl font-black tracking-tight text-slate-100 font-['Space_Grotesk'] canvas-title">
+          Impact & Value Creation Wheel
+        </h2>
+      </div>
+
+      <div class="flex items-center gap-4 text-right">
+        <div class="px-4 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs canvas-stat">
+          <span class="text-slate-400 block">Annual Procurement Volume</span>
+          <span class="font-extrabold text-cyan-400 text-sm">₹4,00,000+ Cr ($48B+)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CIRCULAR INFOGRAPHIC AREA -->
+    <div class="relative w-full h-[540px] flex items-center justify-center">
+
+      <!-- SVG Dotted Outer Ring & Rays -->
+      <svg class="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 1280 540" fill="none">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9"/>
+            <stop offset="50%" stop-color="#818cf8" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#ec4899" stop-opacity="0.9"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Main Dashed Connecting Circle (Center X: 640, Center Y: 270, Radius: 210) -->
+        <circle cx="640" cy="270" r="210" 
+                stroke="url(#ringGrad)" 
+                stroke-width="3.5" 
+                stroke-dasharray="8 7" 
+                class="circle-ring-dashed" />
+                
+        <!-- Outer Static Accent Ring -->
+        <circle cx="640" cy="270" r="213" 
+                stroke="#64748b" 
+                stroke-opacity="0.25" 
+                stroke-width="1" />
+      </svg>
+
+      <!-- CENTER INTERACTIVE CORE HUB -->
+      <div id="centralHub" class="central-hub z-20 w-[260px] h-[260px] rounded-full flex flex-col items-center justify-center p-6 text-center relative border shadow-2xl transition-all duration-300">
+        <!-- Default Center View -->
+        <div id="defaultHubContent" class="flex flex-col items-center">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-cyan-500/30 mb-3 pulse-glow">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <h3 class="text-base font-black text-slate-100 font-['Space_Grotesk'] tracking-tight canvas-hub-title">
+            GeM AUDIT AI
+          </h3>
+          <p class="text-[11px] text-cyan-400 font-bold uppercase tracking-wider mb-2">8 Pillar Ecosystem</p>
+          <p class="text-xs text-slate-400 leading-snug px-2 canvas-hub-desc">
+            Hover over any pillar to inspect full impact metrics & forensic benefits.
+          </p>
+          <div class="mt-3 flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 font-semibold">
+            <i class="fa-solid fa-circle-check"></i> 100% CVC/CAG Audit Ready
+          </div>
+        </div>
+
+        <!-- Dynamic Node Detail View (Hidden by default) -->
+        <div id="activeHubContent" class="hidden flex-col items-center justify-center">
+          <div id="activeNodeBadge" class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg mb-2">
+            <i id="activeNodeIcon" class="fa-solid fa-bolt"></i>
+          </div>
+          <span id="activeNodeTag" class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full mb-1">PILLAR 01</span>
+          <h4 id="activeNodeTitle" class="text-base font-black text-slate-100 font-['Space_Grotesk'] leading-tight mb-1">
+            Faster Procurement
+          </h4>
+          <p id="activeNodeMetric" class="text-xs font-bold text-cyan-400 mb-1">96% Time Saved (7 Days → 8 Mins)</p>
+          <p id="activeNodeDesc" class="text-[11px] text-slate-300 leading-tight px-1">
+            Automates multi-document OCR and 10 statutory portal checks in under 3 seconds.
+          </p>
+        </div>
+      </div>
+
+
+      <!-- 8 NODES & LABELS POSITIONED EXACTLY MATCHING USER DIAGRAM -->
+      
+      <!-- NODE 1: Faster Procurement (Top-Left / ~10:30 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 235px; top: 75px;" onclick="selectNode(0)" onmouseenter="hoverNode(0)" onmouseleave="resetNode()">
+        <div class="text-right node-label-box pr-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Faster Procurement</div>
+          <div class="node-desc">Reduces tender evaluation time significantly</div>
+        </div>
+        <div id="node-0" class="impact-node peach-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+      </div>
+
+      <!-- NODE 2: Fraud Prevention (Top-Right / ~1:30 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 770px; top: 75px;" onclick="selectNode(1)" onmouseenter="hoverNode(1)" onmouseleave="resetNode()">
+        <div id="node-1" class="impact-node white-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-id-card-clip"></i>
+        </div>
+        <div class="text-left node-label-box pl-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Fraud Prevention</div>
+          <div class="node-desc">Prevents financial fraud in contracts</div>
+        </div>
+      </div>
+
+      <!-- NODE 3: Zero Bias (Right / 3:00 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 835px; top: 240px;" onclick="selectNode(2)" onmouseenter="hoverNode(2)" onmouseleave="resetNode()">
+        <div id="node-2" class="impact-node white-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-scale-unbalanced"></i>
+        </div>
+        <div class="text-left node-label-box pl-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Zero Bias</div>
+          <div class="node-desc">Eliminates human bias and bribery</div>
+        </div>
+      </div>
+
+      <!-- NODE 4: Cost Reduction (Bottom-Right / ~4:30 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 770px; top: 400px;" onclick="selectNode(3)" onmouseenter="hoverNode(3)" onmouseleave="resetNode()">
+        <div id="node-3" class="impact-node white-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-chart-line-down"></i>
+        </div>
+        <div class="text-left node-label-box pl-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Cost Reduction</div>
+          <div class="node-desc">Slashes tender review costs</div>
+        </div>
+      </div>
+
+      <!-- NODE 5: Tech-Driven Governance (Bottom / 6:00 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 740px; top: 475px;" onclick="selectNode(4)" onmouseenter="hoverNode(4)" onmouseleave="resetNode()">
+        <div id="node-4" class="impact-node white-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <div class="text-left node-label-box pl-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Tech-Driven Governance</div>
+          <div class="node-desc">Transforms paper files into a digital ecosystem</div>
+        </div>
+      </div>
+
+      <!-- NODE 6: Level Playing Field (Bottom-Left / ~7:30 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 235px; top: 475px;" onclick="selectNode(5)" onmouseenter="hoverNode(5)" onmouseleave="resetNode()">
+        <div class="text-right node-label-box pr-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Level Playing Field</div>
+          <div class="node-desc">Guarantees fair competition for small businesses</div>
+        </div>
+        <div id="node-5" class="impact-node peach-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-handshake"></i>
+        </div>
+      </div>
+
+      <!-- NODE 7: Infrastructure Safety (Left / 9:00 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 175px; top: 350px;" onclick="selectNode(6)" onmouseenter="hoverNode(6)" onmouseleave="resetNode()">
+        <div class="text-right node-label-box pr-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Infrastructure Safety</div>
+          <div class="node-desc">Ensures reliable execution of public projects</div>
+        </div>
+        <div id="node-6" class="impact-node peach-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-gears"></i>
+        </div>
+      </div>
+
+      <!-- NODE 8: Audit Shield (Top-Left / ~9:45 o'clock) -->
+      <div class="absolute z-30 flex items-center gap-3 cursor-pointer group" style="left: 185px; top: 215px;" onclick="selectNode(7)" onmouseenter="hoverNode(7)" onmouseleave="resetNode()">
+        <div class="text-right node-label-box pr-1">
+          <div class="node-title text-slate-100 canvas-text-main group-hover:text-cyan-400 transition-colors">Audit Shield</div>
+          <div class="node-desc">Protects officers from false inquiries</div>
+        </div>
+        <div id="node-7" class="impact-node peach-bg w-14 h-14 rounded-full flex items-center justify-center text-xl shadow-lg shrink-0">
+          <i class="fa-solid fa-clipboard-check"></i>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer Branding -->
+    <div class="w-full flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/80 pt-3 z-10 canvas-footer">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="font-medium text-slate-300">GeM & CPPP Statutory Forensic Engine</span>
+      </div>
+      <div>Designed for Government Procurement Officers & Vigilance Auditors</div>
+    </div>
+  </div>
+
+
+  <!-- JavaScript Logic for Interactivity, Themes & Exports -->
+  <script>
+    const nodeData = [
+      {
+        title: "Faster Procurement",
+        metric: "96% Faster Evaluation (7 Days → 8 Mins)",
+        desc: "Automates multi-page document OCR & 10 statutory portal checks in under 3 seconds per tender.",
+        icon: "fa-cart-shopping",
+        colorBg: "bg-rose-500/20 text-rose-400 border-rose-500/30"
+      },
+      {
+        title: "Fraud Prevention",
+        metric: "Zero Fraudulent Bid Escapes",
+        desc: "Catches photoshopped balance sheets, fake MSME exemptions, and 77%+ GST turnover inflation.",
+        icon: "fa-id-card-clip",
+        colorBg: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+      },
+      {
+        title: "Zero Bias",
+        metric: "100% Objective Algorithmic Scoring",
+        desc: "Eliminates subjective human discretionary bias, officer bribery risks, and tender rigging.",
+        icon: "fa-scale-unbalanced",
+        colorBg: "bg-amber-500/20 text-amber-400 border-amber-500/30"
+      },
+      {
+        title: "Cost Reduction",
+        metric: "₹1,200 Cr Saved in Evaluation Costs",
+        desc: "Slashes manual legal verification overhead and eliminates litigation delays across ministries.",
+        icon: "fa-chart-line-down",
+        colorBg: "bg-blue-500/20 text-blue-400 border-blue-500/30"
+      },
+      {
+        title: "Tech-Driven Governance",
+        metric: "100% Paperless Digital Ecosystem",
+        desc: "Seamlessly converts physical paper files and legacy PDFs into a structured API data highway.",
+        icon: "fa-building-columns",
+        colorBg: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+      },
+      {
+        title: "Level Playing Field",
+        metric: "Guaranteed MSME Fair Competition",
+        desc: "Validates genuine Udyam & StartUp India credentials so honest SMBs win contracts fairly.",
+        icon: "fa-handshake",
+        colorBg: "bg-pink-500/20 text-pink-400 border-pink-500/30"
+      },
+      {
+        title: "Infrastructure Safety",
+        metric: "0 Non-Performing Shell Companies",
+        desc: "Filters out insolvent contractors before award, ensuring high-quality public project execution.",
+        icon: "fa-gears",
+        colorBg: "bg-orange-500/20 text-orange-400 border-orange-500/30"
+      },
+      {
+        title: "Audit Shield",
+        metric: "Tamper-Evident SHA-256 Proof",
+        desc: "Locks every verification decision in a cryptographic ledger to protect honest officers from CVC inquiries.",
+        icon: "fa-clipboard-check",
+        colorBg: "bg-purple-500/20 text-purple-400 border-purple-500/30"
+      }
+    ];
+
+    let tourInterval = null;
+    let currentTourIndex = 0;
+    let isTourRunning = false;
+
+    function hoverNode(index) {
+      if (isTourRunning) return;
+      showNodeDetail(index);
+    }
+
+    function selectNode(index) {
+      showNodeDetail(index);
+    }
+
+    function showNodeDetail(index) {
+      // Highlight node visually
+      document.querySelectorAll('.impact-node').forEach((el, idx) => {
+        if (idx === index) {
+          el.classList.add('active-node');
+        } else {
+          el.classList.remove('active-node');
+        }
+      });
+
+      const data = nodeData[index];
+      const defaultHub = document.getElementById('defaultHubContent');
+      const activeHub = document.getElementById('activeHubContent');
+
+      defaultHub.classList.add('hidden');
+      activeHub.classList.remove('hidden');
+      activeHub.classList.add('flex');
+
+      document.getElementById('activeNodeIcon').className = `fa-solid ${data.icon}`;
+      document.getElementById('activeNodeTag').innerText = `PILLAR 0${index + 1}`;
+      document.getElementById('activeNodeTitle').innerText = data.title;
+      document.getElementById('activeNodeMetric').innerText = data.metric;
+      document.getElementById('activeNodeDesc').innerText = data.desc;
+      
+      const badge = document.getElementById('activeNodeBadge');
+      badge.className = `w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-lg mb-2 ${data.colorBg}`;
+    }
+
+    function resetNode() {
+      if (isTourRunning) return;
+      document.querySelectorAll('.impact-node').forEach(el => el.classList.remove('active-node'));
+      document.getElementById('defaultHubContent').classList.remove('hidden');
+      const activeHub = document.getElementById('activeHubContent');
+      activeHub.classList.add('hidden');
+      activeHub.classList.remove('flex');
+    }
+
+    function toggleTour() {
+      const tourBtnText = document.getElementById('tourBtnText');
+      const tourIcon = document.getElementById('tourIcon');
+
+      if (isTourRunning) {
+        clearInterval(tourInterval);
+        isTourRunning = false;
+        tourBtnText.innerText = "Auto Tour";
+        tourIcon.className = "fa-solid fa-play text-cyan-400";
+        resetNode();
+      } else {
+        isTourRunning = true;
+        tourBtnText.innerText = "Stop Tour";
+        tourIcon.className = "fa-solid fa-pause text-rose-400";
+        showNodeDetail(currentTourIndex);
+
+        tourInterval = setInterval(() => {
+          currentTourIndex = (currentTourIndex + 1) % nodeData.length;
+          showNodeDetail(currentTourIndex);
+        }, 2500);
+      }
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const themeBtnText = document.getElementById('themeBtnText');
+      
+      if (body.classList.contains('dark-theme')) {
+        body.classList.remove('dark-theme');
+        body.classList.add('light-theme');
+        themeBtnText.innerText = "Dark Studio Mode";
+      } else {
+        body.classList.remove('light-theme');
+        body.classList.add('dark-theme');
+        themeBtnText.innerText = "Light Theme (SIH Pastel)";
+      }
+    }
+
+    function exportPNG() {
+      const target = document.getElementById('captureCanvas');
+      html2canvas(target, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: document.body.classList.contains('light-theme') ? '#d5e5db' : '#0f172a'
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'GeM_Audit_AI_8_Pillars_Impact_Wheel.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>

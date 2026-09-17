@@ -37,7 +37,7 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/auth/login');
+    navigate('/');
   };
 
   const navContent = (

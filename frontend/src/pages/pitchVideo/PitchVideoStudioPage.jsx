@@ -11,79 +11,79 @@ const SCENES = [
   {
     id: 1,
     title: "The Paperwork Problem",
-    duration: 18,
+    duration: 22.1,
     audioUrl: "/audio/pitch/scene1.mp3",
-    tag: "THE PROBLEM",
-    voiceover: "Every year, the government gives out lakhs of crores in contracts. But officers waste days checking piles of paper by hand. Dishonest bidders use fake certificates to win contracts, causing public projects to get delayed for years.",
+    tag: "THE BIG PROBLEM",
+    voiceover: "Every single year, the Indian government awards lakhs of crores in public contracts. Yet, procurement officers still spend days manually sifting through stacks of paper. Meanwhile, dishonest contractors exploit these loopholes with forged certificates, stalling critical national projects for years.",
     subtitles: [
-      { text: "The government awards lakhs of crores in contracts every year.", start: 0, end: 6 },
-      { text: "Officers waste days checking huge piles of papers by hand.", start: 6, end: 12 },
-      { text: "Dishonest bidders use fake certificates, causing long project delays.", start: 12, end: 18 }
+      { text: "Every single year, the government awards lakhs of crores in contracts.", start: 0, end: 6 },
+      { text: "Yet, procurement officers still spend days checking stacks of paper by hand.", start: 6, end: 13 },
+      { text: "Dishonest bidders exploit loopholes with fake certificates, delaying projects for years.", start: 13, end: 22 }
     ]
   },
   {
     id: 2,
     title: "Meet GeM Audit (Bid Document Verification)",
-    duration: 18,
+    duration: 19.9,
     audioUrl: "/audio/pitch/scene2.mp3",
-    tag: "STEP 1: 3-SECOND VERIFICATION",
-    voiceover: "Meet GeM Audit. Earlier, it took days of manual work, but with this, now our AI reads the bid documents and verifies all information against government portals in just three seconds. Right away, it catches two fake claims and warns the officer.",
+    tag: "STEP 1: 3-SECOND AUDIT",
+    voiceover: "Enter GeM Audit. Instead of days of grueling manual checks, our AI inspects the entire bid dossier and cross-verifies credentials against ten live government registries in just three seconds. Instantly, it catches fraudulent claims and alerts the evaluation committee.",
     subtitles: [
-      { text: "Earlier it took days of manual work checking papers.", start: 0, end: 5 },
-      { text: "Now GeM Audit verifies bid documents with portals in 3 seconds.", start: 5, end: 12 },
-      { text: "Instantly catches two fake claims and warns the officer.", start: 12, end: 18 }
+      { text: "Enter GeM Audit: replacing days of grueling manual checks.", start: 0, end: 5 },
+      { text: "Our AI inspects the entire bid against 10 government registries in 3 seconds.", start: 5, end: 13 },
+      { text: "Instantly, it catches fraudulent claims and alerts the evaluation committee.", start: 13, end: 20 }
     ]
   },
   {
     id: 3,
     title: "Catching Fake Claims Live",
-    duration: 18,
+    duration: 23.2,
     audioUrl: "/audio/pitch/scene3.mp3",
-    tag: "STEP 2: LIVE CHECK",
-    voiceover: "Here is that live verification in action. In the bid document, the contractor claimed eighteen crore rupees in sales, but the government tax portal showed only four crore. The AI catches the lie instantly and prepares the rejection letter.",
+    tag: "STEP 2: LIVE DETECTION",
+    voiceover: "Here is that live forensic verification in action. In their bid submission, a contractor claimed eighteen crore rupees in annual turnover. But when our system pinged the live GST portal, their real filed revenue was barely four crore. The AI catches the fabrication on the spot and drafts a legally sealed rejection notice.",
     subtitles: [
-      { text: "Here is that live verification in action, inspecting the flagged claims.", start: 0, end: 6 },
-      { text: "Bid document claimed ₹18 Crore, but tax portal showed only ₹4 Crore.", start: 6, end: 12 },
-      { text: "Catches the lie instantly and prepares a rejection letter automatically.", start: 12, end: 18 }
+      { text: "Here is that live forensic verification in action.", start: 0, end: 5 },
+      { text: "Bid document claimed ₹18 Crore turnover, but live GST portal showed barely ₹4 Crore.", start: 5, end: 14 },
+      { text: "The AI catches the fabrication on the spot and auto-drafts a sealed rejection notice.", start: 14, end: 23 }
     ]
   },
   {
     id: 4,
     title: "Permanent Digital Proof",
-    duration: 18,
+    duration: 19.7,
     audioUrl: "/audio/pitch/scene4.mp3",
     tag: "SAFETY & TRUST",
-    voiceover: "To keep everything fair and protect officers from false blame, GeM Audit locks every decision with a secure digital stamp. This creates an unchangeable record that can be shown in court to prove everything was done honestly.",
+    voiceover: "To guarantee complete integrity and shield honest officers from false allegations, GeM Audit cryptographically seals every single audit decision with SHA-256 digital stamps. This produces an unalterable forensic record that stands up in any court or vigilance inquiry.",
     subtitles: [
-      { text: "Every decision is locked with an unchangeable digital stamp.", start: 0, end: 6 },
-      { text: "Creates a permanent record to protect honest officers.", start: 6, end: 12 },
-      { text: "Proves everything was fair and stops arguments.", start: 12, end: 18 }
+      { text: "To guarantee integrity and shield honest officers from false allegations,", start: 0, end: 6 },
+      { text: "GeM Audit cryptographically seals every audit decision with SHA-256 digital stamps.", start: 6, end: 13 },
+      { text: "Produces an unalterable forensic record that stands up in any court or inquiry.", start: 13, end: 20 }
     ]
   },
   {
     id: 5,
     title: "The 48-Hour Help Bot",
-    duration: 18,
+    duration: 21.2,
     audioUrl: "/audio/pitch/scene5.mp3",
     tag: "48-HOUR GeM DEADLINE",
-    voiceover: "On the government portal, if an officer asks for extra proof, sellers get only forty-eight hours to reply or their bid is rejected. Our AI finds the right past certificates in seconds and writes the reply letter for them, saving their bid on time.",
+    voiceover: "On the GeM portal, when officers raise technical queries, vendors have only forty-eight hours to respond or face automatic disqualification. Our AI clarifies everything in forty-five seconds—retrieving the exact verified certificates from their vault and drafting a formal, compliant representation on time.",
     subtitles: [
-      { text: "On the portal, sellers get only 48 hours to answer questions.", start: 0, end: 5 },
-      { text: "If they miss this 48-hour deadline, their bid is rejected immediately.", start: 5, end: 11 },
-      { text: "Our AI finds the right papers and writes the reply letter in 45 seconds.", start: 11, end: 18 }
+      { text: "On GeM, vendors have only 48 hours to answer technical queries or face rejection.", start: 0, end: 7 },
+      { text: "Our AI clarifies everything in 45 seconds—retrieving verified certificates from their vault.", start: 7, end: 14 },
+      { text: "Drafts a formal, compliant representation on time, saving bids from disqualification.", start: 14, end: 21 }
     ]
   },
   {
     id: 6,
     title: "Fast, Clean & Honest Bids",
-    duration: 18,
+    duration: 17.4,
     audioUrl: "/audio/pitch/scene6.mp3",
-    tag: "BIG IMPACT",
-    voiceover: "GeM Audit cuts tender checking time from seven days down to just eight minutes, stopping all fraud. We are making government buying fast, simple, and completely honest for India.",
+    tag: "NATIONAL IMPACT",
+    voiceover: "GeM Audit slashes tender evaluation time from seven days down to just eight minutes—eliminating fake bids and saving thousands of crores. We are building a faster, smarter, and truly corruption-free public procurement ecosystem for India.",
     subtitles: [
-      { text: "Checking time cut from 7 days to just 8 minutes—96% faster.", start: 0, end: 6 },
-      { text: "Stops fake companies and false documents completely.", start: 6, end: 12 },
-      { text: "Making government purchasing fast, simple, and honest.", start: 12, end: 18 }
+      { text: "Evaluation time slashed from 7 days down to just 8 minutes—96% faster.", start: 0, end: 6 },
+      { text: "Eliminating fake bids completely and saving thousands of crores.", start: 6, end: 11 },
+      { text: "Building a faster, smarter, and truly corruption-free procurement ecosystem for India.", start: 11, end: 17 }
     ]
   }
 ];
@@ -108,7 +108,7 @@ export default function PitchVideoStudioPage() {
   const [overallTime, setOverallTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [voiceMode, setVoiceMode] = useState('studio'); // 'studio' | 'browser'
+  const [voiceMode, setVoiceMode] = useState('female'); // 'female' | 'male'
   
   const videoContainerRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -138,45 +138,8 @@ export default function PitchVideoStudioPage() {
     }
   }, [isMuted]);
 
-  const playSoundEffect = (type) => {
-    if (isMuted) return;
-    try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      if (type === 'whoosh') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
-      } else if (type === 'alert') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-        osc.frequency.setValueAtTime(440, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.25);
-      } else if (type === 'success') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-        osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
-        osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.4);
-      }
-    } catch {
-      // Ignored if browser policy blocks audio before user gesture
-    }
-  };
+  // Scene transition sound effects removed for clean natural narration
+  const playSoundEffect = () => {};
 
   const formatSpeechText = (text) => {
     if (!text) return '';
@@ -210,20 +173,16 @@ export default function PitchVideoStudioPage() {
   const playSceneAudio = (scene) => {
     if (isMuted) return;
 
-    if (voiceMode === 'studio' && scene.audioUrl) {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      if (audioPlayerRef.current) {
-        audioPlayerRef.current.pause();
-        audioPlayerRef.current.src = scene.audioUrl;
-        audioPlayerRef.current.currentTime = 0;
-        audioPlayerRef.current.play().catch(() => {
-          // Fallback to speech synthesis if audio file playback is blocked
-          speakCurrentScene();
-        });
-      }
-    } else {
-      if (audioPlayerRef.current) audioPlayerRef.current.pause();
-      speakCurrentScene();
+    const audioUrl = voiceMode === 'male' 
+      ? `/audio/pitch_male/scene${scene.id}.mp3` 
+      : `/audio/pitch/scene${scene.id}.mp3`;
+
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (audioPlayerRef.current) {
+      audioPlayerRef.current.pause();
+      audioPlayerRef.current.src = audioUrl;
+      audioPlayerRef.current.currentTime = 0;
+      audioPlayerRef.current.play().catch(() => {});
     }
   };
 
@@ -231,7 +190,6 @@ export default function PitchVideoStudioPage() {
     let interval = null;
     if (isPlaying) {
       playSceneAudio(currentScene);
-      playSoundEffect(currentSceneIdx === 0 ? 'whoosh' : currentSceneIdx === 2 ? 'alert' : 'success');
 
       interval = setInterval(() => {
         setSceneProgress(prev => {
@@ -285,7 +243,6 @@ export default function PitchVideoStudioPage() {
     setSceneProgress(0);
     const timeBefore = SCENES.slice(0, idx).reduce((acc, s) => acc + s.duration, 0);
     setOverallTime(timeBefore);
-    playSoundEffect('whoosh');
   };
 
   const toggleFullScreen = () => {
@@ -378,21 +335,21 @@ export default function PitchVideoStudioPage() {
                 const newMode = e.target.value;
                 setVoiceMode(newMode);
                 if (isPlaying) {
-                  if (audioPlayerRef.current) audioPlayerRef.current.pause();
-                  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-                  if (newMode === 'studio') {
-                    audioPlayerRef.current.src = currentScene.audioUrl;
+                  const audioUrl = newMode === 'male' 
+                    ? `/audio/pitch_male/scene${currentScene.id}.mp3` 
+                    : `/audio/pitch/scene${currentScene.id}.mp3`;
+                  if (audioPlayerRef.current) {
+                    audioPlayerRef.current.pause();
+                    audioPlayerRef.current.src = audioUrl;
                     audioPlayerRef.current.currentTime = (sceneProgress / 100) * currentScene.duration;
                     audioPlayerRef.current.play().catch(() => {});
-                  } else {
-                    speakCurrentScene();
                   }
                 }
               }}
               className="bg-transparent text-emerald-300 font-bold focus:outline-none cursor-pointer text-xs"
             >
-              <option value="studio" className="bg-slate-900 text-emerald-300">🎙️ Studio Voice (Neerja AI)</option>
-              <option value="browser" className="bg-slate-900 text-slate-200">🗣️ Browser TTS</option>
+              <option value="female" className="bg-slate-900 text-emerald-300">🎙️ Natural Female (Neerja Expressive)</option>
+              <option value="male" className="bg-slate-900 text-emerald-300">🎙️ Natural Male (Prabhat Executive)</option>
             </select>
           </div>
 
@@ -411,10 +368,11 @@ export default function PitchVideoStudioPage() {
           {!isRecording ? (
             <button
               onClick={startRecording}
-              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition-all active:scale-95"
+              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition-all active:scale-95 border border-emerald-500/40"
+              title="Record and download the exact live animated video"
             >
               <Download className="w-4 h-4" />
-              Export / Record Video (.webm)
+              Record Exact Video (.webm)
             </button>
           ) : (
             <button
@@ -422,7 +380,7 @@ export default function PitchVideoStudioPage() {
               className="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-rose-600/30 flex items-center gap-2 animate-pulse"
             >
               <div className="w-2.5 h-2.5 rounded-full bg-white animate-ping" />
-              Stop &amp; Save Recording
+              Stop &amp; Save Video
             </button>
           )}
         </div>
@@ -432,7 +390,7 @@ export default function PitchVideoStudioPage() {
       <div className="w-full max-w-6xl mt-6">
         <div 
           ref={videoContainerRef}
-          className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl flex flex-col justify-between select-none"
+          className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl flex flex-col justify-between select-none group"
         >
           {/* Top Video Overlay Bar */}
           <div className="absolute top-0 left-0 right-0 z-30 p-4 lg:p-6 flex items-center justify-between bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent">
@@ -853,16 +811,26 @@ export default function PitchVideoStudioPage() {
           </div>
 
           {/* DYNAMIC CINEMATIC SUBTITLE BAR */}
-          <div className="absolute bottom-16 left-6 right-6 z-30 flex justify-center pointer-events-none">
-            <div className="px-6 py-2.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-slate-700/60 shadow-2xl text-center max-w-2xl transform transition-all duration-300">
-              <p className="text-xs lg:text-sm font-bold text-amber-300 drop-shadow">
+          <div 
+            className={`absolute left-6 right-6 z-30 flex justify-center pointer-events-none transition-all duration-300 ${
+              isPlaying ? 'bottom-5' : 'bottom-20'
+            }`}
+          >
+            <div className="px-6 py-2.5 rounded-xl bg-slate-950/90 backdrop-blur-md border border-slate-700/80 shadow-2xl text-center max-w-3xl transform transition-all duration-300">
+              <p className="text-xs sm:text-sm md:text-base font-bold text-amber-300 drop-shadow-md tracking-wide">
                 "{activeSubtitle?.text || currentScene.voiceover.slice(0, 80)}..."
               </p>
             </div>
           </div>
 
-          {/* BOTTOM VIDEO CONTROLS & TIMELINE */}
-          <div className="relative z-30 p-4 bg-slate-950/95 border-t border-slate-800 flex flex-col gap-2">
+          {/* BOTTOM VIDEO CONTROLS & TIMELINE (Auto-hides on Play, reveals on hover or pause) */}
+          <div 
+            className={`absolute bottom-0 left-0 right-0 z-40 p-4 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent border-t border-slate-800/80 flex flex-col gap-2 transition-all duration-300 ${
+              isPlaying 
+                ? 'opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto' 
+                : 'opacity-100 translate-y-0 pointer-events-auto'
+            }`}
+          >
             {/* Progress Bar */}
             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden flex">
               {SCENES.map((scene, idx) => {

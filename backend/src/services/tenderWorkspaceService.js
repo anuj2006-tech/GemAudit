@@ -184,7 +184,7 @@ export class TenderWorkspaceService {
 
     setTimeout(async () => {
       try {
-        console.log(`[Tender AI] Starting requirement extraction for tender ${tenderId}, doc ${docId}...`);
+        console.log(`[GeM Audit AI] Starting requirement extraction for tender ${tenderId}, doc ${docId}...`);
         
         await repo.updateDocument(docId, userContext.companyId, {
           processing_status: 'ANALYZING',
@@ -225,7 +225,7 @@ JSON format constraint:
               requirements = parsed.requirements || [];
             }
           } catch (jsonErr) {
-            console.warn('[Tender AI] JSON parse failed, utilizing fallbacks:', jsonErr.message);
+            console.warn('[GeM Audit AI] JSON parse failed, utilizing fallbacks:', jsonErr.message);
           }
         }
 
@@ -234,7 +234,7 @@ JSON format constraint:
           requirements = this.generateFallbackRequirements(documentType, textContent);
         }
 
-        console.log(`[Tender AI] Found ${requirements.length} requirements. Saving...`);
+        console.log(`[GeM Audit AI] Found ${requirements.length} requirements. Saving...`);
         for (const req of requirements) {
           await repo.createRequirement({
             company_id: userContext.companyId,
@@ -269,7 +269,7 @@ JSON format constraint:
         }
 
       } catch (err) {
-        console.error('[Tender AI] Background extraction failed:', err.message);
+        console.error('[GeM Audit AI] Background extraction failed:', err.message);
         try {
           await repo.updateDocument(docId, userContext.companyId, {
             processing_status: 'FAILED',
@@ -277,7 +277,7 @@ JSON format constraint:
             updated_at: new Date().toISOString()
           });
         } catch (dbErr) {
-          console.error('[Tender AI] Failed updating DB status on error:', dbErr.message);
+          console.error('[GeM Audit AI] Failed updating DB status on error:', dbErr.message);
         }
       }
     }, 100);
@@ -681,7 +681,7 @@ JSON response structure constraint:
   // ---------------------------------------------------------
 
   static generateFallbackRequirements(documentType, textContent) {
-    console.log(`[Tender AI] Generating fallback requirements for document type ${documentType}...`);
+    console.log(`[GeM Audit AI] Generating fallback requirements for document type ${documentType}...`);
     const list = [];
     const textLower = textContent.toLowerCase();
 

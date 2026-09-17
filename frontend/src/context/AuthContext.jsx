@@ -55,12 +55,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('auth_user');
-    localStorage.removeItem('auth_role');
-    setUser(null);
-    setRole(null);
-    window.location.href = '/auth/login';
+    localStorage.setItem('auth_user', JSON.stringify(DEFAULT_OFFICER_USER));
+    localStorage.setItem('auth_role', 'PLATFORM_ADMIN');
+    localStorage.setItem('auth_token', 'demo_jwt_token_procurement_officer');
+    setUser(DEFAULT_OFFICER_USER);
+    setRole('PLATFORM_ADMIN');
+    window.location.href = '/';
   };
 
   const value = useMemo(() => ({ user, role, login, logout }), [user, role]);

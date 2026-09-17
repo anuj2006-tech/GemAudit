@@ -126,7 +126,7 @@ const DocumentVerificationPage = () => {
           <div>
             <h2 className="text-xl font-extrabold text-white tracking-tight">Upload Tender Evidence & Documents</h2>
             <p className="mt-1 text-sm text-slate-400">
-              Select compliance documents, certificates, or financial reports to extract text and generate vector embeddings for Tender AI RAG Copilot.
+              Select compliance documents, certificates, or financial reports to extract text and analyze compliance for GeM Audit AI.
             </p>
           </div>
 

@@ -24,7 +24,7 @@ const formatFileSize = (bytes) => {
 };
 
 /**
- * DocumentUpload component for Tender AI Enterprise Console
+ * DocumentUpload component for GeM Audit AI Console
  * 
  * @param {Object} props
  * @param {(file: File, docType: string) => Promise<any>} props.onUpload - Async upload function
