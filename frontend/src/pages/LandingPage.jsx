@@ -4,7 +4,7 @@ import {
   Shield, Brain, Files, Activity, ArrowRight, Check, Sparkles,
   Lock, Zap, ChevronDown, Star,
   ShieldCheck, FileText, CheckCircle2, BarChart3, Scale, Clock,
-  Cpu, Building, Award, ExternalLink, Video, History, Layers
+  Cpu, Building, Award, ExternalLink, History, Layers
 } from 'lucide-react';
 
 const LandingPage = () => {
@@ -122,14 +122,6 @@ const LandingPage = () => {
           >
             <span>Open Officer Workspace</span>
             <ArrowRight className="h-4 w-4" />
-          </button>
-
-          <button
-            onClick={() => navigate('/pitch-video')}
-            className="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-sm shadow transition"
-          >
-            <Video className="h-4 w-4 text-cyan-400" />
-            <span>Launch Pitch Studio</span>
           </button>
 
           <button

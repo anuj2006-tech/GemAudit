@@ -12,19 +12,16 @@ import {
   Server,
   CheckCircle2,
   ExternalLink,
-  GitFork,
-  Sparkles,
-  Video
+  GitFork
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-// Clean 7-item officer navigation structure
+// Clean 6-item officer navigation structure
 export const NAV_LINKS = [
   { label: 'Dashboard', to: '/gem-compliance-dashboard', icon: LayoutDashboard, badge: null },
   { label: 'Tender Board', to: '/gem-compliance-fastapi', icon: Layers, badge: 'Live' },
   { label: 'Workflow & ROI', to: '/gem-compliance/workflow', icon: GitFork, badge: '96% Fast' },
-  { label: 'Pitch Video Studio', to: '/pitch-video', icon: Sparkles, badge: 'HD AI' },
   { label: 'Analytics', to: '/gem-compliance/analytics', icon: TrendingUp, badge: null },
   { label: 'Audit Trail', to: '/gem-compliance/audit-trail', icon: History, badge: '10 Portals' },
   { label: 'Settings', to: '/super-admin/settings', icon: Settings, badge: null }
