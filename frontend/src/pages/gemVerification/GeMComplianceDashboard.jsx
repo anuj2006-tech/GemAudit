@@ -660,25 +660,9 @@ export default function GeMComplianceDashboard() {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h1 className="text-sm sm:text-base font-bold tracking-tight text-slate-900 truncate">
-                  GeM Bid Compliance Verification Console
-                </h1>
-                <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  AI Engine Live
-                </span>
-              </div>
-              <p className="text-[11px] sm:text-xs text-slate-500 font-mono mt-0.5 truncate">
-                FastAPI Engine · 10 Statutory Portals · 18 Active Bidders across 3 Tenders
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] font-mono text-slate-600">
-              <Database className="w-3.5 h-3.5 text-indigo-600" />
-              <span>SQLite + LLM</span>
+              <h1 className="text-sm sm:text-base font-bold tracking-tight text-slate-900 truncate">
+                GeM Bid Compliance Verification Console
+              </h1>
             </div>
           </div>
         </header>
