@@ -8,7 +8,6 @@ import {
   ShieldCheck, 
   UserCheck, 
   X, 
-  Server, 
   CheckCircle2, 
   ExternalLink
 } from 'lucide-react';
@@ -100,22 +99,6 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
             );
           })}
         </nav>
-      </div>
-
-      {/* Middle Widget: Live Statutory Portals Health */}
-      <div className="my-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-        <div className="flex items-center justify-between text-[11px]">
-          <span className="text-slate-700 font-semibold flex items-center gap-1.5">
-            <Server className="w-3.5 h-3.5 text-emerald-600" /> Statutory Engine
-          </span>
-          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-            10/10 Online
-          </span>
-        </div>
-        <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full w-full rounded-full"></div>
-        </div>
-        <p className="text-[10px] text-slate-500 font-mono">Automated API Setu Link</p>
       </div>
 
       {/* User Footer Card */}
