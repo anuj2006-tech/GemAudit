@@ -25,7 +25,6 @@ Evaluating contractor bids manually takes **5 to 7 days per tender**, relies on 
 7. [Local Setup & Execution Guide](#-local-setup--execution-guide)
 8. [Core API Endpoints](#-core-api-endpoints)
 9. [Impact & Benchmarks (Manual vs. GemAudit)](#-impact--benchmarks-manual-vs-gemaudit)
-10. [SIH Deliverables & Presentation Slides](#-sih-deliverables--presentation-slides)
 
 ---
 
@@ -37,7 +36,6 @@ Evaluating contractor bids manually takes **5 to 7 days per tender**, relies on 
 - **🔒 100% Cryptographic Audit Trail (`SHA-256`):** Digitally signs and seals every verification timestamp, discrepancy score, and officer decision — creating immutable evidence for **CVC (Central Vigilance Commission)** and **CAG** audits.
 - **⚖️ Zero Discretionary Bias & Bribery:** Replaces subjective human discretion with objective mathematical verification against live government tax returns and ministry registries.
 - **⏱️ 48-Hour Seller Clarification Helper:** Automates GeM's mandatory 48-hour seller response window and drafts legally defensible rejection notices with one click.
-- **🎬 Pitch Video Studio & Motion Visualizer:** Integrated presentation studio with synced Edge-TTS natural voice narration for stakeholder and jury demonstrations.
 - **🚀 Instant Demo Access:** No tedious login gate for evaluators — launches directly into the procurement officer workspace.
 
 ---
@@ -50,7 +48,6 @@ graph TB
         UI_Dash["GeM Overview Dashboard (/gem-compliance-dashboard)"]
         UI_Matrix["10-Portal Compliance Matrix (/gem-compliance)"]
         UI_Audit["Cryptographic Audit Trail (/gem-compliance/audit-trail)"]
-        UI_Studio["Pitch Video Studio (/pitch-video)"]
     end
 
     subgraph FastAPIEngine ["Forensic & Analytics Engine (FastAPI / Python 3.10+)"]
@@ -140,33 +137,13 @@ GemAudit/
 │   │   ├── context/                    # AuthContext (Officer session & workspace)
 │   │   ├── pages/
 │   │   │   ├── gemVerification/        # Compliance portal, audit trail, analytics pages
-│   │   │   ├── pitchVideo/             # Pitch Video Studio
 │   │   │   └── tenderReg/              # Tender management & registration
 │   │   ├── routes/AppRoutes.jsx        # Complete client-side route registry (login bypassed)
 │   │   └── services/                   # API connectors (gemFastapiService.js, gemService.js)
 │   ├── vite.config.js                  # Vite bundler options (port 3000, /api proxy)
 │   └── package.json
 │
-├── slides/                             # SIH Interactive Presentation Slides & Diagrams
-│   ├── sih_references_and_data_sources_slide.html   # Hexagonal Process Chain with Working Links
-│   ├── sih_feasibility_viability_slide.html         # Slide 4: Feasibility & Viability Matrices
-│   ├── sih_impact_and_benefits_slide.html           # Slide 5: Social & Quantitative Impact
-│   ├── gem_impact_benefits_circular_diagram.html    # Split Circular Impact Wheel
-│   ├── procurement_impact_wheel.html                # 6-Dimension Procurement Wheel
-│   ├── comparison_bar_chart.html                    # Legacy vs GemAudit Performance Bar Chart
-│   └── feasibility_viability_panels.html            # Feasibility & Viability Bento Grid
-│
-├── docs/                               # Project Guides & Technical Documentation
-│   ├── TEAM_HANDOFF_AND_PROJECT_GUIDE.md            # Comprehensive Architecture & Execution Guide
-│   ├── TEAM_HANDOFF_AND_PROJECT_GUIDE.html          # Styled HTML Technical Guide
-│   └── tender_platform_technical_report.md          # Technical Audit Report
-│
-├── audio/                              # Generated Narration Audio Files (.mp3)
-├── GeM_Audit_Pitch_Presentation.mp4    # 1080p Pitch Presentation Video
-├── generate_voiceovers.py              # Edge-TTS Natural Human Voice Generation Script
-├── render_pitch_video.py               # Automated Video Render Script (Playwright + FFmpeg)
-├── pitch_video_studio.html             # Standalone Pitch Video Studio Runner
-├── docker-compose.yml                  # Container stack orchestration
+├── .gitignore                          # Git ignore rules
 └── README.md                           # Platform Documentation
 ```
 
@@ -180,8 +157,6 @@ GemAudit/
 | **Forensic Backend** | Python 3.10+, FastAPI, Uvicorn, SQLAlchemy, Pydantic | High-speed concurrent statutory API lookups & pixel OCR |
 | **Gateway Backend** | Node.js, Express, Helmet, Argon2, JWT, Rate Limiting | Enterprise session security, tender management, RBAC |
 | **Databases** | SQLite (`gem_compliance.db`) & PostgreSQL (Supabase) | Local zero-config testing cache + cloud storage with RLS |
-| **Audio & TTS** | Microsoft Edge-TTS (`en-IN-NeerjaExpressiveNeural`, `en-IN-PrabhatNeural`) | Expressive natural human narration for video studio |
-| **Video Rendering** | Playwright, FFmpeg, HTML5 Canvas | Automated 60fps MP4 video generation with synced subtitles |
 
 ---
 
@@ -271,21 +246,6 @@ npm run dev
 | **Fraud Escape Rate** | ~75% Altered PDFs Missed | **0% Fraud Escapes** | **🛡️ Multi-Crore Funds Protected** |
 | **Statutory Coverage** | 1–2 Sample Checks | **10 Registries in 3 Sec** | **🌐 100% Comprehensive** |
 | **Audit Liability** | Vulnerable Paper Files | **SHA-256 Sealed Proof** | **🔒 100% CVC/CAG Audit Ready** |
-
----
-
-## 🏛️ SIH Deliverables & Presentation Slides
-
-All official Smart India Hackathon deliverables are pre-packaged in the [`slides/`](slides/) and [`docs/`](docs/) directories:
-
-1. **Slide: References & Data Sources:** [`slides/sih_references_and_data_sources_slide.html`](slides/sih_references_and_data_sources_slide.html)  
-   *Interactive horizontal hexagonal process chain with working live hyperlinks and Dark/Beige theme toggle.*
-2. **Slide 4: Feasibility & Viability:** [`slides/sih_feasibility_viability_slide.html`](slides/sih_feasibility_viability_slide.html)
-3. **Slide 5: Benefits & Social Impact:** [`slides/sih_impact_and_benefits_slide.html`](slides/sih_impact_and_benefits_slide.html)
-4. **Split Circular Comparison Wheel:** [`slides/gem_impact_benefits_circular_diagram.html`](slides/gem_impact_benefits_circular_diagram.html)
-5. **Comparative Performance Bar Chart:** [`slides/comparison_bar_chart.html`](slides/comparison_bar_chart.html)
-6. **Pitch Video Studio:** [`pitch_video_studio.html`](pitch_video_studio.html)
-7. **Team Technical Handoff Guide:** [`docs/TEAM_HANDOFF_AND_PROJECT_GUIDE.md`](docs/TEAM_HANDOFF_AND_PROJECT_GUIDE.md)
 
 ---
 

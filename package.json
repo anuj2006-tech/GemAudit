@@ -1,8 +1,0 @@
-{
-  "name": "tender-management-root",
-  "private": true,
-  "scripts": {
-    "build": "npm --prefix backend install",
-    "start": "npm --prefix backend start"
-  }
-}
