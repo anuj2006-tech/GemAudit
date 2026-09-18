@@ -4,27 +4,23 @@ import {
   Layers, 
   TrendingUp, 
   History, 
-  Settings, 
   LogOut, 
   ShieldCheck, 
   UserCheck, 
-  X,
-  Server,
-  CheckCircle2,
-  ExternalLink,
-  GitFork
+  X, 
+  Server, 
+  CheckCircle2, 
+  ExternalLink
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-// Clean 6-item officer navigation structure
+// Clean officer navigation structure (Dashboard, Tender Board, Analytics, Audit Trail)
 export const NAV_LINKS = [
-  { label: 'Dashboard', to: '/gem-compliance-dashboard', icon: LayoutDashboard, badge: null },
-  { label: 'Tender Board', to: '/gem-compliance-fastapi', icon: Layers, badge: 'Live' },
-  { label: 'Workflow & ROI', to: '/gem-compliance/workflow', icon: GitFork, badge: '96% Fast' },
-  { label: 'Analytics', to: '/gem-compliance/analytics', icon: TrendingUp, badge: null },
-  { label: 'Audit Trail', to: '/gem-compliance/audit-trail', icon: History, badge: '10 Portals' },
-  { label: 'Settings', to: '/super-admin/settings', icon: Settings, badge: null }
+  { label: 'Dashboard', to: '/gem-compliance-dashboard', icon: LayoutDashboard },
+  { label: 'Tender Board', to: '/gem-compliance-fastapi', icon: Layers },
+  { label: 'Analytics', to: '/gem-compliance/analytics', icon: TrendingUp },
+  { label: 'Audit Trail', to: '/gem-compliance/audit-trail', icon: History }
 ];
 
 const Sidebar = ({ mobileOpen, onMobileClose }) => {
@@ -82,7 +78,7 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
 
         {/* Navigation Links */}
         <nav className="space-y-1.5 overflow-y-auto pr-1">
-          {NAV_LINKS.map(({ label, to, icon: Icon, badge }) => {
+          {NAV_LINKS.map(({ label, to, icon: Icon }) => {
             const active = location.pathname === to || location.pathname.startsWith(to + '/');
             return (
               <Link
@@ -97,11 +93,6 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
               >
                 <Icon size={18} className={`${active ? 'text-white' : 'text-slate-400 group-hover:text-indigo-600 transition-colors'}`} />
                 <span>{label}</span>
-                {badge && !active && (
-                  <span className="ml-auto text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-                    {badge}
-                  </span>
-                )}
                 {active && (
                   <span className="ml-auto h-2 w-2 rounded-full bg-white shadow-xs" />
                 )}
@@ -124,7 +115,7 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
         <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
           <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full w-full rounded-full"></div>
         </div>
-        <p className="text-[10px] text-slate-500 font-mono">FastAPI · SQLite · OpenRouter AI</p>
+        <p className="text-[10px] text-slate-500 font-mono">Automated API Setu Link</p>
       </div>
 
       {/* User Footer Card */}

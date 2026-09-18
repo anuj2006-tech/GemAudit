@@ -86,20 +86,10 @@ export default function GeMOverviewDashboard() {
               <h1 className="text-sm sm:text-base font-bold tracking-tight text-slate-900 truncate">
                 Procurement Officer Dashboard
               </h1>
-              <p className="text-[11px] sm:text-xs text-slate-500 font-mono mt-0.5 truncate">
-                FastAPI + SQLite · 10 Government Portals · {totalBidders} Active Bidders
-              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate('/gem-compliance/workflow')}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 transition border border-slate-200 shrink-0"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-              <span className="hidden sm:inline">Workflow & ROI</span>
-            </button>
             <button
               onClick={() => navigate('/gem-compliance-fastapi')}
               className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 sm:px-4 py-2 rounded-lg flex items-center gap-1.5 sm:gap-2 transition shadow-2xs shrink-0"
