@@ -1,22 +1,29 @@
+# Dependencies
 node_modules/
+**/node_modules/
+
+# Production builds
 dist/
+**/dist/
+**/build/
+
+# Environment configurations & secrets
 .env
 .env.local
 .env.development
 .env.production
+backend/.env
 !.env.example
 
-**/node_modules/
-**/dist/
-**/build/
-backend/.env
+# Python cache & virtual environments
 __pycache__/
-**/__pycache__/ 
+**/__pycache__/
 *.pyc
-*.log 
-*.db
-*.sqlite3
 venv/
 .venv/
-temp_video_build/
+
+# Logs & local caches
+*.log
+*.db
+*.sqlite3
 .agents/
