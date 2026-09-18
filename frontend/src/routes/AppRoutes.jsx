@@ -54,7 +54,8 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Pages */}
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/" element={<Navigate to="/gem-compliance-dashboard" replace />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/auth/login" element={<Navigate to="/gem-compliance-dashboard" replace />} />
       <Route path="/auth/register" element={<Navigate to="/gem-compliance-dashboard" replace />} />
       <Route path="/tender-reg" element={<TenderRegPage />} />
