@@ -1,3 +1,7 @@
+/**
+ * GeM Audit AI — Enterprise API Gateway & Procurement Verification Core
+ * Handles compliance audits, forensic checks, and role-based tender access.
+ */
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
