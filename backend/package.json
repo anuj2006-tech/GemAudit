@@ -1,7 +1,7 @@
 {
   "name": "gem-audit-backend",
   "version": "1.0.0",
-  "description": "Secure API Gateway for GeM Audit AI Forensic Bid Verification Platform",
+  "description": "Enterprise API Gateway for GeM Audit AI Forensic Bid Verification Platform",
   "main": "server.js",
   "type": "module",
   "scripts": {

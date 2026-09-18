@@ -1,3 +1,6 @@
+/**
+ * GeM Audit AI — Frontend Web Portal Application Bootstrap
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';

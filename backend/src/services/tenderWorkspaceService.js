@@ -1,3 +1,7 @@
+/**
+ * GeM Audit AI — Tender Workspace Service
+ * Manages tender documents, forensic extraction, and verification pipelines.
+ */
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
