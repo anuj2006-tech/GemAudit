@@ -89,57 +89,89 @@ export default function GeMAuditTrailPage() {
   };
 
   // Human-friendly Action Badge Config
-  const getActionBadge = (action) => {
-    switch (action) {
-      case 'PROCUREMENT_OFFICER_DECISION_MARK_QUALIFIED':
+  const getActionBadge = (action, details = {}) => {
+    // 1. Officer Disqualification
+    if (action === 'PROCUREMENT_OFFICER_DECISION_MARK_DISQUALIFIED' || details?.decision === 'MARK_DISQUALIFIED' || details?.decision === 'DISQUALIFIED') {
+      return {
+        label: 'Officer Disqualified Bidder',
+        icon: <XCircle className="w-3.5 h-3.5 text-rose-600 stroke-[2.5]" />,
+        bgClass: 'bg-rose-50 border-rose-200 text-rose-800'
+      };
+    }
+
+    // 2. Disqualification Notice Dispatched
+    if (action === 'STATUTORY_DISQUALIFICATION_NOTICE_DISPATCHED' || 
+        (action === 'NOTIFICATION_SENT_TO_BIDDER' && (details?.decision === 'MARK_DISQUALIFIED' || details?.decision === 'DISQUALIFIED'))) {
+      return {
+        label: 'Disqualification Notice Dispatched',
+        icon: <Send className="w-3.5 h-3.5 text-rose-600 stroke-[2.5]" />,
+        bgClass: 'bg-rose-50 border-rose-200 text-rose-800'
+      };
+    }
+
+    // 3. Automated AI Disqualification Flag
+    if (action === 'AUTOMATED_AI_VERIFICATION_EXECUTED') {
+      if (details?.recommendation === 'RECOMMEND_DISQUALIFY' || details?.risk_level === 'High' || details?.score < 50) {
         return {
-          label: 'Officer Qualified Bidder',
-          icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />,
-          bgClass: 'bg-emerald-50 border-emerald-200 text-emerald-800'
-        };
-      case 'PROCUREMENT_OFFICER_DECISION_MARK_DISQUALIFIED':
-        return {
-          label: 'Officer Disqualified Bidder',
-          icon: <XCircle className="w-3.5 h-3.5 text-rose-600" />,
+          label: 'AI Auto-Flagged Disqualification',
+          icon: <XCircle className="w-3.5 h-3.5 text-rose-600 stroke-[2.5]" />,
           bgClass: 'bg-rose-50 border-rose-200 text-rose-800'
         };
-      case 'NOTIFICATION_SENT_TO_BIDDER':
-        return {
-          label: 'Formal Decision Notice Dispatched',
-          icon: <Send className="w-3.5 h-3.5 text-indigo-600" />,
-          bgClass: 'bg-indigo-50 border-indigo-200 text-indigo-800'
-        };
-      case 'AUTOMATED_AI_VERIFICATION_EXECUTED':
-        return {
-          label: '10-Registry AI Verification Run',
-          icon: <Sparkles className="w-3.5 h-3.5 text-violet-600" />,
-          bgClass: 'bg-violet-50 border-violet-200 text-violet-800'
-        };
-      case 'CLARIFICATION_NOTICE_ISSUED':
-        return {
-          label: 'Statutory Clarification Notice Issued',
-          icon: <Clock className="w-3.5 h-3.5 text-amber-600" />,
-          bgClass: 'bg-amber-50 border-amber-200 text-amber-800'
-        };
-      case 'BIDDER_RESPONSE_SUBMITTED_AND_REVERIFIED':
-        return {
-          label: 'Bidder Response Re-evaluated',
-          icon: <TrendingUp className="w-3.5 h-3.5 text-teal-600" />,
-          bgClass: 'bg-teal-50 border-teal-200 text-teal-800'
-        };
-      case 'DOCUMENT_UPLOADED':
-        return {
-          label: 'Compliance Document Uploaded',
-          icon: <FileText className="w-3.5 h-3.5 text-sky-600" />,
-          bgClass: 'bg-sky-50 border-sky-200 text-sky-800'
-        };
-      default:
-        return {
-          label: action?.replace(/_/g, ' ') || 'Audit Event',
-          icon: <ShieldCheck className="w-3.5 h-3.5 text-slate-600" />,
-          bgClass: 'bg-slate-100 border-slate-200 text-slate-800'
-        };
+      }
+      return {
+        label: '10-Registry AI Verification Run',
+        icon: <Sparkles className="w-3.5 h-3.5 text-violet-600" />,
+        bgClass: 'bg-violet-50 border-violet-200 text-violet-800'
+      };
     }
+
+    // 4. Officer Qualified Bidder
+    if (action === 'PROCUREMENT_OFFICER_DECISION_MARK_QUALIFIED' || details?.decision === 'MARK_QUALIFIED') {
+      return {
+        label: 'Officer Qualified Bidder',
+        icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />,
+        bgClass: 'bg-emerald-50 border-emerald-200 text-emerald-800'
+      };
+    }
+
+    // 5. Formal Decision Notice
+    if (action === 'NOTIFICATION_SENT_TO_BIDDER') {
+      return {
+        label: 'Formal Decision Notice Dispatched',
+        icon: <Send className="w-3.5 h-3.5 text-indigo-600" />,
+        bgClass: 'bg-indigo-50 border-indigo-200 text-indigo-800'
+      };
+    }
+
+    if (action === 'CLARIFICATION_NOTICE_ISSUED') {
+      return {
+        label: 'Statutory Clarification Notice Issued',
+        icon: <Clock className="w-3.5 h-3.5 text-amber-600" />,
+        bgClass: 'bg-amber-50 border-amber-200 text-amber-800'
+      };
+    }
+
+    if (action === 'BIDDER_RESPONSE_SUBMITTED_AND_REVERIFIED') {
+      return {
+        label: 'Bidder Response Re-evaluated',
+        icon: <TrendingUp className="w-3.5 h-3.5 text-teal-600" />,
+        bgClass: 'bg-teal-50 border-teal-200 text-teal-800'
+      };
+    }
+
+    if (action === 'DOCUMENT_UPLOADED') {
+      return {
+        label: 'Compliance Document Uploaded',
+        icon: <FileText className="w-3.5 h-3.5 text-sky-600" />,
+        bgClass: 'bg-sky-50 border-sky-200 text-sky-800'
+      };
+    }
+
+    return {
+      label: action?.replace(/_/g, ' ') || 'Audit Event',
+      icon: <ShieldCheck className="w-3.5 h-3.5 text-slate-600" />,
+      bgClass: 'bg-slate-100 border-slate-200 text-slate-800'
+    };
   };
 
   // Performed By Badge
@@ -167,13 +199,13 @@ export default function GeMAuditTrailPage() {
 
   // Summarize details into high-contrast chips & text
   const renderFindingSummary = (details, action, bidder) => {
-    if (action.includes('DECISION')) {
-      const isQualified = details.decision === 'MARK_QUALIFIED';
+    if (action.includes('DECISION') || details.decision) {
+      const isQualified = details.decision === 'MARK_QUALIFIED' || details.decision === 'QUALIFIED';
       return (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] uppercase tracking-wider ${
-              isQualified ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+            <span className={`px-2 py-0.5 rounded-md font-bold text-[10px] uppercase tracking-wider border ${
+              isQualified ? 'bg-emerald-100 border-emerald-200 text-emerald-800' : 'bg-rose-100 border-rose-200 text-rose-800 font-black'
             }`}>
               {isQualified ? 'Decision: Qualified' : 'Decision: Disqualified'}
             </span>
@@ -182,29 +214,46 @@ export default function GeMAuditTrailPage() {
                 Score: <strong>{details.score_at_decision}%</strong>
               </span>
             )}
+            {details.risk_level_at_decision && (
+              <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold uppercase ${
+                details.risk_level_at_decision === 'High' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-600'
+              }`}>
+                Risk: {details.risk_level_at_decision}
+              </span>
+            )}
           </div>
-          <p className="text-[11px] text-slate-500 line-clamp-1">
-            {details.remarks || `Statutory check snapshot frozen with ${details.passed_checks ?? 9} passed, ${details.failed_checks ?? 0} failed.`}
+          <p className="text-[11px] text-slate-600 line-clamp-1">
+            {details.remarks || (isQualified 
+              ? `Statutory criteria verified across 10 central registries in compliance with GFR Rule 144(xi).` 
+              : `Mandatory technical disqualification under GFR Rule 151/144(xi): ${details.failed_checks || 3} statutory checks failed.`)}
           </p>
         </div>
       );
     }
 
-    if (action === 'NOTIFICATION_SENT_TO_BIDDER') {
+    if (action.includes('NOTIFICATION') || action.includes('NOTICE')) {
+      const isDisq = details.decision === 'MARK_DISQUALIFIED' || details.decision === 'DISQUALIFIED' || action.includes('DISQUALIFICATION');
       return (
-        <div className="space-y-0.5">
-          <div className="flex items-center gap-1.5 text-slate-800 text-[11px] font-medium">
-            <span>Ref:</span>
-            <span className="font-mono font-bold text-indigo-700">{details.ref_no || 'GeM/COMP/2026/OFFICIAL'}</span>
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+              isDisq ? 'bg-rose-100 border-rose-200 text-rose-800 font-black' : 'bg-indigo-50 border-indigo-200 text-indigo-800'
+            }`}>
+              {isDisq ? 'Disqualification Notice' : 'Decision Notice'}
+            </span>
+            <span className="font-mono text-[10px] text-slate-600 font-bold">{details.ref_no || 'GeM/COMP/2026/OFFICIAL'}</span>
           </div>
           <p className="text-[11px] text-slate-500 line-clamp-1">
-            Delivered to bidder registered email & official GeM Seller Dashboard.
+            {isDisq 
+              ? 'Formal Technical Disqualification order dispatched to bidder registered email & official GeM Seller Dashboard.' 
+              : 'Delivered to bidder registered email & official GeM Seller Dashboard.'}
           </p>
         </div>
       );
     }
 
     if (action === 'AUTOMATED_AI_VERIFICATION_EXECUTED') {
+      const isDisq = details.recommendation === 'RECOMMEND_DISQUALIFY' || details.risk_level === 'High' || details.score < 50;
       return (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
@@ -217,12 +266,17 @@ export default function GeMAuditTrailPage() {
             }`}>
               Score: {details.score}%
             </span>
+            {isDisq && (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-100 text-rose-800 border border-rose-200 uppercase tracking-wider">
+                {details.risk_level === 'High' ? 'High Risk Disqualification' : 'AI Flagged'}
+              </span>
+            )}
             <span className="text-[10px] text-slate-500 font-medium">
-              {details.passed} Passed · {details.warnings || 0} Warnings · {details.failed} Failed
+              {details.passed ?? 6} Passed · {details.warnings || 0} Warnings · {details.failed ?? 0} Failed
             </span>
           </div>
           <p className="text-[11px] text-slate-600 font-mono text-[10px]">
-            Recommendation: <strong className="text-slate-800">{details.recommendation || 'EVALUATE'}</strong>
+            Recommendation: <strong className={isDisq ? 'text-rose-700 font-bold' : 'text-slate-800'}>{details.recommendation || 'EVALUATE'}</strong>
           </p>
         </div>
       );
@@ -264,17 +318,29 @@ export default function GeMAuditTrailPage() {
   const filteredLogs = logs.filter(log => {
     const details = parseDetails(log.details_json);
     const bidder = biddersMap[log.bidder_id];
-    const company = bidder?.company_name || '';
+    const company = bidder?.company_name || details?.company || '';
     const sellerId = bidder?.gem_seller_id || '';
 
     const text = `${log.action} ${log.performed_by} ${company} ${sellerId} ${JSON.stringify(details)}`.toLowerCase();
     const matchesSearch = text.includes(searchTerm.toLowerCase());
 
     let matchesAction = true;
-    if (actionFilter === 'DECISION') matchesAction = log.action?.includes('DECISION');
-    else if (actionFilter === 'VERIFY') matchesAction = log.action?.includes('VERIFICATION') || log.action?.includes('REVERIFIED');
-    else if (actionFilter === 'NOTICE') matchesAction = log.action?.includes('NOTICE') || log.action?.includes('NOTIFICATION');
-    else if (actionFilter === 'UPLOAD') matchesAction = log.action?.includes('UPLOAD');
+    if (actionFilter === 'DISQUALIFIED') {
+      matchesAction = log.action?.includes('DISQUALIFIED') || 
+                      details?.decision === 'MARK_DISQUALIFIED' ||
+                      details?.decision === 'DISQUALIFIED' ||
+                      details?.recommendation === 'RECOMMEND_DISQUALIFY' ||
+                      details?.risk_level === 'High' ||
+                      bidder?.decision_status === 'MARK_DISQUALIFIED';
+    } else if (actionFilter === 'DECISION') {
+      matchesAction = log.action?.includes('DECISION') || details?.decision;
+    } else if (actionFilter === 'VERIFY') {
+      matchesAction = log.action?.includes('VERIFICATION') || log.action?.includes('REVERIFIED');
+    } else if (actionFilter === 'NOTICE') {
+      matchesAction = log.action?.includes('NOTICE') || log.action?.includes('NOTIFICATION');
+    } else if (actionFilter === 'UPLOAD') {
+      matchesAction = log.action?.includes('UPLOAD');
+    }
 
     return matchesSearch && matchesAction;
   });
@@ -287,7 +353,17 @@ export default function GeMAuditTrailPage() {
 
   // Stats
   const totalEvents = logs.length;
-  const decisionEvents = logs.filter(l => l.action?.includes('DECISION')).length;
+  const disqualifiedEvents = logs.filter(l => {
+    const d = parseDetails(l.details_json);
+    const b = biddersMap[l.bidder_id];
+    return l.action?.includes('DISQUALIFIED') || 
+           d?.decision === 'MARK_DISQUALIFIED' || 
+           d?.decision === 'DISQUALIFIED' ||
+           d?.recommendation === 'RECOMMEND_DISQUALIFY' ||
+           d?.risk_level === 'High' ||
+           b?.decision_status === 'MARK_DISQUALIFIED';
+  }).length;
+  const decisionEvents = logs.filter(l => l.action?.includes('DECISION') || parseDetails(l.details_json).decision).length;
   const aiEvents = logs.filter(l => l.action?.includes('VERIFICATION')).length;
 
   return (
@@ -363,22 +439,22 @@ export default function GeMAuditTrailPage() {
             </div>
 
             <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+                <XCircle className="w-5 h-5 stroke-[2.5]" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xl font-bold font-mono text-rose-700">{disqualifiedEvents} Sealed</div>
+                <div className="text-[11px] font-medium text-slate-500 truncate">Disqualifications Sealed</div>
+              </div>
+            </div>
+
+            <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
                 <UserCheck className="w-5 h-5" />
               </div>
               <div className="min-w-0">
                 <div className="text-xl font-bold font-mono text-blue-700">{decisionEvents} Recorded</div>
                 <div className="text-[11px] font-medium text-slate-500 truncate">Officer Decisions Frozen</div>
-              </div>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                <Cpu className="w-5 h-5" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xl font-bold font-mono text-purple-700">{aiEvents} Executed</div>
-                <div className="text-[11px] font-medium text-slate-500 truncate">10-Portal AI Cross-Checks</div>
               </div>
             </div>
           </div>
@@ -412,6 +488,7 @@ export default function GeMAuditTrailPage() {
               <div className="flex items-center border border-slate-300 bg-slate-100 p-0.5 rounded-lg text-xs shrink-0">
                 {[
                   { label: 'All Records', value: 'ALL' },
+                  { label: '🚫 Disqualified', value: 'DISQUALIFIED' },
                   { label: 'Officer Decisions', value: 'DECISION' },
                   { label: 'AI Verifications', value: 'VERIFY' },
                   { label: 'Notices', value: 'NOTICE' }
@@ -421,8 +498,8 @@ export default function GeMAuditTrailPage() {
                     onClick={() => setActionFilter(act.value)}
                     className={`px-3 py-1 text-[11px] transition rounded-md font-semibold ${
                       actionFilter === act.value 
-                        ? 'bg-white text-slate-900 shadow-2xs font-bold' 
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? (act.value === 'DISQUALIFIED' ? 'bg-rose-600 text-white shadow-xs font-bold' : 'bg-white text-slate-900 shadow-2xs font-bold') 
+                        : (act.value === 'DISQUALIFIED' ? 'text-rose-700 hover:text-rose-900 font-bold' : 'text-slate-600 hover:text-slate-900')
                     }`}
                   >
                     {act.label}
@@ -460,7 +537,7 @@ export default function GeMAuditTrailPage() {
                     filteredLogs.map((log, idx) => {
                       const details = parseDetails(log.details_json);
                       const bidder = biddersMap[log.bidder_id];
-                      const badge = getActionBadge(log.action);
+                      const badge = getActionBadge(log.action, details);
                       const shaDigest = generateSha256Digest(log.id, log.timestamp, log.action);
                       const formattedTime = new Date(log.timestamp).toLocaleString('en-IN', {
                         day: '2-digit',
@@ -495,15 +572,15 @@ export default function GeMAuditTrailPage() {
                           <td className="py-3.5 px-4">
                             <div className="space-y-0.5">
                               <div className="font-bold text-slate-900 text-xs line-clamp-1">
-                                {bidder?.company_name || `Bidder ID #${log.bidder_id || 'System'}`}
+                                {bidder?.company_name || details?.company || details?.company_name || `Bidder ID #${log.bidder_id || 'System'}`}
                               </div>
                               <div className="flex items-center gap-1.5 font-mono text-[10px] text-slate-500">
-                                {bidder?.gem_seller_id && (
+                                {(bidder?.gem_seller_id || details?.seller_id) && (
                                   <span className="px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 font-semibold border border-slate-200">
-                                    {bidder.gem_seller_id}
+                                    {bidder?.gem_seller_id || details?.seller_id}
                                   </span>
                                 )}
-                                <span>Ref: {bidder?.tender_ref || 'GEM/2026/B/894120'}</span>
+                                <span>Ref: {bidder?.tender_ref || details?.tender_ref || 'GEM/2026/B/894120'}</span>
                               </div>
                             </div>
                           </td>
@@ -589,6 +666,25 @@ export default function GeMAuditTrailPage() {
               {/* Certificate Body */}
               <div className="p-6 overflow-y-auto space-y-5 text-xs">
                 
+                {/* Disqualification Alert Banner if applicable */}
+                {(selectedAuditLog.details?.decision === 'MARK_DISQUALIFIED' || 
+                  selectedAuditLog.details?.decision === 'DISQUALIFIED' || 
+                  selectedAuditLog.log.action?.includes('DISQUALIFIED') ||
+                  selectedAuditLog.details?.recommendation === 'RECOMMEND_DISQUALIFY') && (
+                  <div className="bg-rose-50 border border-rose-200 rounded-xl p-3.5 flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5 stroke-[2.5]" />
+                    <div className="space-y-1">
+                      <div className="font-bold text-rose-900 text-xs uppercase tracking-wider flex items-center gap-2">
+                        <span>Statutory Disqualification Ruling</span>
+                        <span className="px-2 py-0.2 rounded text-[9px] bg-rose-200 text-rose-900 font-extrabold">GFR 144(xi) / 151</span>
+                      </div>
+                      <p className="text-[11px] text-rose-800 leading-relaxed font-['IBM_Plex_Sans']">
+                        Bidder disqualified from technical evaluation. Statutory non-compliance is sealed in the cryptographic audit ledger. Commercial financial bid remains frozen & un-opened.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Cryptographic Seal Verified Banner */}
                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-start gap-3">
                   <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />

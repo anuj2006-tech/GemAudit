@@ -188,16 +188,16 @@
       "udyam_number": "UDYAM-MH-01-0011223",
       "enterprise_type": "Small",
       "local_content_percent": 60.0,
-      "decision_status": "PENDING",
-      "officer_remarks": null,
+      "decision_status": "MARK_DISQUALIFIED",
+      "officer_remarks": "Disqualified: Default on statutory EPFO & ESIC contributions flagged during multi-portal verification.",
       "score": 44.0,
       "risk_level": "High",
       "passed_checks": 5,
       "warning_checks": 2,
       "failed_checks": 2,
-      "ai_recommendation_status": "RECOMMEND_CLARIFICATION",
-      "latest_decision": null,
-      "notification_sent_at": null
+      "ai_recommendation_status": "RECOMMEND_DISQUALIFY",
+      "latest_decision": "MARK_DISQUALIFIED",
+      "notification_sent_at": "2026-08-28T12:24:00.612040"
     },
     {
       "id": 9,
@@ -210,16 +210,16 @@
       "udyam_number": null,
       "enterprise_type": "Large Enterprise",
       "local_content_percent": 25.0,
-      "decision_status": "PENDING",
-      "officer_remarks": null,
+      "decision_status": "MARK_DISQUALIFIED",
+      "officer_remarks": "Rejected: Missing OEM Authorization and non-compliant local content (25% < 50% statutory threshold).",
       "score": 49.5,
       "risk_level": "High",
       "passed_checks": 4,
       "warning_checks": 2,
       "failed_checks": 3,
       "ai_recommendation_status": "RECOMMEND_DISQUALIFY",
-      "latest_decision": null,
-      "notification_sent_at": null
+      "latest_decision": "MARK_DISQUALIFIED",
+      "notification_sent_at": "2026-08-28T12:23:35.451920"
     },
     {
       "id": 10,
@@ -4174,11 +4174,35 @@
   },
   "audit_logs": [
     {
-      "id": 22,
-      "bidder_id": 1,
-      "action": "NOTIFICATION_SENT_TO_BIDDER",
+      "id": 25,
+      "bidder_id": 8,
+      "action": "PROCUREMENT_OFFICER_DECISION_MARK_DISQUALIFIED",
       "performed_by": "Gov Procurement Officer",
-      "details_json": "{\"decision\": \"MARK_DISQUALIFIED\", \"sent_at\": \"28-Aug-2026 12:22:27 UTC\", \"ref_no\": \"GeM/COMP/2026/MARK/3\"}",
+      "details_json": "{\"decision\": \"MARK_DISQUALIFIED\", \"remarks\": \"EPFO & ESIC statutory defaults flagged during multi-portal verification. Mandatory rejection under GFR 144(xi).\", \"score_at_decision\": 44.0, \"risk_level_at_decision\": \"High\", \"timestamp\": \"28-Aug-2026 12:24:00 UTC\", \"passed_checks\": 5, \"failed_checks\": 2}",
+      "timestamp": "2026-08-28T12:24:00.612040"
+    },
+    {
+      "id": 24,
+      "bidder_id": 9,
+      "action": "STATUTORY_DISQUALIFICATION_NOTICE_DISPATCHED",
+      "performed_by": "Gov Procurement Officer",
+      "details_json": "{\"decision\": \"MARK_DISQUALIFIED\", \"sent_at\": \"28-Aug-2026 12:23:35 UTC\", \"ref_no\": \"GeM/COMP/2026/DISQ/GEM-SLR-66231\"}",
+      "timestamp": "2026-08-28T12:23:35.451920"
+    },
+    {
+      "id": 23,
+      "bidder_id": 9,
+      "action": "PROCUREMENT_OFFICER_DECISION_MARK_DISQUALIFIED",
+      "performed_by": "Gov Procurement Officer",
+      "details_json": "{\"decision\": \"MARK_DISQUALIFIED\", \"remarks\": \"Missing OEM Authorization Certificate and declared local content 25.0% does not satisfy 50% statutory threshold under PPP-MII Order.\", \"score_at_decision\": 49.5, \"risk_level_at_decision\": \"High\", \"timestamp\": \"28-Aug-2026 12:23:10 UTC\", \"passed_checks\": 4, \"failed_checks\": 3}",
+      "timestamp": "2026-08-28T12:23:10.120455"
+    },
+    {
+      "id": 22,
+      "bidder_id": 3,
+      "action": "STATUTORY_DISQUALIFICATION_NOTICE_DISPATCHED",
+      "performed_by": "Gov Procurement Officer",
+      "details_json": "{\"decision\": \"MARK_DISQUALIFIED\", \"sent_at\": \"28-Aug-2026 12:22:27 UTC\", \"ref_no\": \"GeM/COMP/2026/DISQ/GEM-SLR-33104\"}",
       "timestamp": "2026-08-28T12:22:27.385946"
     },
     {
@@ -4186,7 +4210,7 @@
       "bidder_id": 3,
       "action": "PROCUREMENT_OFFICER_DECISION_MARK_DISQUALIFIED",
       "performed_by": "Gov Procurement Officer",
-      "details_json": "{\"decision\": \"MARK_DISQUALIFIED\", \"remarks\": \"\", \"score_at_decision\": 35.0, \"risk_level_at_decision\": \"High\", \"timestamp\": \"28-Aug-2026 12:21:54 UTC\", \"passed_checks\": 6, \"failed_checks\": 3}",
+      "details_json": "{\"decision\": \"MARK_DISQUALIFIED\", \"remarks\": \"Mandatory technical disqualification under GFR Rule 151: Active debarment record identified on CPPP Blacklist Registry.\", \"score_at_decision\": 35.0, \"risk_level_at_decision\": \"High\", \"timestamp\": \"28-Aug-2026 12:21:54 UTC\", \"passed_checks\": 6, \"failed_checks\": 3}",
       "timestamp": "2026-08-28T12:21:54.709062"
     },
     {

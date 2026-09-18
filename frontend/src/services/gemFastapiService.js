@@ -8,7 +8,8 @@ import initialOfflineData from './gemOfflineData.json';
 
 const FASTAPI_BASE = import.meta.env.VITE_FASTAPI_BASE || 'http://localhost:8000/api';
 const TIMEOUT_MS = 1800;
-const STORAGE_KEY = 'gem_audit_interactive_state_v2';
+const STORAGE_KEY = 'gem_audit_interactive_state_v3';
+const PREV_STORAGE_KEY = 'gem_audit_interactive_state_v2';
 
 // Always get freshest state from localStorage to ensure cross-page synchronization
 const getFreshState = () => {
@@ -16,6 +17,17 @@ const getFreshState = () => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       return JSON.parse(saved);
+    }
+    // Check if user had previous v2 state with dynamic logs
+    const prevSaved = localStorage.getItem(PREV_STORAGE_KEY);
+    if (prevSaved) {
+      const parsedPrev = JSON.parse(prevSaved || '{}');
+      const fresh = JSON.parse(JSON.stringify(initialOfflineData));
+      // Carry over any dynamic user-created logs
+      const userLogs = (parsedPrev.audit_logs || []).filter(l => l.id > 1000000);
+      fresh.audit_logs = [...userLogs, ...fresh.audit_logs];
+      saveState(fresh);
+      return fresh;
     }
   } catch (e) {}
   const fresh = JSON.parse(JSON.stringify(initialOfflineData));
@@ -283,9 +295,14 @@ export const sendBidderNotificationFastAPI = async (bidderId, payload) => {
   const bidKey = String(bidderId);
   const b = state.bidders.find(item => String(item.id) === bidKey);
 
-  const refNo = `GeM/COMP/2026/NOTIF/${b?.gem_seller_id || Date.now()}`;
+  const isDisqualified = b?.decision_status === 'MARK_DISQUALIFIED' || payload?.decision === 'MARK_DISQUALIFIED';
+  const notifAction = isDisqualified 
+    ? 'STATUTORY_DISQUALIFICATION_NOTICE_DISPATCHED' 
+    : 'NOTIFICATION_SENT_TO_BIDDER';
+  const refNo = `GeM/COMP/2026/${isDisqualified ? 'DISQ' : 'NOTIF'}/${b?.gem_seller_id || Date.now()}`;
+  
   const details = {
-    decision: b?.decision_status || 'MARK_QUALIFIED',
+    decision: isDisqualified ? 'MARK_DISQUALIFIED' : (b?.decision_status || 'MARK_QUALIFIED'),
     sent_at: new Date().toISOString(),
     ref_no: refNo,
     company: b?.company_name,
@@ -298,10 +315,10 @@ export const sendBidderNotificationFastAPI = async (bidderId, payload) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    appendAuditLog(bidderId, 'NOTIFICATION_SENT_TO_BIDDER', 'Gov Procurement Officer', details);
+    appendAuditLog(bidderId, notifAction, 'Gov Procurement Officer', details);
     return res;
   } catch (e) {
-    appendAuditLog(bidderId, 'NOTIFICATION_SENT_TO_BIDDER', 'Gov Procurement Officer', details);
+    appendAuditLog(bidderId, notifAction, 'Gov Procurement Officer', details);
     return { success: true, message: 'Notification dispatched via GeM Gateway.' };
   }
 };

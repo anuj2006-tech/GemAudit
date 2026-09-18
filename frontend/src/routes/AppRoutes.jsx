@@ -168,7 +168,7 @@ const AppRoutes = () => {
         <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMWorkflowPage /></ProtectedRoute>
       } />
       <Route path="/gem-compliance" element={
-        <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><GeMCompliancePortal /></ProtectedRoute>
+        <Navigate to="/gem-compliance-fastapi" replace />
       } />
       <Route path="/bid-documents" element={
         <ProtectedRoute allowedRoles={['PLATFORM_ADMIN', 'COMPANY_OWNER', 'ADMIN', 'COMPANY_ADMIN', 'EMPLOYEE', 'BID_MANAGER', 'PROPOSAL_WRITER', 'REVIEWER', 'VIEWER']}><BidDocumentSuitePage /></ProtectedRoute>
